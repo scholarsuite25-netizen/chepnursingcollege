@@ -166,7 +166,7 @@ export default function LibraryPage() {
               Open Evidence-Based Medical Knowledge &amp; Clinical Practice Tools
             </h1>
             <p className="text-sm sm:text-base text-gray-200 max-w-2xl leading-relaxed">
-              Zero-cost, open access repository containing over <strong>480+ indexed clinical resources</strong> (240+ peer-reviewed eJournals and 240+ core curriculum medical textbooks), categorized across 12 nursing disciplines, alongside automated CBT testing and OSCE clinical simulators.
+              College-funded, open access repository containing over <strong>480+ indexed clinical resources</strong> (240+ peer-reviewed eJournals and 240+ core curriculum medical textbooks), categorized across 12 nursing disciplines, alongside automated CBT testing and OSCE clinical simulators.
             </p>
 
             {/* Live Search Bar */}
@@ -754,7 +754,7 @@ export default function LibraryPage() {
                 <div className="pt-4 mt-4 border-t border-gray-100 flex items-center justify-between text-xs">
                   <span className="text-emerald-700 font-semibold flex items-center gap-1">
                     <span className="material-symbols-outlined text-[16px]">verified</span>
-                    Zero Cost / Open Access
+                    Institutional Open Access
                   </span>
                   <a
                     href={db.url}

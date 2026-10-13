@@ -86,6 +86,17 @@ interface ExamQuestionItem {
 }
 
 export default function AdminPage() {
+  // Authentication & Security Gate States
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [loginEmail, setLoginEmail] = useState("provost@chepnursingcollege.org");
+  const [loginPassword, setLoginPassword] = useState("chep2026admin");
+  const [loginRole, setLoginRole] = useState("Super Administrator (Provost)");
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [forgotPasswordModalOpen, setForgotPasswordModalOpen] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotSuccess, setForgotSuccess] = useState(false);
+
   // Navigation & View States
   const [activeTab, setActiveTab] = useState<
     | "overview"
@@ -114,6 +125,31 @@ export default function AdminPage() {
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3500);
+  };
+
+  const handleAdminSignIn = (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginLoading(true);
+    setTimeout(() => {
+      setLoginLoading(false);
+      setIsAuthenticated(true);
+      showToast(`Welcome, ${loginRole}. Session authenticated via NMCN Security Node.`);
+    }, 600);
+  };
+
+  const handleAdminSignOut = () => {
+    setIsAuthenticated(false);
+    showToast("Signed out of CHEP Institutional Senate Suite.");
+  };
+
+  const handleForgotPasswordSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setForgotSuccess(true);
+    setTimeout(() => {
+      setForgotSuccess(false);
+      setForgotPasswordModalOpen(false);
+      showToast("Security reset token dispatched to verified registry inbox.");
+    }, 2000);
   };
 
   // 1. Admissions Candidates State
@@ -186,10 +222,10 @@ export default function AdminPage() {
   ]);
   const [selectedDossier, setSelectedDossier] = useState<Candidate | null>(null);
 
-  // 2. Blog Posts / News Dispatches State
+  // 2. Official News Dispatches State
   const [posts, setPosts] = useState<PostItem[]>([
     {
-      id: "seed-1",
+      id: "post-2026-001",
       title: "2026/2027 Professional Basic Nursing Screening Dates Announced",
       category: "Admissions 2026/2027",
       summary: "Physical computer-based screening and credentials verification scheduled at Ota Main Campus.",
@@ -201,7 +237,7 @@ export default function AdminPage() {
       created_at: "2026-04-12",
     },
     {
-      id: "seed-2",
+      id: "post-2026-002",
       title: "Community Health Nursing: Bridging the Gap Between Healthcare and Society",
       category: "Community Health",
       summary: "Preventative epidemiology and primary health posts form Nigeria's frontline defense.",
@@ -213,7 +249,7 @@ export default function AdminPage() {
       created_at: "2026-04-01",
     },
     {
-      id: "seed-3",
+      id: "post-2026-003",
       title: "Compassion in Motion: The Philosophy of Total Nursing Care",
       category: "Total Care",
       summary: "Integrating physiological assessment, mental health support, and cultural bedside dignity.",
@@ -225,7 +261,7 @@ export default function AdminPage() {
       created_at: "2026-03-28",
     },
     {
-      id: "seed-4",
+      id: "post-2026-004",
       title: "Senate Approval: Induction of 48 Post-Basic Midwives into NMCN Register",
       category: "Accreditation",
       summary: "Senate congratulates the 2025/2026 midwifery cohort on achieving 100% pass rate at the council professional examination.",
@@ -237,7 +273,7 @@ export default function AdminPage() {
       created_at: "2026-03-15",
     },
     {
-      id: "seed-5",
+      id: "post-2026-005",
       title: "Upgraded High-Fidelity Maternal Simulation Manikins Installed at Ota Skills Lab",
       category: "Clinical Skills",
       summary: "State-of-the-art birthing simulators deployed to enhance emergency obstetric care competency.",
@@ -259,7 +295,7 @@ export default function AdminPage() {
   const [postImage, setPostImage] = useState("/images/chep/safety_exercise.png");
   const [postPublished, setPostPublished] = useState(true);
 
-  // Quick Draft State (WP Classic Dashboard Widget)
+  // Quick Draft State
   const [quickDraftTitle, setQuickDraftTitle] = useState("");
   const [quickDraftContent, setQuickDraftContent] = useState("");
 
@@ -587,7 +623,7 @@ export default function AdminPage() {
   });
 
   // ----------------------------------------------------
-  // Blog / Dispatches Handlers
+  // News Dispatches Handlers
   // ----------------------------------------------------
   const handleOpenNewPost = () => {
     setEditingPost(null);
@@ -643,7 +679,7 @@ export default function AdminPage() {
         image_url: postImage,
         published: postPublished,
       });
-      showToast("Post updated in WordPress repository.");
+      showToast("Dispatch updated in Senate repository.");
     } else {
       const newPost: PostItem = {
         id: `post-${Date.now()}`,
@@ -659,17 +695,17 @@ export default function AdminPage() {
       };
       setPosts([newPost, ...posts]);
       await publishDispatch(newPost);
-      showToast("New dispatch published to live site.");
+      showToast("New dispatch published to official college news feed.");
     }
 
     setPostModalOpen(false);
   };
 
   const handleDeletePost = async (id: string) => {
-    if (confirm("Move this dispatch to trash?")) {
+    if (confirm("Move this official dispatch to archive?")) {
       setPosts((prev) => prev.filter((p) => p.id !== id));
       await deleteDispatch(id);
-      showToast("Post moved to trash.");
+      showToast("Dispatch moved to archive.");
     }
   };
 
@@ -680,7 +716,7 @@ export default function AdminPage() {
       id: `draft-${Date.now()}`,
       title: quickDraftTitle,
       category: "Internal Memo",
-      author: "Provost Stella Ayowole",
+      author: "Office of the Provost",
       summary: quickDraftContent.slice(0, 80) + "...",
       content: quickDraftContent,
       read_time: "2 min read",
@@ -691,7 +727,7 @@ export default function AdminPage() {
     setPosts([newDraft, ...posts]);
     setQuickDraftTitle("");
     setQuickDraftContent("");
-    showToast("Quick Draft saved successfully.");
+    showToast("Quick memo draft saved to Senate archive.");
   };
 
   // ----------------------------------------------------
@@ -715,7 +751,7 @@ export default function AdminPage() {
     setMediaModalOpen(false);
     setMediaTitle("");
     setMediaCaption("");
-    showToast("New asset added to Media Library.");
+    showToast("New photo asset registered in institutional repository.");
   };
 
   const handleDeleteMedia = async (id: string) => {
@@ -752,10 +788,10 @@ export default function AdminPage() {
   };
 
   const handleDeleteUser = async (id: string) => {
-    if (confirm("Revoke user privileges and delete account?")) {
+    if (confirm("Revoke user privileges and remove administrative account?")) {
       setUsers((prev) => prev.filter((u) => u.id !== id));
       await deleteSiteUser(id);
-      showToast("User account removed.");
+      showToast("Administrative account revoked.");
     }
   };
 
@@ -805,30 +841,275 @@ export default function AdminPage() {
 
   // Purge Edge Cache Simulation
   const handlePurgeCache = () => {
-    showToast("Vercel Edge & Cloudflare Cache purged successfully (TTL: 0s).");
+    showToast("Serverless Edge & CDN Cache purged successfully (TTL: 0s).");
   };
 
+  // ========================================================
+  // CONDITIONAL VIEW: SECURE SENATE LOGIN GATE (IF LOGGED OUT)
+  // ========================================================
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-[#111827] text-white flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden font-sans">
+        {/* Subtle Ambient Background */}
+        <div className="absolute inset-0 bg-radial-gradient from-emerald-950/40 via-gray-950 to-black pointer-events-none"></div>
+
+        <div className="max-w-md w-full bg-[#1f2937] border border-gray-700/80 rounded-2xl shadow-2xl p-6 sm:p-8 relative z-10 space-y-6">
+          {/* Institutional Header */}
+          <div className="text-center space-y-2">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/5 border border-emerald-500/30 p-2 shadow-inner mx-auto mb-2">
+              <img
+                src="/images/chep/chep_logo.png"
+                alt="CHEP College of Nursing Sciences"
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-400 font-bold block">
+              CHEP-IMS • Senate &amp; Registry Gateway
+            </span>
+            <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+              Institutional Senate Suite
+            </h1>
+            <p className="text-xs text-gray-400 leading-relaxed">
+              Restricted portal for College Provost, Academic Registry, and NMCN Council Preceptors.
+            </p>
+          </div>
+
+          {/* Login Form */}
+          <form onSubmit={handleAdminSignIn} className="space-y-4 text-xs">
+            <div>
+              <label className="block text-gray-300 font-bold mb-1">Administrative Email</label>
+              <div className="relative">
+                <span className="material-symbols-outlined absolute left-3 top-2.5 text-gray-400 text-[18px]">
+                  mail
+                </span>
+                <input
+                  type="email"
+                  required
+                  value={loginEmail}
+                  onChange={(e) => setLoginEmail(e.target.value)}
+                  placeholder="provost@chepnursingcollege.org"
+                  className="w-full pl-10 pr-3 py-2.5 bg-gray-900/90 border border-gray-700 rounded-xl text-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-hidden"
+                />
+              </div>
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <label className="text-gray-300 font-bold">Security Password / Passkey</label>
+                <button
+                  type="button"
+                  onClick={() => setForgotPasswordModalOpen(true)}
+                  className="text-[11px] text-emerald-400 hover:text-emerald-300 hover:underline"
+                >
+                  Forgot Password?
+                </button>
+              </div>
+              <div className="relative">
+                <span className="material-symbols-outlined absolute left-3 top-2.5 text-gray-400 text-[18px]">
+                  lock
+                </span>
+                <input
+                  type={showLoginPassword ? "text" : "password"}
+                  required
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  placeholder="••••••••••••"
+                  className="w-full pl-10 pr-10 py-2.5 bg-gray-900/90 border border-gray-700 rounded-xl text-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-hidden font-mono"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowLoginPassword(!showLoginPassword)}
+                  className="absolute right-3 top-2.5 text-gray-400 hover:text-white"
+                >
+                  <span className="material-symbols-outlined text-[18px]">
+                    {showLoginPassword ? "visibility_off" : "visibility"}
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-gray-300 font-bold mb-1">Assigned Institutional Role</label>
+              <select
+                value={loginRole}
+                onChange={(e) => setLoginRole(e.target.value)}
+                className="w-full px-3 py-2 bg-gray-900/90 border border-gray-700 rounded-xl text-white text-xs outline-hidden focus:border-emerald-500"
+              >
+                <option value="Super Administrator (Provost)">Provost &amp; Chief Executive</option>
+                <option value="Academic Registrar">Academic Registrar (Admissions &amp; Senate)</option>
+                <option value="Faculty Lecturer">Faculty Lecturer (Examiner &amp; Curriculum)</option>
+                <option value="Clinical Preceptor">Clinical Preceptor (Hospital Rotations Lead)</option>
+                <option value="Bursar">Bursar (Chief Financial Officer)</option>
+              </select>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loginLoading}
+              className="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-xs uppercase tracking-wider disabled:opacity-70 mt-2"
+            >
+              {loginLoading ? (
+                <>
+                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                  <span>Verifying NMCN Credentials...</span>
+                </>
+              ) : (
+                <>
+                  <span className="material-symbols-outlined text-[18px]">verified_user</span>
+                  <span>Sign In to Institutional Suite</span>
+                </>
+              )}
+            </button>
+          </form>
+
+          {/* Demo / Rapid Evaluation Credentials Helper */}
+          <div className="pt-2 border-t border-gray-800 text-[11px] space-y-2">
+            <span className="text-gray-400 uppercase font-bold text-[10px] tracking-wider block">
+              Quick Test Credentials:
+            </span>
+            <div className="flex flex-wrap gap-1.5">
+              <button
+                type="button"
+                onClick={() => {
+                  setLoginEmail("provost@chepnursingcollege.org");
+                  setLoginPassword("chep2026admin");
+                  setLoginRole("Super Administrator (Provost)");
+                }}
+                className="px-2 py-1 rounded bg-gray-800 hover:bg-gray-700 text-emerald-300 text-[10px] font-mono border border-gray-700"
+              >
+                Provost (Super Admin)
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setLoginEmail("registrar@chepnursingcollege.org");
+                  setLoginPassword("chep2026registrar");
+                  setLoginRole("Academic Registrar");
+                }}
+                className="px-2 py-1 rounded bg-gray-800 hover:bg-gray-700 text-blue-300 text-[10px] font-mono border border-gray-700"
+              >
+                Registrar (Editor)
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setLoginEmail("faculty@chepnursingcollege.org");
+                  setLoginPassword("chep2026faculty");
+                  setLoginRole("Clinical Preceptor");
+                }}
+                className="px-2 py-1 rounded bg-gray-800 hover:bg-gray-700 text-purple-300 text-[10px] font-mono border border-gray-700"
+              >
+                Faculty Preceptor
+              </button>
+            </div>
+          </div>
+
+          <div className="text-center pt-2">
+            <Link
+              href="/"
+              className="text-xs text-gray-400 hover:text-white flex items-center justify-center gap-1"
+            >
+              <span className="material-symbols-outlined text-[15px]">arrow_back</span>
+              <span>Return to Public Campus Website</span>
+            </Link>
+          </div>
+        </div>
+
+        {/* Forgot Password Modal */}
+        {forgotPasswordModalOpen && (
+          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4">
+            <div className="bg-[#1f2937] border border-gray-700 rounded-2xl max-w-md w-full p-6 text-xs text-white space-y-4 shadow-2xl">
+              <div className="flex items-center justify-between pb-2 border-b border-gray-700">
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-emerald-400 text-[20px]">vpn_key</span>
+                  <h3 className="font-bold text-sm">Security PIN &amp; Password Recovery</h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setForgotPasswordModalOpen(false)}
+                  className="text-gray-400 hover:text-white"
+                >
+                  <span className="material-symbols-outlined text-[20px]">close</span>
+                </button>
+              </div>
+
+              {forgotSuccess ? (
+                <div className="p-4 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-center space-y-2">
+                  <span className="material-symbols-outlined text-emerald-400 text-[32px]">mark_email_read</span>
+                  <p className="font-bold text-emerald-300">Recovery Instructions Sent!</p>
+                  <p className="text-[11px] text-gray-300">
+                    A cryptographic 24-hour reset token has been dispatched to <strong>{forgotEmail || loginEmail}</strong>.
+                  </p>
+                </div>
+              ) : (
+                <form onSubmit={handleForgotPasswordSubmit} className="space-y-3">
+                  <p className="text-gray-300 leading-relaxed">
+                    Enter your official institutional email. You will receive an automated council identity verification link to reset your administrative passkey.
+                  </p>
+                  <div>
+                    <label className="block text-gray-400 font-bold mb-1">Registered Email Address</label>
+                    <input
+                      type="email"
+                      required
+                      value={forgotEmail}
+                      onChange={(e) => setForgotEmail(e.target.value)}
+                      placeholder="e.g. registrar@chepnursingcollege.org"
+                      className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-xl text-white outline-hidden focus:border-emerald-500"
+                    />
+                  </div>
+                  <div className="p-3 rounded-lg bg-gray-900/60 border border-gray-800 text-[11px] text-gray-400">
+                    <strong>Notice:</strong> For hardware security tokens or emergency lockout, contact the Registry ICT Node: <span className="text-emerald-400">enquiries@chepnursingcollege.org</span>.
+                  </div>
+                  <div className="flex justify-end gap-2 pt-2">
+                    <button
+                      type="button"
+                      onClick={() => setForgotPasswordModalOpen(false)}
+                      className="px-3 py-1.5 rounded-lg border border-gray-600 text-gray-300 hover:bg-gray-800"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold"
+                    >
+                      Dispatch Reset Token
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // ========================================================
+  // AUTHENTICATED SENATE WORKSPACE (FULL SUITE)
+  // ========================================================
   return (
     <div className="min-h-screen bg-[#f0f0f1] font-sans antialiased text-[#3c434a]">
       {/* ======================================================== */}
-      {/* 1. AUTHENTIC WORDPRESS TOP ADMIN BAR (#1d2327) */}
+      {/* 1. INSTITUTIONAL TOP SENATE BAR (#1d2327) */}
       {/* ======================================================== */}
       <header className="sticky top-0 z-50 bg-[#1d2327] text-[#f0f0f1] h-9 sm:h-10 px-3 sm:px-4 flex items-center justify-between text-xs border-b border-[#2c3338] shadow-sm select-none">
-        {/* Left Side: WP Icon, Site Name, Subdomains Jump & + New */}
+        {/* Left Side: Institutional Emblem, System Title & Subdomains */}
         <div className="flex items-center gap-3 sm:gap-4">
-          {/* WordPress Crest Icon */}
+          {/* Institutional Crest */}
           <Link
             href="/admin"
             className="flex items-center gap-1.5 hover:text-[#72aee6] transition-colors font-bold text-white"
-            title="CHEP College WordPress CMS Engine"
+            title="CHEP Institutional Management System"
           >
-            <div className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center font-serif text-[13px] font-black border border-white/20">
-              W
-            </div>
-            <span className="hidden md:inline font-bold text-[#c3c4c7]">CHEP CMS 6.7</span>
+            <img
+              src="/images/chep/chep_logo.png"
+              alt="CHEP Crest"
+              className="w-5 h-5 object-contain"
+            />
+            <span className="hidden md:inline font-bold text-[#c3c4c7]">CHEP-IMS Core 2026/2027</span>
           </Link>
 
-          {/* Site Link & Subdomain Dropdown */}
+          {/* Campus Gateway Jump */}
           <div className="relative group">
             <Link
               href="/"
@@ -845,11 +1126,11 @@ export default function AdminPage() {
                 target="_blank"
                 className="block px-3 py-1.5 hover:bg-[#2271b1] hover:text-white transition-colors"
               >
-                Visit Main College Site
+                Visit Public Campus Website
               </Link>
               <div className="border-t border-[#3c434a] my-1"></div>
               <span className="px-3 py-1 text-[10px] uppercase font-bold text-[#8c8f94] block">
-                Subdomain Gateways
+                Campus Subdomain Gateways
               </span>
               <Link
                 href="/exams"
@@ -909,7 +1190,7 @@ export default function AdminPage() {
                 onClick={handleOpenNewPost}
                 className="w-full text-left px-3 py-1.5 hover:bg-[#2271b1] hover:text-white transition-colors text-xs"
               >
-                Post / Dispatch
+                Official Dispatch
               </button>
               <button
                 type="button"
@@ -961,14 +1242,14 @@ export default function AdminPage() {
             <span>NMCN Node Ogun-OTA-041: Active</span>
           </div>
 
-          {/* Profile User Dropdown */}
+          {/* Profile User Dropdown with Sign Out */}
           <div className="relative group">
             <button
               type="button"
               className="flex items-center gap-2 text-white hover:text-[#72aee6] transition-colors py-1"
             >
               <span className="hidden sm:inline text-xs text-[#c3c4c7]">
-                Howdy, <strong className="text-white">Provost Stella Ayowole</strong>
+                Authenticated: <strong className="text-white">Prof. Stella Ayowole</strong>
               </span>
               <img
                 src="/images/chep/provost.png"
@@ -979,14 +1260,14 @@ export default function AdminPage() {
             <div className="absolute right-0 top-full hidden group-hover:block w-56 bg-[#2c3338] text-[#c3c4c7] shadow-xl py-2 rounded-b border border-[#3c434a] z-50">
               <div className="px-3 py-1.5 border-b border-[#3c434a]">
                 <p className="font-bold text-white text-xs">Prof. Stella O. Ayowole</p>
-                <p className="text-[11px] text-[#8c8f94]">Super Administrator</p>
+                <p className="text-[11px] text-[#8c8f94]">{loginRole}</p>
               </div>
               <button
                 type="button"
                 onClick={() => setActiveTab("users")}
                 className="w-full text-left px-3 py-1.5 hover:bg-[#2271b1] hover:text-white transition-colors text-xs"
               >
-                Edit Profile
+                Edit Roster Profile
               </button>
               <button
                 type="button"
@@ -996,12 +1277,14 @@ export default function AdminPage() {
                 Institutional Settings
               </button>
               <div className="border-t border-[#3c434a] my-1"></div>
-              <Link
-                href="/"
-                className="block px-3 py-1.5 text-rose-400 hover:bg-rose-900/40 hover:text-white transition-colors text-xs"
+              <button
+                type="button"
+                onClick={handleAdminSignOut}
+                className="w-full text-left px-3 py-1.5 text-rose-400 hover:bg-rose-900/40 hover:text-white transition-colors text-xs flex items-center justify-between"
               >
-                Log Out
-              </Link>
+                <span>Sign Out</span>
+                <span className="material-symbols-outlined text-[14px]">logout</span>
+              </button>
             </div>
           </div>
         </div>
@@ -1016,10 +1299,10 @@ export default function AdminPage() {
       )}
 
       {/* ======================================================== */}
-      {/* 2. MAIN WORDPRESS WORKSPACE (SIDEBAR + CONTENT CANVAS) */}
+      {/* 2. MAIN SENATE WORKSPACE (SIDEBAR + CONTENT CANVAS) */}
       {/* ======================================================== */}
       <div className="flex min-h-[calc(100vh-2.5rem)]">
-        {/* WordPress Collapsible Left Sidebar */}
+        {/* Senate Collapsible Left Sidebar */}
         <aside
           className={`bg-[#1d2327] text-[#c3c4c7] shrink-0 border-r border-[#2c3338] transition-all duration-200 select-none ${
             sidebarCollapsed ? "w-14" : "w-56"
@@ -1063,7 +1346,7 @@ export default function AdminPage() {
               >
                 <div className="flex items-center gap-2.5">
                   <span className="material-symbols-outlined text-[18px]">article</span>
-                  {!sidebarCollapsed && <span>Posts / News</span>}
+                  {!sidebarCollapsed && <span>Official Dispatches</span>}
                 </div>
                 {!sidebarCollapsed && (
                   <span className="text-[10px] bg-[#d63638] text-white font-bold px-1.5 py-0.2 rounded-full">
@@ -1081,11 +1364,11 @@ export default function AdminPage() {
                     ? "bg-[#2271b1] text-white font-bold"
                     : "hover:bg-[#13171a] hover:text-[#72aee6]"
                 }`}
-                title="Media Library"
+                title="Media Repository"
               >
                 <div className="flex items-center gap-2.5">
                   <span className="material-symbols-outlined text-[18px]">photo_library</span>
-                  {!sidebarCollapsed && <span>Media Library</span>}
+                  {!sidebarCollapsed && <span>Media Assets</span>}
                 </div>
                 {!sidebarCollapsed && (
                   <span className="text-[10px] text-[#8c8f94]">{mediaItems.length}</span>
@@ -1189,7 +1472,7 @@ export default function AdminPage() {
               >
                 <div className="flex items-center gap-2.5">
                   <span className="material-symbols-outlined text-[18px]">group</span>
-                  {!sidebarCollapsed && <span>Users &amp; Roles</span>}
+                  {!sidebarCollapsed && <span>Staff Directory</span>}
                 </div>
                 {!sidebarCollapsed && (
                   <span className="text-[10px] text-[#8c8f94]">{users.length}</span>
@@ -1248,7 +1531,7 @@ export default function AdminPage() {
           </div>
         </aside>
 
-        {/* WordPress Main Content Area */}
+        {/* Main Content Area */}
         <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl">
           {/* ======================================================== */}
           {/* TAB 1: DASHBOARD OVERVIEW */}
@@ -1260,7 +1543,7 @@ export default function AdminPage() {
                 <div>
                   <h1 className="text-2xl font-bold text-[#1d2327]">Dashboard</h1>
                   <p className="text-xs text-[#646970]">
-                    CHEP College of Nursing Sciences • Institutional WordPress CMS 6.7
+                    CHEP College of Nursing Sciences • Institutional Senate Suite (CHEP-IMS v6.7)
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
@@ -1270,7 +1553,7 @@ export default function AdminPage() {
                     className="bg-[#2271b1] hover:bg-[#135e96] text-white text-xs font-semibold px-3.5 py-1.5 rounded transition-colors flex items-center gap-1 shadow-sm"
                   >
                     <span className="material-symbols-outlined text-[15px]">add</span>
-                    <span>Add New Post</span>
+                    <span>New Dispatch</span>
                   </button>
                   <button
                     type="button"
@@ -1283,15 +1566,15 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              {/* WordPress Welcome Notice Card */}
+              {/* Institutional Welcome Notice Card */}
               <div className="bg-white border border-[#c3c4c7] p-5 rounded shadow-xs relative overflow-hidden">
                 <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
                   <div className="space-y-1">
                     <h2 className="text-lg font-bold text-[#1d2327]">
-                      Welcome to CHEP Institutional WordPress Management!
+                      Welcome to CHEP Institutional Senate Suite (CHEP-IMS)!
                     </h2>
                     <p className="text-xs text-[#646970] max-w-2xl leading-relaxed">
-                      We’ve assembled quick-links below to get you started managing academic bulletins,
+                      Central administrative environment for managing academic bulletins,
                       reviewing candidate admissions, curating clinical eLibrary texts, and moderating exams.
                     </p>
                   </div>
@@ -1306,12 +1589,12 @@ export default function AdminPage() {
                   <div>
                     <h3 className="text-xs font-bold uppercase tracking-wider text-[#1d2327] mb-2 flex items-center gap-1.5">
                       <span className="material-symbols-outlined text-[16px] text-[#2271b1]">campaign</span>
-                      Get Started
+                      Quick Tasks
                     </h3>
                     <ul className="text-xs space-y-1.5 text-[#2271b1]">
                       <li>
                         <button type="button" onClick={() => setActiveTab("posts")} className="hover:underline">
-                          Write an official college bulletin
+                          Issue official Senate dispatch
                         </button>
                       </li>
                       <li>
@@ -1409,7 +1692,7 @@ export default function AdminPage() {
                   </div>
                   <div className="mt-2 flex items-baseline gap-2">
                     <span className="text-2xl font-black text-[#1d2327]">480+</span>
-                    <span className="text-xs text-emerald-600 font-semibold">100% Open Access</span>
+                    <span className="text-xs text-emerald-600 font-semibold">Institutional Access</span>
                   </div>
                   <p className="text-[11px] text-[#8c8f94] mt-1">240+ eBooks &amp; 240+ Journals</p>
                 </div>
@@ -1427,7 +1710,7 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              {/* Two Column Layout: Left (At A Glance & Activity) | Right (Quick Draft & Health) */}
+              {/* Two Column Layout */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 {/* Left 7 Columns */}
                 <div className="lg:col-span-7 space-y-6">
@@ -1435,13 +1718,13 @@ export default function AdminPage() {
                   <div className="bg-white border border-[#c3c4c7] rounded shadow-xs overflow-hidden">
                     <div className="px-4 py-3 bg-[#f6f7f7] border-b border-[#c3c4c7] font-bold text-xs text-[#1d2327] flex items-center justify-between">
                       <span>At a Glance</span>
-                      <span className="text-[11px] text-[#646970] font-normal">WordPress 6.7.2</span>
+                      <span className="text-[11px] text-[#646970] font-normal">CHEP-IMS Core v6.7</span>
                     </div>
                     <div className="p-4 grid grid-cols-2 gap-4 text-xs">
                       <div className="space-y-2">
                         <div className="flex items-center gap-2 text-[#2271b1]">
                           <span className="material-symbols-outlined text-[16px]">article</span>
-                          <span>{posts.length} Posts</span>
+                          <span>{posts.length} Official Dispatches</span>
                         </div>
                         <div className="flex items-center gap-2 text-[#2271b1]">
                           <span className="material-symbols-outlined text-[16px]">school</span>
@@ -1473,7 +1756,7 @@ export default function AdminPage() {
                   {/* Activity Stream */}
                   <div className="bg-white border border-[#c3c4c7] rounded shadow-xs overflow-hidden">
                     <div className="px-4 py-3 bg-[#f6f7f7] border-b border-[#c3c4c7] font-bold text-xs text-[#1d2327]">
-                      Activity
+                      Activity Feed
                     </div>
                     <div className="p-4 space-y-3">
                       <span className="text-[11px] font-bold uppercase tracking-wider text-[#646970] block">
@@ -1511,7 +1794,7 @@ export default function AdminPage() {
                   {/* Quick Draft Box */}
                   <div className="bg-white border border-[#c3c4c7] rounded shadow-xs overflow-hidden">
                     <div className="px-4 py-3 bg-[#f6f7f7] border-b border-[#c3c4c7] font-bold text-xs text-[#1d2327]">
-                      Quick Draft
+                      Quick Memo Draft
                     </div>
                     <form onSubmit={handleSaveQuickDraft} className="p-4 space-y-3 text-xs">
                       <div>
@@ -1527,7 +1810,7 @@ export default function AdminPage() {
                       </div>
                       <div>
                         <label className="block text-[11px] font-bold text-[#1d2327] mb-1">
-                          What’s on your mind?
+                          Draft Notes / Action Items
                         </label>
                         <textarea
                           rows={3}
@@ -1542,7 +1825,7 @@ export default function AdminPage() {
                           type="submit"
                           className="bg-[#2271b1] hover:bg-[#135e96] text-white text-xs font-semibold px-3 py-1.5 rounded transition-colors"
                         >
-                          Save Draft
+                          Save Draft Memo
                         </button>
                       </div>
                     </form>
@@ -1551,9 +1834,9 @@ export default function AdminPage() {
                   {/* Site Health Status Box */}
                   <div className="bg-white border border-[#c3c4c7] rounded shadow-xs overflow-hidden">
                     <div className="px-4 py-3 bg-[#f6f7f7] border-b border-[#c3c4c7] font-bold text-xs text-[#1d2327] flex items-center justify-between">
-                      <span>Site Health Status</span>
+                      <span>System Health Status</span>
                       <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.2 rounded">
-                        Good (100%)
+                        Operational (100%)
                       </span>
                     </div>
                     <div className="p-4 space-y-2.5 text-xs text-[#646970]">
@@ -1591,7 +1874,7 @@ export default function AdminPage() {
             <div className="space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <h1 className="text-2xl font-bold text-[#1d2327]">Posts</h1>
+                  <h1 className="text-2xl font-bold text-[#1d2327]">Official Dispatches</h1>
                   <button
                     type="button"
                     onClick={handleOpenNewPost}
@@ -1604,7 +1887,7 @@ export default function AdminPage() {
                 <div className="flex items-center gap-2">
                   <input
                     type="text"
-                    placeholder="Search Posts..."
+                    placeholder="Search Dispatches..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="px-2.5 py-1.5 border border-[#8c8f94] rounded text-xs outline-hidden focus:border-[#2271b1]"
@@ -1612,7 +1895,7 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              {/* WordPress Post Status Bar */}
+              {/* Status Filter Bar */}
               <div className="flex items-center gap-3 text-xs text-[#646970] border-b border-[#c3c4c7] pb-2">
                 <button
                   type="button"
@@ -1699,11 +1982,11 @@ export default function AdminPage() {
                                   onClick={() => handleDeletePost(post.id)}
                                   className="text-red-600 hover:underline"
                                 >
-                                  Trash
+                                  Archive
                                 </button>
                                 <span>|</span>
                                 <Link href="/news" target="_blank" className="hover:underline">
-                                  View
+                                  View Public
                                 </Link>
                               </div>
                             </td>
@@ -1732,7 +2015,7 @@ export default function AdminPage() {
                                 type="button"
                                 onClick={() => handleOpenEditPost(post)}
                                 className="p-1 text-[#2271b1] hover:bg-blue-50 rounded"
-                                title="Edit Post"
+                                title="Edit Dispatch"
                               >
                                 <span className="material-symbols-outlined text-[16px]">edit</span>
                               </button>
@@ -1753,7 +2036,7 @@ export default function AdminPage() {
             <div className="space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <h1 className="text-2xl font-bold text-[#1d2327]">Media Library</h1>
+                  <h1 className="text-2xl font-bold text-[#1d2327]">Media Repository</h1>
                   <button
                     type="button"
                     onClick={() => setMediaModalOpen(true)}
@@ -2052,7 +2335,7 @@ export default function AdminPage() {
                 <div>
                   <h1 className="text-2xl font-bold text-[#1d2327]">eLibrary &amp; Repository Manager</h1>
                   <p className="text-xs text-[#646970]">
-                    Over 480+ open-access clinical eBooks &amp; peer-reviewed journals • Subdomain:{" "}
+                    Over 480+ clinical eBooks &amp; peer-reviewed journals • Subdomain:{" "}
                     <code className="text-emerald-700 font-bold">library.chep</code>
                   </p>
                 </div>
@@ -2217,7 +2500,7 @@ export default function AdminPage() {
             <div className="space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                  <h1 className="text-2xl font-bold text-[#1d2327]">Users &amp; Roles</h1>
+                  <h1 className="text-2xl font-bold text-[#1d2327]">Staff Directory &amp; Roles</h1>
                   <p className="text-xs text-[#646970]">
                     Role-Based Access Control (Super Admin, Editor, Faculty, Preceptor, Bursar)
                   </p>
@@ -2301,7 +2584,7 @@ export default function AdminPage() {
               <div>
                 <h1 className="text-2xl font-bold text-[#1d2327]">Tools &amp; System Health</h1>
                 <p className="text-xs text-[#646970]">
-                  System runtime information, server environment diagnostics, and backup utilities
+                  System runtime information, server environment diagnostics, and archival utilities
                 </p>
               </div>
 
@@ -2310,8 +2593,8 @@ export default function AdminPage() {
                   <h3 className="text-sm font-bold text-[#1d2327]">System Information</h3>
                   <div className="space-y-2 text-xs text-[#646970]">
                     <div className="flex justify-between py-1 border-b border-[#f0f0f1]">
-                      <span>CMS Version</span>
-                      <span className="font-bold text-[#1d2327]">WordPress 6.7.2 / Next.js 16</span>
+                      <span>Management Suite</span>
+                      <span className="font-bold text-[#1d2327]">CHEP-IMS Core 6.7.2 / Next.js 16</span>
                     </div>
                     <div className="flex justify-between py-1 border-b border-[#f0f0f1]">
                       <span>Server Operating System</span>
@@ -2450,7 +2733,7 @@ export default function AdminPage() {
                       </tr>
                       <tr>
                         <td className="py-2 px-3 font-mono font-bold text-[#2271b1]">admin.chep</td>
-                        <td className="py-2 px-3">Enterprise WordPress CMS Suite</td>
+                        <td className="py-2 px-3">Enterprise Institutional Senate Suite</td>
                         <td className="py-2 px-3 text-emerald-700 font-bold">Active DNS</td>
                       </tr>
                     </tbody>
@@ -2473,14 +2756,14 @@ export default function AdminPage() {
       </div>
 
       {/* ======================================================== */}
-      {/* MODAL: ADD / EDIT POST (CLASSIC WP EDITOR STYLE) */}
+      {/* MODAL: ADD / EDIT DISPATCH */}
       {/* ======================================================== */}
       {postModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white rounded-lg shadow-2xl max-w-2xl w-full overflow-hidden border border-[#c3c4c7] animate-scaleIn">
             <div className="px-4 py-3 bg-[#f6f7f7] border-b border-[#c3c4c7] flex items-center justify-between">
               <h3 className="font-bold text-sm text-[#1d2327]">
-                {editingPost ? "Edit Dispatch" : "Add New Post"}
+                {editingPost ? "Edit Dispatch" : "Add New Official Dispatch"}
               </h3>
               <button
                 type="button"
@@ -2493,7 +2776,7 @@ export default function AdminPage() {
 
             <form onSubmit={handleSavePost} className="p-4 sm:p-6 space-y-4 text-xs">
               <div>
-                <label className="block font-bold text-[#1d2327] mb-1">Post Title</label>
+                <label className="block font-bold text-[#1d2327] mb-1">Dispatch Title</label>
                 <input
                   type="text"
                   value={postTitle}
@@ -2520,7 +2803,7 @@ export default function AdminPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block font-bold text-[#1d2327] mb-1">Author</label>
+                  <label className="block font-bold text-[#1d2327] mb-1">Author / Signatory</label>
                   <input
                     type="text"
                     value={postAuthor}
@@ -2561,7 +2844,7 @@ export default function AdminPage() {
                     onChange={(e) => setPostPublished(e.target.checked)}
                     className="rounded border-[#8c8f94]"
                   />
-                  <span className="font-bold text-[#1d2327]">Publish immediately to live site</span>
+                  <span className="font-bold text-[#1d2327]">Publish immediately to live public feed</span>
                 </label>
               </div>
 
@@ -2577,7 +2860,7 @@ export default function AdminPage() {
                   type="submit"
                   className="px-4 py-2 bg-[#2271b1] hover:bg-[#135e96] text-white rounded text-xs font-semibold shadow-xs"
                 >
-                  {editingPost ? "Update Post" : "Publish Post"}
+                  {editingPost ? "Update Dispatch" : "Publish Dispatch"}
                 </button>
               </div>
             </form>

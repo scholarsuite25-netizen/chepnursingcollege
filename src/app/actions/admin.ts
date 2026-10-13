@@ -136,7 +136,7 @@ export async function deleteDispatch(id: string) {
 }
 
 // ----------------------------------------------------
-// WordPress-Style Site Users Management
+// Institutional User Directory & Role-Based Access
 // ----------------------------------------------------
 export async function getSiteUsers() {
   try {

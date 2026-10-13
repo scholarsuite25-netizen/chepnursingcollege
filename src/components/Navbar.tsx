@@ -153,19 +153,24 @@ export default function Navbar() {
       href: "/portal",
       dropdown: [
         {
-          label: "Student & Faculty LMS",
-          href: "/portal",
-          desc: "Course registration, fee clearance & grade reports",
+          label: "Student e-Logbook & LMS",
+          href: "/portal/student",
+          desc: "Course registration, fee clearance & clinical logbook",
           subdomain: "portal.chep",
           icon: "badge",
         },
         {
-          label: "WordPress Admin CMS",
-          href: "/admin",
-          desc: "Enterprise institutional publishing & candidate management",
-          subdomain: "admin.chep",
-          badge: "Staff Only",
-          icon: "tune",
+          label: "Faculty & Preceptor Desk",
+          href: "/portal/faculty",
+          desc: "Clinical procedure verification & academic grading",
+          subdomain: "faculty.chep",
+          icon: "clinical_notes",
+        },
+        {
+          label: "Candidate Screening Portal",
+          href: "/admission/slip",
+          desc: "Screening slip reprint & admission status tracker",
+          icon: "assignment_ind",
         },
       ],
     },
@@ -412,12 +417,12 @@ export default function Navbar() {
               Student &amp; Faculty Portal [portal.chep]
             </Link>
             <Link
-              href="/admin"
+              href="/admission/slip"
               onClick={() => setMobileMenuOpen(false)}
               className="flex items-center justify-center gap-2 py-2 text-xs font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl"
             >
-              <span className="material-symbols-outlined text-[18px]">tune</span>
-              WordPress Admin CMS [admin.chep]
+              <span className="material-symbols-outlined text-[18px]">assignment_ind</span>
+              Candidate Screening Portal
             </Link>
           </div>
         </div>
