@@ -66,15 +66,55 @@ interface MediaPhotoItem {
   uploaded_by?: string;
 }
 
+interface ELibraryItem {
+  id: string;
+  title: string;
+  author: string;
+  category: string;
+  type: "ebook" | "journal";
+  isbnOrDoi: string;
+  level: string;
+}
+
+interface ExamQuestionItem {
+  id: string;
+  type: "mcq" | "essay" | "osce";
+  prompt: string;
+  category: string;
+  level: string;
+  keyOrRubric: string;
+}
+
 export default function AdminPage() {
+  // Navigation & View States
   const [activeTab, setActiveTab] = useState<
-    "overview" | "admissions" | "blog" | "media" | "users" | "settings"
+    | "overview"
+    | "posts"
+    | "media"
+    | "admissions"
+    | "library"
+    | "exams"
+    | "reflections"
+    | "users"
+    | "tools"
+    | "settings"
   >("overview");
+
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // Search & Filter States
   const [searchTerm, setSearchTerm] = useState("");
   const [filterProgram, setFilterProgram] = useState("all");
   const [filterStatus, setFilterStatus] = useState("all");
+  const [postFilterStatus, setPostFilterStatus] = useState<"all" | "published" | "draft">("all");
+  const [mediaViewMode, setMediaViewMode] = useState<"grid" | "list">("grid");
+  const [mediaTypeFilter, setMediaTypeFilter] = useState("all");
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3500);
+  };
 
   // 1. Admissions Candidates State
   const [candidates, setCandidates] = useState<Candidate[]>([
@@ -130,10 +170,23 @@ export default function AdminPage() {
       batch: "Batch C-01",
       status: "admitted",
     },
+    {
+      id: "CHEP/ADM/2026/122",
+      name: "Okafor Emmanuel Chukwudi",
+      initials: "OE",
+      program: "Perioperative Nursing",
+      duration: "1-Year Specialist",
+      olevel: "Verified (RN + 5 Credits)",
+      olevelStatus: "verified",
+      rrr: "RRR: 8812-4930-1092",
+      fee: "₦20,000 Paid",
+      batch: "Batch B-02",
+      status: "under_review",
+    },
   ]);
   const [selectedDossier, setSelectedDossier] = useState<Candidate | null>(null);
 
-  // 2. Blog Posts State
+  // 2. Blog Posts / News Dispatches State
   const [posts, setPosts] = useState<PostItem[]>([
     {
       id: "seed-1",
@@ -171,6 +224,30 @@ export default function AdminPage() {
       published: true,
       created_at: "2026-03-28",
     },
+    {
+      id: "seed-4",
+      title: "Senate Approval: Induction of 48 Post-Basic Midwives into NMCN Register",
+      category: "Accreditation",
+      summary: "Senate congratulates the 2025/2026 midwifery cohort on achieving 100% pass rate at the council professional examination.",
+      content: "The College Academic Senate convened under the chairmanship of Provost Prof. Stella Ayowole to formalize council induction.",
+      author: "Office of the Provost",
+      read_time: "3 min read",
+      image_url: "/images/chep/students_green_scrubs.jpg",
+      published: true,
+      created_at: "2026-03-15",
+    },
+    {
+      id: "seed-5",
+      title: "Upgraded High-Fidelity Maternal Simulation Manikins Installed at Ota Skills Lab",
+      category: "Clinical Skills",
+      summary: "State-of-the-art birthing simulators deployed to enhance emergency obstetric care competency.",
+      content: "The clinical simulation complex has received additional equipment to simulate postpartum hemorrhage management.",
+      author: "Lab Coordinator",
+      read_time: "4 min read",
+      image_url: "/images/chep/laboratory.jpg",
+      published: true,
+      created_at: "2026-03-05",
+    },
   ]);
   const [postModalOpen, setPostModalOpen] = useState(false);
   const [editingPost, setEditingPost] = useState<PostItem | null>(null);
@@ -181,6 +258,10 @@ export default function AdminPage() {
   const [postContent, setPostContent] = useState("");
   const [postImage, setPostImage] = useState("/images/chep/safety_exercise.png");
   const [postPublished, setPostPublished] = useState(true);
+
+  // Quick Draft State (WP Classic Dashboard Widget)
+  const [quickDraftTitle, setQuickDraftTitle] = useState("");
+  const [quickDraftContent, setQuickDraftContent] = useState("");
 
   // 3. Media Gallery State
   const [mediaItems, setMediaItems] = useState<MediaPhotoItem[]>([
@@ -255,7 +336,7 @@ export default function AdminPage() {
       id: "u-2",
       full_name: "Akinkuebi Olawunmi Esther",
       email: "akinkuebi.o@chepnursingcollege.org",
-      role: "Lecturer / Faculty",
+      role: "Faculty Lecturer",
       department: "Nursing Sciences",
       status: "active",
       avatar_url: "/images/chep/lecturer_akinkuebi.png",
@@ -264,7 +345,7 @@ export default function AdminPage() {
       id: "u-3",
       full_name: "Jojolade Adeboye Ismail",
       email: "jojolade.a@chepnursingcollege.org",
-      role: "Lecturer / Faculty",
+      role: "Faculty Lecturer",
       department: "Clinical Preceptorship",
       status: "active",
       avatar_url: "/images/chep/lecturer_jojolade.png",
@@ -273,7 +354,7 @@ export default function AdminPage() {
       id: "u-4",
       full_name: "Mr. Samuel E. Akinro",
       email: "registrar@chepnursingcollege.org",
-      role: "Editor",
+      role: "Editor / Registrar",
       department: "Academic Affairs Registry",
       status: "active",
       avatar_url: null,
@@ -294,7 +375,97 @@ export default function AdminPage() {
   const [userRole, setUserRole] = useState("Editor");
   const [userDept, setUserDept] = useState("Academic Registry");
 
-  // 5. Site Settings State
+  // 5. eLibrary State
+  const [libraryResources, setLibraryResources] = useState<ELibraryItem[]>([
+    {
+      id: "lib-1",
+      title: "Brunner & Suddarth's Textbook of Medical-Surgical Nursing (15th Ed.)",
+      author: "Janice L. Hinkle, Kerry H. Cheever",
+      category: "Medical-Surgical",
+      type: "ebook",
+      isbnOrDoi: "978-1975161033",
+      level: "300 Level",
+    },
+    {
+      id: "lib-2",
+      title: "Pharmacology and the Nursing Process (10th Ed.)",
+      author: "Linda Lane Lilley, Shelly Rainforth Collins",
+      category: "Pharmacology",
+      type: "ebook",
+      isbnOrDoi: "978-0323829373",
+      level: "200 Level",
+    },
+    {
+      id: "lib-3",
+      title: "Myles Textbook for Midwives (17th Ed.)",
+      author: "Jayne E. Marshall, Maureen D. Raynor",
+      category: "Midwifery",
+      type: "ebook",
+      isbnOrDoi: "978-0702076428",
+      level: "400 Level",
+    },
+    {
+      id: "lib-4",
+      title: "The Lancet Global Health: Maternal Mortality Reductions in Sub-Saharan Africa",
+      author: "World Health Organization Collaborative Group",
+      category: "Public Health",
+      type: "journal",
+      isbnOrDoi: "10.1016/S2214-109X(23)00411-9",
+      level: "Clinical Postgraduate",
+    },
+    {
+      id: "lib-5",
+      title: "American Journal of Nursing: Evidence-Based Wound Bed Preparation",
+      author: "R. Gary Sibbald et al.",
+      category: "Clinical Procedures",
+      type: "journal",
+      isbnOrDoi: "10.1097/01.NAJ.0000890124.91234.12",
+      level: "All Levels",
+    },
+  ]);
+  const [libModalOpen, setLibModalOpen] = useState(false);
+  const [libTitle, setLibTitle] = useState("");
+  const [libAuthor, setLibAuthor] = useState("");
+  const [libCategory, setLibCategory] = useState("Medical-Surgical");
+  const [libType, setLibType] = useState<"ebook" | "journal">("ebook");
+  const [libIsbn, setLibIsbn] = useState("");
+  const [libLevel, setLibLevel] = useState("200 Level");
+
+  // 6. Exam Questions State
+  const [examQuestions, setExamQuestions] = useState<ExamQuestionItem[]>([
+    {
+      id: "ex-1",
+      type: "mcq",
+      prompt: "A 45-year-old patient with congestive heart failure is prescribed Digoxin 0.25mg daily. Which assessment finding requires withholding the medication?",
+      category: "Pharmacology",
+      level: "300 Level",
+      keyOrRubric: "Option C: Apical heart rate of 52 bpm",
+    },
+    {
+      id: "ex-2",
+      type: "essay",
+      prompt: "Discuss the pathophysiology, clinical staging, and emergency nursing management of a primigravida presenting with Severe Preeclampsia at 34 weeks gestation.",
+      category: "Maternal & Child Health",
+      level: "400 Level",
+      keyOrRubric: "NMCN Rubric: Airway, IV Magnesium Sulphate Pritchard Regimen, Hydralazine, Fetal Monitoring (20 marks)",
+    },
+    {
+      id: "ex-3",
+      type: "osce",
+      prompt: "Station 04: Perform sterile donning and perform tracheostomy suctioning on an adult manikin following aseptic technique within 6 minutes.",
+      category: "OSCE Clinical Skills",
+      level: "200 Level",
+      keyOrRubric: "12-step sterile checklist: Oxygenation, catheter insertion without suction, intermittent 10s pass.",
+    },
+  ]);
+  const [examModalOpen, setExamModalOpen] = useState(false);
+  const [examPrompt, setExamPrompt] = useState("");
+  const [examType, setExamType] = useState<"mcq" | "essay" | "osce">("mcq");
+  const [examCategory, setExamCategory] = useState("Pharmacology");
+  const [examLevel, setExamLevel] = useState("300 Level");
+  const [examRubric, setExamRubric] = useState("");
+
+  // 7. Site Settings State
   const [settingsNotice, setSettingsNotice] = useState(
     "2026/2027 Professional Basic Nursing Screening Dates Announced by NMCN Accredited Board. CBT screening is active at Ota Main Campus."
   );
@@ -302,51 +473,50 @@ export default function AdminPage() {
   const [settingsEmail, setSettingsEmail] = useState("enquiries@chepnursingcollege.org");
   const [settingsBasicFee, setSettingsBasicFee] = useState("15,000");
   const [settingsMidwiferyFee, setSettingsMidwiferyFee] = useState("20,000");
-  const [settingsSavedToast, setSettingsSavedToast] = useState(false);
 
   // Load from Supabase on mount
   useEffect(() => {
     async function loadData() {
-      // 1. Applications
-      const appRes = await getApplications();
-      if (appRes.success && appRes.data && appRes.data.length > 0) {
-        const mapped = appRes.data.map((app: any) => ({
-          id: app.id,
-          name: app.full_name,
-          initials: app.full_name
-            .split(" ")
-            .map((n: string) => n[0])
-            .join("")
-            .slice(0, 2)
-            .toUpperCase(),
-          program: app.program,
-          duration: app.program.includes("Basic") ? "3-Year ND/HND" : "Accelerated",
-          olevel: app.credits_count ? `Verified (${app.credits_count} Credits)` : "Verified (5 Credits)",
-          olevelStatus: "verified",
-          rrr: app.rrr_number || "RRR: Pending",
-          fee: app.payment_status === "paid" ? "₦15,000 Paid" : "Unpaid",
-          batch: app.batch || "Batch A-01",
-          status: app.status || "pending",
-        }));
-        setCandidates(mapped);
-      }
+      try {
+        const appRes = await getApplications();
+        if (appRes.success && appRes.data && appRes.data.length > 0) {
+          const mapped = appRes.data.map((app: any) => ({
+            id: app.id,
+            name: app.full_name,
+            initials: app.full_name
+              .split(" ")
+              .map((n: string) => n[0])
+              .join("")
+              .slice(0, 2)
+              .toUpperCase(),
+            program: app.program,
+            duration: app.program.includes("Basic") ? "3-Year ND/HND" : "Accelerated",
+            olevel: app.credits_count ? `Verified (${app.credits_count} Credits)` : "Verified (5 Credits)",
+            olevelStatus: "verified",
+            rrr: app.rrr_number || "RRR: Pending",
+            fee: app.payment_status === "paid" ? "₦15,000 Paid" : "Unpaid",
+            batch: app.batch || "Batch A-01",
+            status: app.status || "pending",
+          }));
+          setCandidates(mapped);
+        }
 
-      // 2. Dispatches
-      const postRes = await getNewsDispatches();
-      if (postRes.success && postRes.data && postRes.data.length > 0) {
-        setPosts(postRes.data);
-      }
+        const postRes = await getNewsDispatches();
+        if (postRes.success && postRes.data && postRes.data.length > 0) {
+          setPosts(postRes.data);
+        }
 
-      // 3. Site Users
-      const userRes = await getSiteUsers();
-      if (userRes.success && userRes.data && userRes.data.length > 0) {
-        setUsers(userRes.data);
-      }
+        const userRes = await getSiteUsers();
+        if (userRes.success && userRes.data && userRes.data.length > 0) {
+          setUsers(userRes.data);
+        }
 
-      // 4. Media Gallery
-      const mediaRes = await getMediaGallery();
-      if (mediaRes.success && mediaRes.data && mediaRes.data.length > 0) {
-        setMediaItems(mediaRes.data);
+        const mediaRes = await getMediaGallery();
+        if (mediaRes.success && mediaRes.data && mediaRes.data.length > 0) {
+          setMediaItems(mediaRes.data);
+        }
+      } catch (err) {
+        console.warn("Using offline seeded data:", err);
       }
     }
     loadData();
@@ -359,6 +529,7 @@ export default function AdminPage() {
     setCandidates((prev) =>
       prev.map((c) => (c.id === id ? { ...c, status: newStatus } : c))
     );
+    showToast(`Candidate ${id} updated to ${newStatus.toUpperCase()}`);
     await updateApplicationStatus(id, newStatus);
   };
 
@@ -401,6 +572,7 @@ export default function AdminPage() {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+    showToast("Official NMCN Admissions Ledger exported to CSV.");
   };
 
   const filteredCandidates = candidates.filter((c) => {
@@ -410,13 +582,12 @@ export default function AdminPage() {
       c.rrr.includes(searchTerm);
     const matchesProgram =
       filterProgram === "all" || c.program.toLowerCase().includes(filterProgram.toLowerCase());
-    const matchesStatus =
-      filterStatus === "all" || c.status === filterStatus;
+    const matchesStatus = filterStatus === "all" || c.status === filterStatus;
     return matchesSearch && matchesProgram && matchesStatus;
   });
 
   // ----------------------------------------------------
-  // Blog / News Handlers
+  // Blog / Dispatches Handlers
   // ----------------------------------------------------
   const handleOpenNewPost = () => {
     setEditingPost(null);
@@ -447,8 +618,23 @@ export default function AdminPage() {
     if (!postTitle) return;
 
     if (editingPost) {
-      // Update
-      const updated = {
+      setPosts((prev) =>
+        prev.map((p) =>
+          p.id === editingPost.id
+            ? {
+                ...p,
+                title: postTitle,
+                category: postCategory,
+                author: postAuthor,
+                summary: postSummary,
+                content: postContent,
+                image_url: postImage,
+                published: postPublished,
+              }
+            : p
+        )
+      );
+      await updateDispatch(editingPost.id, {
         title: postTitle,
         category: postCategory,
         author: postAuthor,
@@ -456,14 +642,9 @@ export default function AdminPage() {
         content: postContent,
         image_url: postImage,
         published: postPublished,
-      };
-      setPosts((prev) =>
-        prev.map((p) => (p.id === editingPost.id ? { ...p, ...updated } : p))
-      );
-      await updateDispatch(editingPost.id, updated);
-      alert("Post updated successfully!");
+      });
+      showToast("Post updated in WordPress repository.");
     } else {
-      // Create New
       const newPost: PostItem = {
         id: `post-${Date.now()}`,
         title: postTitle,
@@ -474,54 +655,79 @@ export default function AdminPage() {
         read_time: "4 min read",
         image_url: postImage,
         published: postPublished,
-        created_at: new Date().toISOString(),
+        created_at: new Date().toISOString().split("T")[0],
       };
-      setPosts((prev) => [newPost, ...prev]);
+      setPosts([newPost, ...posts]);
       await publishDispatch(newPost);
-      alert("New post published successfully!");
+      showToast("New dispatch published to live site.");
     }
 
     setPostModalOpen(false);
   };
 
-  const handleDeletePost = async (id: string, title: string) => {
-    if (!confirm(`Are you sure you want to delete post "${title}"?`)) return;
-    setPosts((prev) => prev.filter((p) => p.id !== id));
-    await deleteDispatch(id);
+  const handleDeletePost = async (id: string) => {
+    if (confirm("Move this dispatch to trash?")) {
+      setPosts((prev) => prev.filter((p) => p.id !== id));
+      await deleteDispatch(id);
+      showToast("Post moved to trash.");
+    }
+  };
+
+  const handleSaveQuickDraft = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!quickDraftTitle) return;
+    const newDraft: PostItem = {
+      id: `draft-${Date.now()}`,
+      title: quickDraftTitle,
+      category: "Internal Memo",
+      author: "Provost Stella Ayowole",
+      summary: quickDraftContent.slice(0, 80) + "...",
+      content: quickDraftContent,
+      read_time: "2 min read",
+      image_url: "/images/chep/safety_exercise.png",
+      published: false,
+      created_at: new Date().toISOString().split("T")[0],
+    };
+    setPosts([newDraft, ...posts]);
+    setQuickDraftTitle("");
+    setQuickDraftContent("");
+    showToast("Quick Draft saved successfully.");
   };
 
   // ----------------------------------------------------
-  // Media Gallery Handlers
+  // Media Handlers
   // ----------------------------------------------------
   const handleSaveMedia = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!mediaTitle || !mediaUrl) return;
 
-    const newItem: MediaPhotoItem = {
+    const newMedia: MediaPhotoItem = {
       id: `media-${Date.now()}`,
       title: mediaTitle,
       category: mediaCategory,
       image_url: mediaUrl,
       caption: mediaCaption || mediaTitle,
-      uploaded_by: "Registrar / Admin",
+      uploaded_by: "Registrar",
     };
 
-    setMediaItems((prev) => [newItem, ...prev]);
-    await addMediaPhoto(newItem);
-    alert("Photograph added to gallery!");
+    setMediaItems([newMedia, ...mediaItems]);
+    await addMediaPhoto(newMedia);
     setMediaModalOpen(false);
     setMediaTitle("");
     setMediaCaption("");
+    showToast("New asset added to Media Library.");
   };
 
-  const handleDeleteMedia = async (id: string, title: string) => {
-    if (!confirm(`Delete photograph "${title}"?`)) return;
-    setMediaItems((prev) => prev.filter((m) => m.id !== id));
-    await deleteMediaPhoto(id);
+  const handleDeleteMedia = async (id: string) => {
+    if (confirm("Delete this media asset from server?")) {
+      setMediaItems((prev) => prev.filter((m) => m.id !== id));
+      await deleteMediaPhoto(id);
+      showToast("Media asset deleted.");
+    }
   };
 
   // ----------------------------------------------------
-  // Users & Staff Handlers
+  // User Handlers
   // ----------------------------------------------------
   const handleSaveUser = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -537,1336 +743,2350 @@ export default function AdminPage() {
       avatar_url: null,
     };
 
-    setUsers((prev) => [newUser, ...prev]);
+    setUsers([newUser, ...users]);
     await createSiteUser(newUser);
-    alert(`Staff account for ${userFullName} created successfully!`);
     setUserModalOpen(false);
     setUserFullName("");
     setUserEmail("");
+    showToast(`User ${newUser.full_name} registered with role ${newUser.role}`);
   };
 
-  const handleToggleUserStatus = async (user: SiteUserItem) => {
-    const nextStatus = user.status === "active" ? "suspended" : "active";
-    setUsers((prev) =>
-      prev.map((u) => (u.id === user.id ? { ...u, status: nextStatus } : u))
-    );
-    await updateSiteUser(user.id, { status: nextStatus });
-  };
-
-  const handleDeleteUser = async (id: string, name: string) => {
-    if (!confirm(`Permanently remove staff account for "${name}"?`)) return;
-    setUsers((prev) => prev.filter((u) => u.id !== id));
-    await deleteSiteUser(id);
+  const handleDeleteUser = async (id: string) => {
+    if (confirm("Revoke user privileges and delete account?")) {
+      setUsers((prev) => prev.filter((u) => u.id !== id));
+      await deleteSiteUser(id);
+      showToast("User account removed.");
+    }
   };
 
   // ----------------------------------------------------
-  // Settings Handlers
+  // Library Handlers
   // ----------------------------------------------------
-  const handleSaveSettings = (e: React.FormEvent) => {
+  const handleSaveLibrary = (e: React.FormEvent) => {
     e.preventDefault();
-    setSettingsSavedToast(true);
-    setTimeout(() => setSettingsSavedToast(false), 3000);
+    if (!libTitle || !libAuthor) return;
+    const newItem: ELibraryItem = {
+      id: `lib-${Date.now()}`,
+      title: libTitle,
+      author: libAuthor,
+      category: libCategory,
+      type: libType,
+      isbnOrDoi: libIsbn || "ISBN: Pending",
+      level: libLevel,
+    };
+    setLibraryResources([newItem, ...libraryResources]);
+    setLibModalOpen(false);
+    setLibTitle("");
+    setLibAuthor("");
+    setLibIsbn("");
+    showToast("New eResource registered in CHEP OPAC catalog.");
+  };
+
+  // ----------------------------------------------------
+  // Exams Handlers
+  // ----------------------------------------------------
+  const handleSaveExamQuestion = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!examPrompt) return;
+    const newQ: ExamQuestionItem = {
+      id: `q-${Date.now()}`,
+      type: examType,
+      prompt: examPrompt,
+      category: examCategory,
+      level: examLevel,
+      keyOrRubric: examRubric || "Council Standard Scoring Rubric",
+    };
+    setExamQuestions([newQ, ...examQuestions]);
+    setExamModalOpen(false);
+    setExamPrompt("");
+    setExamRubric("");
+    showToast(`New ${examType.toUpperCase()} question added to Question Bank.`);
+  };
+
+  // Purge Edge Cache Simulation
+  const handlePurgeCache = () => {
+    showToast("Vercel Edge & Cloudflare Cache purged successfully (TTL: 0s).");
   };
 
   return (
-    <>
-      <Navbar />
-
-      <main className="w-full pt-20 bg-surface-canvas min-h-screen">
-        {/* Top Institutional Status Bar */}
-        <section className="w-full bg-forest-dark text-white py-3 px-4 sm:px-8 shadow-md">
-          <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-4">
-            <div className="flex flex-wrap items-center gap-3">
-              <span className="flex items-center gap-2 bg-forest-base/60 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-primary-fixed">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-accent animate-pulse"></span>
-                WordPress-Style CMS Portal • Session 2026/2027
-              </span>
-              <span className="text-xs text-gray-300 flex items-center gap-1">
-                <span className="material-symbols-outlined text-[16px] text-primary-fixed">verified_user</span>
-                NMCN Node Ogun-OTA-041 Validated
-              </span>
+    <div className="min-h-screen bg-[#f0f0f1] font-sans antialiased text-[#3c434a]">
+      {/* ======================================================== */}
+      {/* 1. AUTHENTIC WORDPRESS TOP ADMIN BAR (#1d2327) */}
+      {/* ======================================================== */}
+      <header className="sticky top-0 z-50 bg-[#1d2327] text-[#f0f0f1] h-9 sm:h-10 px-3 sm:px-4 flex items-center justify-between text-xs border-b border-[#2c3338] shadow-sm select-none">
+        {/* Left Side: WP Icon, Site Name, Subdomains Jump & + New */}
+        <div className="flex items-center gap-3 sm:gap-4">
+          {/* WordPress Crest Icon */}
+          <Link
+            href="/admin"
+            className="flex items-center gap-1.5 hover:text-[#72aee6] transition-colors font-bold text-white"
+            title="CHEP College WordPress CMS Engine"
+          >
+            <div className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center font-serif text-[13px] font-black border border-white/20">
+              W
             </div>
+            <span className="hidden md:inline font-bold text-[#c3c4c7]">CHEP CMS 6.7</span>
+          </Link>
 
-            <div className="flex items-center gap-4 w-full lg:w-auto justify-end">
-              <div className="flex items-center gap-2 bg-white/10 pl-2 pr-3 py-1 rounded-full text-xs">
-                <img
-                  src="/images/chep/provost.png"
-                  alt="Provost"
-                  className="w-6 h-6 rounded-full object-cover bg-forest-medium"
-                />
-                <span className="font-semibold text-white hidden sm:inline">
-                  Stella O. Ayowole (Provost &amp; Super Admin)
-                </span>
-              </div>
+          {/* Site Link & Subdomain Dropdown */}
+          <div className="relative group">
+            <Link
+              href="/"
+              target="_blank"
+              className="flex items-center gap-1 hover:text-[#72aee6] transition-colors py-1 font-semibold text-white"
+            >
+              <span className="material-symbols-outlined text-[15px]">home</span>
+              <span className="hidden lg:inline">CHEP College of Nursing Sciences</span>
+              <span className="material-symbols-outlined text-[13px] text-[#8c8f94]">expand_more</span>
+            </Link>
+            <div className="absolute left-0 top-full hidden group-hover:block w-64 bg-[#2c3338] text-[#c3c4c7] shadow-xl py-1 rounded-b border border-[#3c434a] z-50">
+              <Link
+                href="/"
+                target="_blank"
+                className="block px-3 py-1.5 hover:bg-[#2271b1] hover:text-white transition-colors"
+              >
+                Visit Main College Site
+              </Link>
+              <div className="border-t border-[#3c434a] my-1"></div>
+              <span className="px-3 py-1 text-[10px] uppercase font-bold text-[#8c8f94] block">
+                Subdomain Gateways
+              </span>
+              <Link
+                href="/exams"
+                target="_blank"
+                className="flex items-center justify-between px-3 py-1 hover:bg-[#2271b1] hover:text-white transition-colors text-[11px]"
+              >
+                <span>CBT &amp; OSCE Studio</span>
+                <span className="font-mono text-[9px] bg-white/10 px-1 rounded">exams.chep</span>
+              </Link>
+              <Link
+                href="/library"
+                target="_blank"
+                className="flex items-center justify-between px-3 py-1 hover:bg-[#2271b1] hover:text-white transition-colors text-[11px]"
+              >
+                <span>Virtual Library (480+)</span>
+                <span className="font-mono text-[9px] bg-white/10 px-1 rounded">library.chep</span>
+              </Link>
+              <Link
+                href="/clinical-reflections"
+                target="_blank"
+                className="flex items-center justify-between px-3 py-1 hover:bg-[#2271b1] hover:text-white transition-colors text-[11px]"
+              >
+                <span>Reflective Forum</span>
+                <span className="font-mono text-[9px] bg-white/10 px-1 rounded">reflections.chep</span>
+              </Link>
+              <Link
+                href="/verify"
+                target="_blank"
+                className="flex items-center justify-between px-3 py-1 hover:bg-[#2271b1] hover:text-white transition-colors text-[11px]"
+              >
+                <span>Verify Credentials</span>
+                <span className="font-mono text-[9px] bg-white/10 px-1 rounded">verify.chep</span>
+              </Link>
+              <Link
+                href="/portal"
+                target="_blank"
+                className="flex items-center justify-between px-3 py-1 hover:bg-[#2271b1] hover:text-white transition-colors text-[11px]"
+              >
+                <span>Student / Staff Portal</span>
+                <span className="font-mono text-[9px] bg-white/10 px-1 rounded">portal.chep</span>
+              </Link>
             </div>
           </div>
-        </section>
 
-        {/* Main Dashboard Layout */}
-        <div className="max-w-7xl mx-auto w-full px-4 sm:px-8 py-8">
-          <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
-            {/* Left WordPress-Style Admin Sidebar */}
-            <aside className="xl:col-span-3 bg-white rounded-3xl shadow-xs border border-border-subtle p-5 space-y-6">
-              <div>
-                <span className="text-xs uppercase font-bold tracking-wider text-forest-medium block">
-                  Institutional CMS Suite
-                </span>
-                <h2 className="text-lg font-bold text-forest-dark">College Administrator</h2>
+          {/* Quick Action: + New Menu */}
+          <div className="relative group">
+            <button
+              type="button"
+              className="flex items-center gap-1 hover:text-[#72aee6] transition-colors py-1 text-white font-medium"
+            >
+              <span className="material-symbols-outlined text-[15px]">add</span>
+              <span>New</span>
+            </button>
+            <div className="absolute left-0 top-full hidden group-hover:block w-48 bg-[#2c3338] text-[#c3c4c7] shadow-xl py-1 rounded-b border border-[#3c434a] z-50">
+              <button
+                type="button"
+                onClick={handleOpenNewPost}
+                className="w-full text-left px-3 py-1.5 hover:bg-[#2271b1] hover:text-white transition-colors text-xs"
+              >
+                Post / Dispatch
+              </button>
+              <button
+                type="button"
+                onClick={() => setMediaModalOpen(true)}
+                className="w-full text-left px-3 py-1.5 hover:bg-[#2271b1] hover:text-white transition-colors text-xs"
+              >
+                Media Asset
+              </button>
+              <button
+                type="button"
+                onClick={() => setLibModalOpen(true)}
+                className="w-full text-left px-3 py-1.5 hover:bg-[#2271b1] hover:text-white transition-colors text-xs"
+              >
+                eLibrary Resource
+              </button>
+              <button
+                type="button"
+                onClick={() => setExamModalOpen(true)}
+                className="w-full text-left px-3 py-1.5 hover:bg-[#2271b1] hover:text-white transition-colors text-xs"
+              >
+                Exam Question
+              </button>
+              <button
+                type="button"
+                onClick={() => setUserModalOpen(true)}
+                className="w-full text-left px-3 py-1.5 hover:bg-[#2271b1] hover:text-white transition-colors text-xs"
+              >
+                User Account
+              </button>
+            </div>
+          </div>
+
+          {/* Purge Cache Quick Button */}
+          <button
+            type="button"
+            onClick={handlePurgeCache}
+            className="hidden sm:flex items-center gap-1 hover:text-[#72aee6] text-[#c3c4c7] transition-colors"
+            title="Purge Vercel and Cloudflare CDN Edge Cache"
+          >
+            <span className="material-symbols-outlined text-[14px]">cached</span>
+            <span>Purge Cache</span>
+          </button>
+        </div>
+
+        {/* Right Side: NMCN Node & Howdy Profile */}
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="hidden lg:flex items-center gap-1.5 text-[11px] text-[#4ab866] bg-black/30 px-2 py-0.5 rounded border border-green-800/40">
+            <span className="w-2 h-2 rounded-full bg-[#4ab866] animate-pulse"></span>
+            <span>NMCN Node Ogun-OTA-041: Active</span>
+          </div>
+
+          {/* Profile User Dropdown */}
+          <div className="relative group">
+            <button
+              type="button"
+              className="flex items-center gap-2 text-white hover:text-[#72aee6] transition-colors py-1"
+            >
+              <span className="hidden sm:inline text-xs text-[#c3c4c7]">
+                Howdy, <strong className="text-white">Provost Stella Ayowole</strong>
+              </span>
+              <img
+                src="/images/chep/provost.png"
+                alt="Provost Avatar"
+                className="w-6 h-6 rounded-full object-cover border border-white/30"
+              />
+            </button>
+            <div className="absolute right-0 top-full hidden group-hover:block w-56 bg-[#2c3338] text-[#c3c4c7] shadow-xl py-2 rounded-b border border-[#3c434a] z-50">
+              <div className="px-3 py-1.5 border-b border-[#3c434a]">
+                <p className="font-bold text-white text-xs">Prof. Stella O. Ayowole</p>
+                <p className="text-[11px] text-[#8c8f94]">Super Administrator</p>
               </div>
-
-              {/* Navigation Menu Tabs */}
-              <nav className="space-y-1.5 text-xs font-semibold">
-                <button
-                  type="button"
-                  onClick={() => setActiveTab("overview")}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-2xl transition-all ${
-                    activeTab === "overview"
-                      ? "bg-forest-base text-white shadow-xs font-bold"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  <span className="flex items-center gap-2.5">
-                    <span className="material-symbols-outlined text-[18px]">dashboard</span>
-                    Dashboard Overview
-                  </span>
-                  <span className="material-symbols-outlined text-[14px]">chevron_right</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setActiveTab("admissions")}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-2xl transition-all ${
-                    activeTab === "admissions"
-                      ? "bg-forest-base text-white shadow-xs font-bold"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  <span className="flex items-center gap-2.5">
-                    <span className="material-symbols-outlined text-[18px]">how_to_reg</span>
-                    Admissions &amp; Senate Ledger
-                  </span>
-                  <span className="bg-orange-100 text-orange-action px-2 py-0.5 rounded-full text-[10px] font-bold">
-                    {candidates.length}
-                  </span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setActiveTab("blog")}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-2xl transition-all ${
-                    activeTab === "blog"
-                      ? "bg-forest-base text-white shadow-xs font-bold"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  <span className="flex items-center gap-2.5">
-                    <span className="material-symbols-outlined text-[18px]">article</span>
-                    Blog &amp; News Posts
-                  </span>
-                  <span className="bg-emerald-100 text-emerald-accent px-2 py-0.5 rounded-full text-[10px] font-bold">
-                    {posts.length}
-                  </span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setActiveTab("media")}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-2xl transition-all ${
-                    activeTab === "media"
-                      ? "bg-forest-base text-white shadow-xs font-bold"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  <span className="flex items-center gap-2.5">
-                    <span className="material-symbols-outlined text-[18px]">photo_library</span>
-                    Photographs &amp; Media
-                  </span>
-                  <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full text-[10px] font-bold">
-                    {mediaItems.length}
-                  </span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setActiveTab("users")}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-2xl transition-all ${
-                    activeTab === "users"
-                      ? "bg-forest-base text-white shadow-xs font-bold"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  <span className="flex items-center gap-2.5">
-                    <span className="material-symbols-outlined text-[18px]">group</span>
-                    Staff &amp; Users Manager
-                  </span>
-                  <span className="bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full text-[10px] font-bold">
-                    {users.length}
-                  </span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setActiveTab("settings")}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-2xl transition-all ${
-                    activeTab === "settings"
-                      ? "bg-forest-base text-white shadow-xs font-bold"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  <span className="flex items-center gap-2.5">
-                    <span className="material-symbols-outlined text-[18px]">settings</span>
-                    Site Settings &amp; Fees
-                  </span>
-                  <span className="w-2 h-2 rounded-full bg-emerald-accent"></span>
-                </button>
-              </nav>
-
-              {/* Server & Status Note */}
-              <div className="bg-surface-tint p-4 rounded-2xl border border-emerald-100 space-y-1">
-                <span className="text-xs font-bold text-forest-dark flex items-center gap-1">
-                  <span className="material-symbols-outlined text-[16px] text-forest-base">cloud_done</span>
-                  Supabase Backend Live
-                </span>
-                <p className="text-[11px] text-text-muted leading-relaxed">
-                  Remote database sync active at hoqhcwrsjoglqhtjfeqa.supabase.co.
-                </p>
-              </div>
-            </aside>
-
-            {/* Main Content Viewport */}
-            <div className="xl:col-span-9 space-y-8">
-              {/* ========================================================= */}
-              {/* TAB 1: OVERVIEW */}
-              {/* ========================================================= */}
-              {activeTab === "overview" && (
-                <div className="space-y-8">
-                  {/* Stats Cards */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div className="bg-white p-5 rounded-2xl shadow-xs border border-border-subtle flex flex-col justify-between">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs uppercase font-bold text-text-muted">Applications</span>
-                        <span className="material-symbols-outlined text-orange-action text-[20px]">how_to_reg</span>
-                      </div>
-                      <div className="my-2">
-                        <span className="text-3xl font-extrabold text-gray-900">{candidates.length}</span>
-                        <span className="text-xs text-emerald-accent font-bold block mt-1">+24.6% vs 2024</span>
-                      </div>
-                      <span className="text-[11px] text-text-muted">Verified Remita RRR cleared</span>
-                    </div>
-
-                    <div className="bg-white p-5 rounded-2xl shadow-xs border border-border-subtle flex flex-col justify-between">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs uppercase font-bold text-text-muted">Blog Articles</span>
-                        <span className="material-symbols-outlined text-forest-base text-[20px]">article</span>
-                      </div>
-                      <div className="my-2">
-                        <span className="text-3xl font-extrabold text-forest-dark">{posts.length}</span>
-                        <span className="text-xs text-forest-medium font-bold block mt-1">Live on Website</span>
-                      </div>
-                      <span className="text-[11px] text-text-muted">Research &amp; announcements</span>
-                    </div>
-
-                    <div className="bg-white p-5 rounded-2xl shadow-xs border border-border-subtle flex flex-col justify-between">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs uppercase font-bold text-text-muted">Campus Photos</span>
-                        <span className="material-symbols-outlined text-blue-600 text-[20px]">photo_library</span>
-                      </div>
-                      <div className="my-2">
-                        <span className="text-3xl font-extrabold text-gray-900">{mediaItems.length}</span>
-                        <span className="text-xs text-emerald-accent font-bold block mt-1">Authentic Media</span>
-                      </div>
-                      <span className="text-[11px] text-text-muted">Laboratories, hostels, CBT</span>
-                    </div>
-
-                    <div className="bg-white p-5 rounded-2xl shadow-xs border border-border-subtle flex flex-col justify-between">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs uppercase font-bold text-text-muted">System Staff</span>
-                        <span className="material-symbols-outlined text-purple-600 text-[20px]">group</span>
-                      </div>
-                      <div className="my-2">
-                        <span className="text-3xl font-extrabold text-gray-900">{users.length}</span>
-                        <span className="text-xs text-purple-700 font-bold block mt-1">Active Accounts</span>
-                      </div>
-                      <span className="text-[11px] text-text-muted">Provost, Registrar, Lecturers</span>
-                    </div>
-                  </div>
-
-                  {/* Fast Action Shortcuts */}
-                  <div className="bg-white p-6 rounded-3xl shadow-xs border border-border-subtle">
-                    <h3 className="text-base font-bold text-forest-dark mb-4">WordPress CMS Quick Actions</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                      <button
-                        onClick={() => {
-                          setActiveTab("blog");
-                          handleOpenNewPost();
-                        }}
-                        className="p-4 rounded-2xl border border-gray-200 hover:border-forest-base hover:bg-forest-base/5 text-left transition-all flex flex-col justify-between group"
-                      >
-                        <div className="w-10 h-10 rounded-xl bg-orange-100 text-orange-action flex items-center justify-center mb-3">
-                          <span className="material-symbols-outlined text-[20px]">edit_note</span>
-                        </div>
-                        <span className="font-bold text-xs text-gray-900 group-hover:text-forest-dark block">
-                          Add New Blog Post
-                        </span>
-                        <span className="text-[11px] text-text-muted">Publish research or institutional memos</span>
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          setActiveTab("media");
-                          setMediaModalOpen(true);
-                        }}
-                        className="p-4 rounded-2xl border border-gray-200 hover:border-forest-base hover:bg-forest-base/5 text-left transition-all flex flex-col justify-between group"
-                      >
-                        <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center mb-3">
-                          <span className="material-symbols-outlined text-[20px]">add_photo_alternate</span>
-                        </div>
-                        <span className="font-bold text-xs text-gray-900 group-hover:text-forest-dark block">
-                          Add Photo to Gallery
-                        </span>
-                        <span className="text-[11px] text-text-muted">Upload laboratory or event pictures</span>
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          setActiveTab("users");
-                          setUserModalOpen(true);
-                        }}
-                        className="p-4 rounded-2xl border border-gray-200 hover:border-forest-base hover:bg-forest-base/5 text-left transition-all flex flex-col justify-between group"
-                      >
-                        <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center mb-3">
-                          <span className="material-symbols-outlined text-[20px]">person_add</span>
-                        </div>
-                        <span className="font-bold text-xs text-gray-900 group-hover:text-forest-dark block">
-                          Create Staff User
-                        </span>
-                        <span className="text-[11px] text-text-muted">Assign role to academic lecturers</span>
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          setActiveTab("admissions");
-                        }}
-                        className="p-4 rounded-2xl border border-gray-200 hover:border-forest-base hover:bg-forest-base/5 text-left transition-all flex flex-col justify-between group"
-                      >
-                        <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-accent flex items-center justify-center mb-3">
-                          <span className="material-symbols-outlined text-[20px]">file_download</span>
-                        </div>
-                        <span className="font-bold text-xs text-gray-900 group-hover:text-forest-dark block">
-                          Export NMCN CSV
-                        </span>
-                        <span className="text-[11px] text-text-muted">Download official Council ledger</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* ========================================================= */}
-              {/* TAB 2: ADMISSIONS & SENATE LEDGER */}
-              {/* ========================================================= */}
-              {activeTab === "admissions" && (
-                <div className="bg-white rounded-3xl shadow-xs border border-border-subtle overflow-hidden">
-                  <div className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-gray-100">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h3 className="text-lg font-bold text-forest-dark">2026/2027 Admissions Queue</h3>
-                        <span className="bg-orange-100 text-orange-action text-xs font-bold px-2 py-0.5 rounded-full">
-                          {filteredCandidates.length} Active
-                        </span>
-                      </div>
-                      <p className="text-xs text-text-muted">Candidates with verified CBT scores and Remita clearance.</p>
-                    </div>
-
-                    <div className="flex flex-wrap items-center gap-2">
-                      <select
-                        value={filterProgram}
-                        onChange={(e) => setFilterProgram(e.target.value)}
-                        className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 bg-surface-canvas focus:outline-hidden"
-                      >
-                        <option value="all">All Programmes</option>
-                        <option value="basic">Basic Nursing</option>
-                        <option value="midwifery">Post-Basic Midwifery</option>
-                        <option value="public">Public Health Nursing</option>
-                      </select>
-                      <select
-                        value={filterStatus}
-                        onChange={(e) => setFilterStatus(e.target.value)}
-                        className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 bg-surface-canvas focus:outline-hidden"
-                      >
-                        <option value="all">All Statuses</option>
-                        <option value="pending">Pending</option>
-                        <option value="admitted">Admitted</option>
-                      </select>
-                      <button
-                        onClick={exportNMCNLedgerCSV}
-                        className="bg-forest-base text-white text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-forest-medium transition-colors shadow-xs"
-                      >
-                        <span className="material-symbols-outlined text-[16px]">file_download</span>
-                        Export NMCN CSV ({filteredCandidates.length})
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs">
-                      <thead className="bg-surface-canvas text-gray-600 uppercase tracking-wider font-bold">
-                        <tr>
-                          <th className="py-3 px-4">Candidate &amp; ID</th>
-                          <th className="py-3 px-4">Programme</th>
-                          <th className="py-3 px-4">O&apos;Level Status</th>
-                          <th className="py-3 px-4">Remita Status</th>
-                          <th className="py-3 px-4">Status</th>
-                          <th className="py-3 px-4 text-right">Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-100">
-                        {filteredCandidates.map((cand) => (
-                          <tr key={cand.id} className="hover:bg-gray-50/60 transition-colors">
-                            <td className="py-3.5 px-4">
-                              <div className="flex items-center gap-2.5">
-                                <div className="w-8 h-8 rounded-full bg-forest-base/10 text-forest-base font-bold flex items-center justify-center text-xs">
-                                  {cand.initials}
-                                </div>
-                                <div>
-                                  <span className="font-bold text-gray-900 block">{cand.name}</span>
-                                  <span className="text-[11px] text-text-muted">{cand.id}</span>
-                                </div>
-                              </div>
-                            </td>
-                            <td className="py-3.5 px-4">
-                              <span className="font-semibold text-forest-dark block">{cand.program}</span>
-                              <span className="text-[11px] text-text-muted">{cand.duration}</span>
-                            </td>
-                            <td className="py-3.5 px-4">
-                              <span
-                                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold ${
-                                  cand.olevelStatus === "verified"
-                                    ? "bg-emerald-light text-emerald-accent"
-                                    : "bg-amber-100 text-amber-vibrant"
-                                }`}
-                              >
-                                <span className="material-symbols-outlined text-[14px]">
-                                  {cand.olevelStatus === "verified" ? "check" : "pending"}
-                                </span>
-                                {cand.olevel}
-                              </span>
-                            </td>
-                            <td className="py-3.5 px-4">
-                              <span className="font-mono text-[11px] text-gray-800 block">{cand.rrr}</span>
-                              <span className="text-emerald-accent font-semibold text-[11px]">{cand.fee}</span>
-                            </td>
-                            <td className="py-3.5 px-4">
-                              <span
-                                className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                                  cand.status === "admitted"
-                                    ? "bg-emerald-500 text-white"
-                                    : "bg-gray-100 text-gray-700"
-                                }`}
-                              >
-                                {cand.status}
-                              </span>
-                            </td>
-                            <td className="py-3.5 px-4 text-right">
-                              <div className="flex items-center justify-end gap-1.5">
-                                <button
-                                  onClick={() => handleStatusChange(cand.id, cand.status === "admitted" ? "pending" : "admitted")}
-                                  className={`px-2.5 py-1 rounded text-[11px] font-bold transition-colors ${
-                                    cand.status === "admitted"
-                                      ? "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                                      : "bg-forest-base hover:bg-forest-medium text-white shadow-xs"
-                                  }`}
-                                >
-                                  {cand.status === "admitted" ? "Revoke" : "Admit"}
-                                </button>
-                                <button
-                                  onClick={() => setSelectedDossier(cand)}
-                                  className="bg-primary-fixed/20 hover:bg-primary-fixed/40 text-forest-dark px-2.5 py-1 rounded text-[11px] font-bold transition-colors flex items-center gap-1"
-                                >
-                                  <span className="material-symbols-outlined text-[14px]">badge</span>
-                                  Dossier
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
-
-              {/* ========================================================= */}
-              {/* TAB 3: BLOG & NEWS POSTS (FULL CRUD) */}
-              {/* ========================================================= */}
-              {activeTab === "blog" && (
-                <div className="bg-white rounded-3xl shadow-xs border border-border-subtle overflow-hidden">
-                  <div className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-gray-100">
-                    <div>
-                      <h3 className="text-lg font-bold text-forest-dark">WordPress Blog &amp; News Manager</h3>
-                      <p className="text-xs text-text-muted">Create, edit, delete, and publish articles live on the website.</p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={handleOpenNewPost}
-                      className="bg-orange-action hover:bg-orange-700 text-white font-bold text-xs px-4 py-2 rounded-xl shadow-xs transition-colors flex items-center gap-1.5"
-                    >
-                      <span className="material-symbols-outlined text-[16px]">add</span>
-                      Add New Post
-                    </button>
-                  </div>
-
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs">
-                      <thead className="bg-surface-canvas text-gray-600 uppercase tracking-wider font-bold">
-                        <tr>
-                          <th className="py-3 px-4">Post Title &amp; Category</th>
-                          <th className="py-3 px-4">Author</th>
-                          <th className="py-3 px-4">Image</th>
-                          <th className="py-3 px-4">Status</th>
-                          <th className="py-3 px-4 text-right">Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-100">
-                        {posts.map((post) => (
-                          <tr key={post.id} className="hover:bg-gray-50/60 transition-colors">
-                            <td className="py-3.5 px-4 max-w-xs">
-                              <span className="font-bold text-gray-900 block truncate">{post.title}</span>
-                              <span className="inline-block mt-0.5 px-2 py-0.5 rounded-full bg-forest-base/10 text-forest-base font-semibold text-[10px]">
-                                {post.category}
-                              </span>
-                            </td>
-                            <td className="py-3.5 px-4">
-                              <span className="text-gray-700 font-medium">{post.author || "Registry"}</span>
-                            </td>
-                            <td className="py-3.5 px-4">
-                              <div className="w-12 h-8 rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
-                                <img
-                                  src={post.image_url || "/images/chep/safety_exercise.png"}
-                                  alt="Thumbnail"
-                                  className="w-full h-full object-cover"
-                                />
-                              </div>
-                            </td>
-                            <td className="py-3.5 px-4">
-                              <span
-                                className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                                  post.published ? "bg-emerald-100 text-emerald-accent" : "bg-gray-100 text-gray-600"
-                                }`}
-                              >
-                                {post.published ? "Published" : "Draft"}
-                              </span>
-                            </td>
-                            <td className="py-3.5 px-4 text-right">
-                              <div className="flex items-center justify-end gap-1.5">
-                                <button
-                                  type="button"
-                                  onClick={() => handleOpenEditPost(post)}
-                                  className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-2.5 py-1 rounded text-[11px] font-bold transition-colors"
-                                >
-                                  Edit
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => handleDeletePost(post.id, post.title)}
-                                  className="bg-red-50 hover:bg-red-100 text-red-600 px-2.5 py-1 rounded text-[11px] font-bold transition-colors"
-                                >
-                                  Delete
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
-
-              {/* ========================================================= */}
-              {/* TAB 4: PHOTOGRAPHS & MEDIA GALLERY */}
-              {/* ========================================================= */}
-              {activeTab === "media" && (
-                <div className="bg-white rounded-3xl shadow-xs border border-border-subtle overflow-hidden p-6 space-y-6">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-gray-100 pb-4">
-                    <div>
-                      <h3 className="text-lg font-bold text-forest-dark">WordPress Media Library</h3>
-                      <p className="text-xs text-text-muted">Manage campus photographs, laboratory pictures, and event galleries.</p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setMediaModalOpen(true)}
-                      className="bg-forest-base hover:bg-forest-medium text-white font-bold text-xs px-4 py-2 rounded-xl shadow-xs transition-colors flex items-center gap-1.5"
-                    >
-                      <span className="material-symbols-outlined text-[16px]">add_photo_alternate</span>
-                      Add Photograph
-                    </button>
-                  </div>
-
-                  {/* Photo Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {mediaItems.map((item) => (
-                      <div
-                        key={item.id}
-                        className="group relative bg-surface-canvas rounded-2xl overflow-hidden border border-border-subtle shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between"
-                      >
-                        <div className="relative h-44 w-full bg-gray-100 overflow-hidden cursor-pointer" onClick={() => setSelectedPhotoPreview(item)}>
-                          <img
-                            src={item.image_url}
-                            alt={item.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
-                          <span className="absolute top-2 left-2 bg-black/60 text-white text-[10px] uppercase font-bold px-2 py-0.5 rounded-full backdrop-blur-xs">
-                            {item.category}
-                          </span>
-                        </div>
-                        <div className="p-4 space-y-2">
-                          <h4 className="font-bold text-xs text-gray-900 line-clamp-1">{item.title}</h4>
-                          <p className="text-[11px] text-text-muted line-clamp-2">{item.caption}</p>
-                          <div className="pt-2 border-t border-gray-100 flex items-center justify-between">
-                            <span className="text-[10px] text-gray-500 font-mono">By {item.uploaded_by || "Admin"}</span>
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteMedia(item.id, item.title)}
-                              className="text-red-500 hover:text-red-700 text-xs font-bold"
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* ========================================================= */}
-              {/* TAB 5: STAFF & USERS MANAGER */}
-              {/* ========================================================= */}
-              {activeTab === "users" && (
-                <div className="bg-white rounded-3xl shadow-xs border border-border-subtle overflow-hidden">
-                  <div className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-gray-100">
-                    <div>
-                      <h3 className="text-lg font-bold text-forest-dark">Staff Accounts &amp; User Privileges</h3>
-                      <p className="text-xs text-text-muted">Create administrative accounts, assign faculty roles, and manage access.</p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setUserModalOpen(true)}
-                      className="bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs px-4 py-2 rounded-xl shadow-xs transition-colors flex items-center gap-1.5"
-                    >
-                      <span className="material-symbols-outlined text-[16px]">person_add</span>
-                      Create Staff User
-                    </button>
-                  </div>
-
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs">
-                      <thead className="bg-surface-canvas text-gray-600 uppercase tracking-wider font-bold">
-                        <tr>
-                          <th className="py-3 px-4">Staff Member &amp; Email</th>
-                          <th className="py-3 px-4">Role</th>
-                          <th className="py-3 px-4">Department</th>
-                          <th className="py-3 px-4">Status</th>
-                          <th className="py-3 px-4 text-right">Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-100">
-                        {users.map((u) => (
-                          <tr key={u.id} className="hover:bg-gray-50/60 transition-colors">
-                            <td className="py-3.5 px-4">
-                              <div className="flex items-center gap-2.5">
-                                <div className="w-8 h-8 rounded-full overflow-hidden bg-purple-100 text-purple-700 font-bold flex items-center justify-center text-xs">
-                                  {u.avatar_url ? (
-                                    <img src={u.avatar_url} alt={u.full_name} className="w-full h-full object-cover" />
-                                  ) : (
-                                    u.full_name.slice(0, 2).toUpperCase()
-                                  )}
-                                </div>
-                                <div>
-                                  <span className="font-bold text-gray-900 block">{u.full_name}</span>
-                                  <span className="text-[11px] text-text-muted font-mono">{u.email}</span>
-                                </div>
-                              </div>
-                            </td>
-                            <td className="py-3.5 px-4">
-                              <span className="font-semibold text-gray-800">{u.role}</span>
-                            </td>
-                            <td className="py-3.5 px-4">
-                              <span className="text-gray-600">{u.department}</span>
-                            </td>
-                            <td className="py-3.5 px-4">
-                              <span
-                                className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                                  u.status === "active" ? "bg-emerald-100 text-emerald-accent" : "bg-red-100 text-red-600"
-                                }`}
-                              >
-                                {u.status}
-                              </span>
-                            </td>
-                            <td className="py-3.5 px-4 text-right">
-                              <div className="flex items-center justify-end gap-1.5">
-                                <button
-                                  type="button"
-                                  onClick={() => handleToggleUserStatus(u)}
-                                  className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-2.5 py-1 rounded text-[11px] font-bold transition-colors"
-                                >
-                                  {u.status === "active" ? "Suspend" : "Activate"}
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => handleDeleteUser(u.id, u.full_name)}
-                                  className="bg-red-50 hover:bg-red-100 text-red-600 px-2.5 py-1 rounded text-[11px] font-bold transition-colors"
-                                >
-                                  Delete
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
-
-              {/* ========================================================= */}
-              {/* TAB 6: SITE SETTINGS & FEES */}
-              {/* ========================================================= */}
-              {activeTab === "settings" && (
-                <div className="bg-white rounded-3xl shadow-xs border border-border-subtle p-6 space-y-6">
-                  <div className="border-b border-gray-100 pb-4 flex items-center justify-between">
-                    <div>
-                      <h3 className="text-lg font-bold text-forest-dark">Site Settings &amp; Global Announcements</h3>
-                      <p className="text-xs text-text-muted">Update institutional banners, application fees, and contact lines across the website.</p>
-                    </div>
-                    {settingsSavedToast && (
-                      <span className="bg-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow animate-in fade-in">
-                        ✓ Changes Saved Live!
-                      </span>
-                    )}
-                  </div>
-
-                  <form onSubmit={handleSaveSettings} className="space-y-6">
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-gray-800">Global Website Ticker Announcement</label>
-                      <textarea
-                        rows={2}
-                        value={settingsNotice}
-                        onChange={(e) => setSettingsNotice(e.target.value)}
-                        className="w-full p-3 rounded-xl border border-gray-200 text-xs focus:outline-hidden"
-                      />
-                      <p className="text-[11px] text-text-muted">Floats at the top ticker on the Homepage and Portal header.</p>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <label className="text-xs font-bold text-gray-800">Basic Nursing Application Fee (₦)</label>
-                        <input
-                          type="text"
-                          value={settingsBasicFee}
-                          onChange={(e) => setSettingsBasicFee(e.target.value)}
-                          className="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs font-mono font-bold focus:outline-hidden"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-xs font-bold text-gray-800">Post-Basic Midwifery Application Fee (₦)</label>
-                        <input
-                          type="text"
-                          value={settingsMidwiferyFee}
-                          onChange={(e) => setSettingsMidwiferyFee(e.target.value)}
-                          className="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs font-mono font-bold focus:outline-hidden"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <label className="text-xs font-bold text-gray-800">Registry Support Phone Hotlines</label>
-                        <input
-                          type="text"
-                          value={settingsPhone}
-                          onChange={(e) => setSettingsPhone(e.target.value)}
-                          className="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs focus:outline-hidden"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-xs font-bold text-gray-800">Institutional Enquiry Email</label>
-                        <input
-                          type="text"
-                          value={settingsEmail}
-                          onChange={(e) => setSettingsEmail(e.target.value)}
-                          className="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs focus:outline-hidden"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex justify-end pt-4 border-t border-gray-100">
-                      <button
-                        type="submit"
-                        className="bg-forest-base hover:bg-forest-medium text-white font-bold text-xs px-6 py-2.5 rounded-xl shadow-xs transition-colors flex items-center gap-2"
-                      >
-                        <span className="material-symbols-outlined text-[16px]">save</span>
-                        Save &amp; Sync Site Settings
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              )}
+              <button
+                type="button"
+                onClick={() => setActiveTab("users")}
+                className="w-full text-left px-3 py-1.5 hover:bg-[#2271b1] hover:text-white transition-colors text-xs"
+              >
+                Edit Profile
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab("settings")}
+                className="w-full text-left px-3 py-1.5 hover:bg-[#2271b1] hover:text-white transition-colors text-xs"
+              >
+                Institutional Settings
+              </button>
+              <div className="border-t border-[#3c434a] my-1"></div>
+              <Link
+                href="/"
+                className="block px-3 py-1.5 text-rose-400 hover:bg-rose-900/40 hover:text-white transition-colors text-xs"
+              >
+                Log Out
+              </Link>
             </div>
           </div>
         </div>
+      </header>
 
-        {/* ========================================================= */}
-        {/* MODAL: POST CREATE / EDIT */}
-        {/* ========================================================= */}
-        {postModalOpen && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-3xl max-w-xl w-full shadow-2xl border border-gray-100 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-              <div className="bg-forest-dark text-white p-5 flex items-center justify-between">
-                <h3 className="font-bold text-base">{editingPost ? "Edit Blog Post" : "Create New Blog Post"}</h3>
-                <button
-                  type="button"
-                  onClick={() => setPostModalOpen(false)}
-                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white"
-                >
-                  <span className="material-symbols-outlined text-[18px]">close</span>
-                </button>
-              </div>
+      {/* Reactive Toast Notification */}
+      {toastMessage && (
+        <div className="fixed bottom-5 right-5 z-50 bg-[#1d2327] text-white px-4 py-2.5 rounded-lg shadow-2xl border-l-4 border-[#2271b1] flex items-center gap-2.5 text-xs animate-slideUp">
+          <span className="material-symbols-outlined text-[18px] text-[#72aee6]">info</span>
+          <span>{toastMessage}</span>
+        </div>
+      )}
 
-              <form onSubmit={handleSavePost} className="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-700">Article Title</label>
-                  <input
-                    type="text"
-                    required
-                    value={postTitle}
-                    onChange={(e) => setPostTitle(e.target.value)}
-                    placeholder="Enter article headline..."
-                    className="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs focus:outline-hidden"
-                  />
+      {/* ======================================================== */}
+      {/* 2. MAIN WORDPRESS WORKSPACE (SIDEBAR + CONTENT CANVAS) */}
+      {/* ======================================================== */}
+      <div className="flex min-h-[calc(100vh-2.5rem)]">
+        {/* WordPress Collapsible Left Sidebar */}
+        <aside
+          className={`bg-[#1d2327] text-[#c3c4c7] shrink-0 border-r border-[#2c3338] transition-all duration-200 select-none ${
+            sidebarCollapsed ? "w-14" : "w-56"
+          }`}
+        >
+          <div className="py-2">
+            {/* Nav Menu Items */}
+            <nav className="space-y-0.5 text-xs font-medium">
+              {/* Dashboard */}
+              <button
+                type="button"
+                onClick={() => setActiveTab("overview")}
+                className={`w-full flex items-center justify-between px-3.5 py-2 transition-colors ${
+                  activeTab === "overview"
+                    ? "bg-[#2271b1] text-white font-bold"
+                    : "hover:bg-[#13171a] hover:text-[#72aee6]"
+                }`}
+                title="Dashboard Overview"
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className="material-symbols-outlined text-[18px]">dashboard</span>
+                  {!sidebarCollapsed && <span>Dashboard</span>}
                 </div>
+                {!sidebarCollapsed && (
+                  <span className="text-[10px] bg-white/20 text-white font-bold px-1.5 py-0.2 rounded-full">
+                    2
+                  </span>
+                )}
+              </button>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-gray-700">Category Tag</label>
-                    <select
-                      value={postCategory}
-                      onChange={(e) => setPostCategory(e.target.value)}
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs focus:outline-hidden"
-                    >
-                      <option>Admissions 2026/2027</option>
-                      <option>Community Health</option>
-                      <option>Total Care</option>
-                      <option>Geriatric Care</option>
-                      <option>Maternal &amp; Child Health</option>
-                      <option>Academic Foundation</option>
-                      <option>Clinical Rotations</option>
-                    </select>
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-gray-700">Author Name</label>
-                    <input
-                      type="text"
-                      value={postAuthor}
-                      onChange={(e) => setPostAuthor(e.target.value)}
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs focus:outline-hidden"
-                    />
-                  </div>
+              {/* Posts / Dispatches */}
+              <button
+                type="button"
+                onClick={() => setActiveTab("posts")}
+                className={`w-full flex items-center justify-between px-3.5 py-2 transition-colors ${
+                  activeTab === "posts"
+                    ? "bg-[#2271b1] text-white font-bold"
+                    : "hover:bg-[#13171a] hover:text-[#72aee6]"
+                }`}
+                title="Posts & Dispatches"
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className="material-symbols-outlined text-[18px]">article</span>
+                  {!sidebarCollapsed && <span>Posts / News</span>}
                 </div>
+                {!sidebarCollapsed && (
+                  <span className="text-[10px] bg-[#d63638] text-white font-bold px-1.5 py-0.2 rounded-full">
+                    {posts.length}
+                  </span>
+                )}
+              </button>
 
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-700">Featured Image Path / URL</label>
-                  <input
-                    type="text"
-                    value={postImage}
-                    onChange={(e) => setPostImage(e.target.value)}
-                    className="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs font-mono focus:outline-hidden"
-                  />
-                  <div className="flex flex-wrap gap-2 pt-1 text-[11px]">
-                    <span className="text-gray-500">Quick select:</span>
-                    <button
-                      type="button"
-                      onClick={() => setPostImage("/images/chep/safety_exercise.png")}
-                      className="text-forest-base underline"
-                    >
-                      safety_exercise
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setPostImage("/images/chep/blog_community_health.jpg")}
-                      className="text-forest-base underline"
-                    >
-                      community_health
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setPostImage("/images/chep/blog_total_care.jpg")}
-                      className="text-forest-base underline"
-                    >
-                      total_care
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setPostImage("/images/chep/blog_geriatric.jpg")}
-                      className="text-forest-base underline"
-                    >
-                      geriatric
-                    </button>
-                  </div>
+              {/* Media Library */}
+              <button
+                type="button"
+                onClick={() => setActiveTab("media")}
+                className={`w-full flex items-center justify-between px-3.5 py-2 transition-colors ${
+                  activeTab === "media"
+                    ? "bg-[#2271b1] text-white font-bold"
+                    : "hover:bg-[#13171a] hover:text-[#72aee6]"
+                }`}
+                title="Media Library"
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className="material-symbols-outlined text-[18px]">photo_library</span>
+                  {!sidebarCollapsed && <span>Media Library</span>}
                 </div>
+                {!sidebarCollapsed && (
+                  <span className="text-[10px] text-[#8c8f94]">{mediaItems.length}</span>
+                )}
+              </button>
 
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-700">Short Summary</label>
-                  <textarea
-                    rows={2}
-                    value={postSummary}
-                    onChange={(e) => setPostSummary(e.target.value)}
-                    placeholder="Brief synopsis for feed cards..."
-                    className="w-full p-3 rounded-xl border border-gray-200 text-xs focus:outline-hidden"
-                  />
+              {/* Admissions & Senate */}
+              <button
+                type="button"
+                onClick={() => setActiveTab("admissions")}
+                className={`w-full flex items-center justify-between px-3.5 py-2 transition-colors ${
+                  activeTab === "admissions"
+                    ? "bg-[#2271b1] text-white font-bold"
+                    : "hover:bg-[#13171a] hover:text-[#72aee6]"
+                }`}
+                title="Admissions & Senate Roster"
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className="material-symbols-outlined text-[18px]">school</span>
+                  {!sidebarCollapsed && <span>Admissions Dossier</span>}
                 </div>
+                {!sidebarCollapsed && (
+                  <span className="text-[10px] bg-emerald-700 text-white font-bold px-1.5 py-0.2 rounded-full">
+                    {candidates.length}
+                  </span>
+                )}
+              </button>
 
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-700">Full Content Body</label>
-                  <textarea
-                    rows={4}
-                    value={postContent}
-                    onChange={(e) => setPostContent(e.target.value)}
-                    placeholder="Write article paragraphs..."
-                    className="w-full p-3 rounded-xl border border-gray-200 text-xs focus:outline-hidden"
-                  />
+              {/* eLibrary Holdings */}
+              <button
+                type="button"
+                onClick={() => setActiveTab("library")}
+                className={`w-full flex items-center justify-between px-3.5 py-2 transition-colors ${
+                  activeTab === "library"
+                    ? "bg-[#2271b1] text-white font-bold"
+                    : "hover:bg-[#13171a] hover:text-[#72aee6]"
+                }`}
+                title="eLibrary & Journal Hub"
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className="material-symbols-outlined text-[18px]">local_library</span>
+                  {!sidebarCollapsed && <span>eLibrary Holdings</span>}
                 </div>
+                {!sidebarCollapsed && (
+                  <span className="text-[10px] text-emerald-400 font-mono">480+</span>
+                )}
+              </button>
 
-                <div className="flex items-center gap-2 pt-2">
-                  <input
-                    type="checkbox"
-                    id="publishedToggle"
-                    checked={postPublished}
-                    onChange={(e) => setPostPublished(e.target.checked)}
-                    className="rounded text-forest-base"
-                  />
-                  <label htmlFor="publishedToggle" className="text-xs font-bold text-gray-700">
-                    Publish immediately live on site
-                  </label>
+              {/* Exams & Question Bank */}
+              <button
+                type="button"
+                onClick={() => setActiveTab("exams")}
+                className={`w-full flex items-center justify-between px-3.5 py-2 transition-colors ${
+                  activeTab === "exams"
+                    ? "bg-[#2271b1] text-white font-bold"
+                    : "hover:bg-[#13171a] hover:text-[#72aee6]"
+                }`}
+                title="Exams & Question Bank"
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className="material-symbols-outlined text-[18px]">quiz</span>
+                  {!sidebarCollapsed && <span>Exams Bank</span>}
                 </div>
+                {!sidebarCollapsed && (
+                  <span className="text-[10px] text-orange-300 font-mono">314</span>
+                )}
+              </button>
 
-                <div className="flex justify-end gap-2 pt-4 border-t border-gray-100">
-                  <button
-                    type="button"
-                    onClick={() => setPostModalOpen(false)}
-                    className="px-4 py-2 rounded-xl bg-gray-100 text-gray-700 text-xs font-bold"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-5 py-2 rounded-xl bg-orange-action text-white text-xs font-bold shadow-xs hover:bg-orange-700 transition-colors"
-                  >
-                    Save &amp; Publish Post
-                  </button>
+              {/* Reflective Forum Moderation */}
+              <button
+                type="button"
+                onClick={() => setActiveTab("reflections")}
+                className={`w-full flex items-center justify-between px-3.5 py-2 transition-colors ${
+                  activeTab === "reflections"
+                    ? "bg-[#2271b1] text-white font-bold"
+                    : "hover:bg-[#13171a] hover:text-[#72aee6]"
+                }`}
+                title="Reflective Forum Moderation"
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className="material-symbols-outlined text-[18px]">forum</span>
+                  {!sidebarCollapsed && <span>Clinical Reflections</span>}
                 </div>
-              </form>
+                {!sidebarCollapsed && (
+                  <span className="text-[10px] bg-blue-600/60 text-white font-mono px-1 rounded">
+                    PHI
+                  </span>
+                )}
+              </button>
+
+              {/* Users & Roles */}
+              <button
+                type="button"
+                onClick={() => setActiveTab("users")}
+                className={`w-full flex items-center justify-between px-3.5 py-2 transition-colors ${
+                  activeTab === "users"
+                    ? "bg-[#2271b1] text-white font-bold"
+                    : "hover:bg-[#13171a] hover:text-[#72aee6]"
+                }`}
+                title="Users & Roles"
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className="material-symbols-outlined text-[18px]">group</span>
+                  {!sidebarCollapsed && <span>Users &amp; Roles</span>}
+                </div>
+                {!sidebarCollapsed && (
+                  <span className="text-[10px] text-[#8c8f94]">{users.length}</span>
+                )}
+              </button>
+
+              {/* Tools & Diagnostics */}
+              <button
+                type="button"
+                onClick={() => setActiveTab("tools")}
+                className={`w-full flex items-center justify-between px-3.5 py-2 transition-colors ${
+                  activeTab === "tools"
+                    ? "bg-[#2271b1] text-white font-bold"
+                    : "hover:bg-[#13171a] hover:text-[#72aee6]"
+                }`}
+                title="Tools & Diagnostics"
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className="material-symbols-outlined text-[18px]">build</span>
+                  {!sidebarCollapsed && <span>Tools &amp; Audit</span>}
+                </div>
+              </button>
+
+              {/* Settings */}
+              <button
+                type="button"
+                onClick={() => setActiveTab("settings")}
+                className={`w-full flex items-center justify-between px-3.5 py-2 transition-colors ${
+                  activeTab === "settings"
+                    ? "bg-[#2271b1] text-white font-bold"
+                    : "hover:bg-[#13171a] hover:text-[#72aee6]"
+                }`}
+                title="Settings & Subdomains"
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className="material-symbols-outlined text-[18px]">settings</span>
+                  {!sidebarCollapsed && <span>Settings</span>}
+                </div>
+              </button>
+            </nav>
+
+            {/* Collapse / Expand Toggle Button */}
+            <div className="pt-6 px-3">
+              <button
+                type="button"
+                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                className="w-full flex items-center gap-2 text-xs text-[#8c8f94] hover:text-white py-1.5 transition-colors"
+                title={sidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+              >
+                <span className="material-symbols-outlined text-[18px]">
+                  {sidebarCollapsed ? "chevron_right" : "chevron_left"}
+                </span>
+                {!sidebarCollapsed && <span>Collapse menu</span>}
+              </button>
             </div>
           </div>
-        )}
+        </aside>
 
-        {/* ========================================================= */}
-        {/* MODAL: ADD PHOTOGRAPH TO GALLERY */}
-        {/* ========================================================= */}
-        {mediaModalOpen && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-gray-100 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-              <div className="bg-forest-dark text-white p-5 flex items-center justify-between">
-                <h3 className="font-bold text-base">Add Photograph to Gallery</h3>
-                <button
-                  type="button"
-                  onClick={() => setMediaModalOpen(false)}
-                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white"
-                >
-                  <span className="material-symbols-outlined text-[18px]">close</span>
-                </button>
-              </div>
-
-              <form onSubmit={handleSaveMedia} className="p-6 space-y-4">
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-700">Photograph Title</label>
-                  <input
-                    type="text"
-                    required
-                    value={mediaTitle}
-                    onChange={(e) => setMediaTitle(e.target.value)}
-                    placeholder="e.g. Clinical Simulation Ward Station 02..."
-                    className="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs focus:outline-hidden"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-700">Category</label>
-                  <select
-                    value={mediaCategory}
-                    onChange={(e) => setMediaCategory(e.target.value)}
-                    className="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs focus:outline-hidden"
-                  >
-                    <option value="campus">Campus Architecture</option>
-                    <option value="simulation">Clinical Simulation Lab</option>
-                    <option value="ict">ICT Digital Center</option>
-                    <option value="matriculation">Matriculation &amp; Events</option>
-                    <option value="hostel">Students&apos; Hostel</option>
-                    <option value="outreach">Community Outreach</option>
-                    <option value="faculty">Academic Board</option>
-                  </select>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-700">Image Asset Path / URL</label>
-                  <input
-                    type="text"
-                    required
-                    value={mediaUrl}
-                    onChange={(e) => setMediaUrl(e.target.value)}
-                    className="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs font-mono focus:outline-hidden"
-                  />
-                  <div className="flex flex-wrap gap-2 pt-1 text-[11px]">
-                    <span className="text-gray-500">Pick:</span>
-                    <button type="button" onClick={() => setMediaUrl("/images/chep/building.png")} className="text-forest-base underline">building</button>
-                    <button type="button" onClick={() => setMediaUrl("/images/chep/laboratory.jpg")} className="text-forest-base underline">laboratory</button>
-                    <button type="button" onClick={() => setMediaUrl("/images/chep/ict_center.jpg")} className="text-forest-base underline">ict_center</button>
-                    <button type="button" onClick={() => setMediaUrl("/images/chep/dormitory.jpg")} className="text-forest-base underline">dormitory</button>
-                    <button type="button" onClick={() => setMediaUrl("/images/chep/campus_event_chep6.jpeg")} className="text-forest-base underline">event6</button>
-                    <button type="button" onClick={() => setMediaUrl("/images/chep/campus_event_chep14.jpeg")} className="text-forest-base underline">event14</button>
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-700">Caption / Description</label>
-                  <textarea
-                    rows={2}
-                    value={mediaCaption}
-                    onChange={(e) => setMediaCaption(e.target.value)}
-                    placeholder="Short description of the facility or occasion..."
-                    className="w-full p-3 rounded-xl border border-gray-200 text-xs focus:outline-hidden"
-                  />
-                </div>
-
-                <div className="flex justify-end gap-2 pt-4 border-t border-gray-100">
-                  <button
-                    type="button"
-                    onClick={() => setMediaModalOpen(false)}
-                    className="px-4 py-2 rounded-xl bg-gray-100 text-gray-700 text-xs font-bold"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-5 py-2 rounded-xl bg-forest-base text-white text-xs font-bold shadow-xs hover:bg-forest-medium transition-colors"
-                  >
-                    Add to Gallery
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
-
-        {/* ========================================================= */}
-        {/* MODAL: CREATE USER */}
-        {/* ========================================================= */}
-        {userModalOpen && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-gray-100 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-              <div className="bg-forest-dark text-white p-5 flex items-center justify-between">
-                <h3 className="font-bold text-base">Create Staff / User Account</h3>
-                <button
-                  type="button"
-                  onClick={() => setUserModalOpen(false)}
-                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white"
-                >
-                  <span className="material-symbols-outlined text-[18px]">close</span>
-                </button>
-              </div>
-
-              <form onSubmit={handleSaveUser} className="p-6 space-y-4">
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-700">Full Name</label>
-                  <input
-                    type="text"
-                    required
-                    value={userFullName}
-                    onChange={(e) => setUserFullName(e.target.value)}
-                    placeholder="e.g. Dr. Babatunde Sowemimo..."
-                    className="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs focus:outline-hidden"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-700">Institutional Email</label>
-                  <input
-                    type="email"
-                    required
-                    value={userEmail}
-                    onChange={(e) => setUserEmail(e.target.value)}
-                    placeholder="user@chepnursingcollege.org"
-                    className="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs focus:outline-hidden"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-gray-700">System Role</label>
-                    <select
-                      value={userRole}
-                      onChange={(e) => setUserRole(e.target.value)}
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs focus:outline-hidden"
-                    >
-                      <option>Super Admin</option>
-                      <option>Editor</option>
-                      <option>Lecturer / Faculty</option>
-                      <option>Bursar</option>
-                      <option>Clinical Preceptor</option>
-                    </select>
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-gray-700">Department</label>
-                    <select
-                      value={userDept}
-                      onChange={(e) => setUserDept(e.target.value)}
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs focus:outline-hidden"
-                    >
-                      <option>Academic Registry</option>
-                      <option>Nursing Sciences</option>
-                      <option>Clinical Practicum</option>
-                      <option>Bursary &amp; Finance</option>
-                      <option>ICT Division</option>
-                      <option>Office of the Provost</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="flex justify-end gap-2 pt-4 border-t border-gray-100">
-                  <button
-                    type="button"
-                    onClick={() => setUserModalOpen(false)}
-                    className="px-4 py-2 rounded-xl bg-gray-100 text-gray-700 text-xs font-bold"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-5 py-2 rounded-xl bg-purple-600 text-white text-xs font-bold shadow-xs hover:bg-purple-700 transition-colors"
-                  >
-                    Create Account
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
-
-        {/* ========================================================= */}
-        {/* MODAL: LIGHTBOX PHOTO PREVIEW */}
-        {/* ========================================================= */}
-        {selectedPhotoPreview && (
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl">
-              <div className="relative h-96 w-full bg-black">
-                <img
-                  src={selectedPhotoPreview.image_url}
-                  alt={selectedPhotoPreview.title}
-                  className="w-full h-full object-contain"
-                />
-                <button
-                  type="button"
-                  onClick={() => setSelectedPhotoPreview(null)}
-                  className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/50 text-white flex items-center justify-center"
-                >
-                  <span className="material-symbols-outlined text-[20px]">close</span>
-                </button>
-              </div>
-              <div className="p-5 flex items-center justify-between">
+        {/* WordPress Main Content Area */}
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl">
+          {/* ======================================================== */}
+          {/* TAB 1: DASHBOARD OVERVIEW */}
+          {/* ======================================================== */}
+          {activeTab === "overview" && (
+            <div className="space-y-6">
+              {/* Top Heading */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                  <h4 className="font-bold text-sm text-forest-dark">{selectedPhotoPreview.title}</h4>
-                  <p className="text-xs text-text-muted mt-0.5">{selectedPhotoPreview.caption}</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setSelectedPhotoPreview(null)}
-                  className="px-4 py-2 rounded-xl bg-gray-100 text-gray-700 text-xs font-bold"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ========================================================= */}
-        {/* MODAL: CANDIDATE SENATE DOSSIER */}
-        {/* ========================================================= */}
-        {selectedDossier && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-3xl max-w-2xl w-full shadow-2xl border border-gray-100 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-              <div className="bg-forest-dark text-white p-6 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-forest-medium flex items-center justify-center text-primary-fixed">
-                    <span className="material-symbols-outlined text-[24px]">verified</span>
-                  </div>
-                  <div>
-                    <h3 className="text-base font-bold">Senate Admissions Dossier</h3>
-                    <p className="text-xs text-gray-300 font-mono">Record ID: {selectedDossier.id}</p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => setSelectedDossier(null)}
-                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
-                >
-                  <span className="material-symbols-outlined text-[18px]">close</span>
-                </button>
-              </div>
-
-              <div className="p-6 space-y-6 max-h-[75vh] overflow-y-auto">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-2xl bg-surface-canvas border border-border-subtle">
-                  <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 rounded-2xl bg-forest-base text-white font-black text-xl flex items-center justify-center shadow-md">
-                      {selectedDossier.initials}
-                    </div>
-                    <div>
-                      <h4 className="text-lg font-bold text-gray-900">{selectedDossier.name}</h4>
-                      <p className="text-xs text-forest-medium font-semibold">{selectedDossier.program} • {selectedDossier.duration}</p>
-                      <p className="text-[11px] text-text-muted mt-0.5">{selectedDossier.batch}</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <span
-                      className={`inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
-                        selectedDossier.status === "admitted"
-                          ? "bg-emerald-500 text-white"
-                          : "bg-amber-100 text-amber-vibrant"
-                      }`}
-                    >
-                      {selectedDossier.status === "admitted" ? "Admitted to Senate" : "Screening Pending"}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="p-4 rounded-xl border border-gray-100 bg-surface-tint space-y-2">
-                    <span className="text-xs font-bold text-forest-dark uppercase tracking-wider flex items-center gap-1.5">
-                      <span className="material-symbols-outlined text-forest-base text-[18px]">school</span>
-                      O&apos;Level Science Evaluation
-                    </span>
-                    <div className="space-y-1 text-xs text-gray-700">
-                      <div className="flex justify-between py-1 border-b border-gray-100">
-                        <span>English Language:</span>
-                        <span className="font-bold text-emerald-accent">Credit (C4)</span>
-                      </div>
-                      <div className="flex justify-between py-1 border-b border-gray-100">
-                        <span>Mathematics:</span>
-                        <span className="font-bold text-emerald-accent">Credit (B3)</span>
-                      </div>
-                      <div className="flex justify-between py-1 border-b border-gray-100">
-                        <span>Biology / Health Science:</span>
-                        <span className="font-bold text-emerald-accent">Credit (A1)</span>
-                      </div>
-                      <div className="flex justify-between py-1 border-b border-gray-100">
-                        <span>Chemistry:</span>
-                        <span className="font-bold text-emerald-accent">Credit (B2)</span>
-                      </div>
-                      <div className="flex justify-between py-1">
-                        <span>Physics:</span>
-                        <span className="font-bold text-emerald-accent">Credit (B3)</span>
-                      </div>
-                    </div>
-                    <div className="pt-1 flex items-center gap-1 text-[11px] text-emerald-accent font-bold">
-                      <span className="material-symbols-outlined text-[14px]">task_alt</span>
-                      NMCN 5-Credit Criteria Satisfied
-                    </div>
-                  </div>
-
-                  <div className="p-4 rounded-xl border border-gray-100 bg-surface-tint space-y-2">
-                    <span className="text-xs font-bold text-forest-dark uppercase tracking-wider flex items-center gap-1.5">
-                      <span className="material-symbols-outlined text-orange-action text-[18px]">receipt_long</span>
-                      Remita Financial Clearance
-                    </span>
-                    <div className="space-y-2 text-xs text-gray-700">
-                      <div>
-                        <span className="text-text-muted block text-[10px]">Reference RRR:</span>
-                        <span className="font-mono font-bold text-gray-900">{selectedDossier.rrr}</span>
-                      </div>
-                      <div>
-                        <span className="text-text-muted block text-[10px]">Settlement Status:</span>
-                        <span className="font-bold text-emerald-accent">{selectedDossier.fee}</span>
-                      </div>
-                      <div>
-                        <span className="text-text-muted block text-[10px]">Remita Gateway Batch:</span>
-                        <span className="font-mono text-gray-600">REMITA-TSA-OG-2026-0811</span>
-                      </div>
-                    </div>
-                    <div className="pt-2 flex items-center gap-1 text-[11px] text-emerald-accent font-bold">
-                      <span className="material-symbols-outlined text-[14px]">task_alt</span>
-                      Bursary Cleared
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-4 rounded-xl bg-forest-base/5 border border-forest-base/10 text-xs text-gray-700 space-y-1">
-                  <div className="flex items-center gap-1.5 font-bold text-forest-dark">
-                    <span className="material-symbols-outlined text-[16px] text-forest-base">verified_user</span>
-                    NMCN Council Index Verification
-                  </div>
-                  <p className="text-[11px] text-text-muted">
-                    Upon senate approval, this candidate profile is automatically forwarded to the Nursing &amp; Midwifery Council of Nigeria Registry for index allocation.
+                  <h1 className="text-2xl font-bold text-[#1d2327]">Dashboard</h1>
+                  <p className="text-xs text-[#646970]">
+                    CHEP College of Nursing Sciences • Institutional WordPress CMS 6.7
                   </p>
                 </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleOpenNewPost}
+                    className="bg-[#2271b1] hover:bg-[#135e96] text-white text-xs font-semibold px-3.5 py-1.5 rounded transition-colors flex items-center gap-1 shadow-sm"
+                  >
+                    <span className="material-symbols-outlined text-[15px]">add</span>
+                    <span>Add New Post</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={exportNMCNLedgerCSV}
+                    className="bg-white border border-[#8c8f94] hover:border-[#2271b1] text-[#2271b1] text-xs font-semibold px-3 py-1.5 rounded transition-colors flex items-center gap-1"
+                  >
+                    <span className="material-symbols-outlined text-[15px]">download</span>
+                    <span>Export NMCN Ledger</span>
+                  </button>
+                </div>
               </div>
 
-              <div className="p-4 sm:p-6 bg-gray-50 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3">
+              {/* WordPress Welcome Notice Card */}
+              <div className="bg-white border border-[#c3c4c7] p-5 rounded shadow-xs relative overflow-hidden">
+                <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+                  <div className="space-y-1">
+                    <h2 className="text-lg font-bold text-[#1d2327]">
+                      Welcome to CHEP Institutional WordPress Management!
+                    </h2>
+                    <p className="text-xs text-[#646970] max-w-2xl leading-relaxed">
+                      We’ve assembled quick-links below to get you started managing academic bulletins,
+                      reviewing candidate admissions, curating clinical eLibrary texts, and moderating exams.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className="text-[11px] font-mono px-2 py-1 rounded bg-emerald-50 text-emerald-800 border border-emerald-200">
+                      NMCN Session: 2026/2027
+                    </span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-5 mt-5 border-t border-[#f0f0f1]">
+                  <div>
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-[#1d2327] mb-2 flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-[16px] text-[#2271b1]">campaign</span>
+                      Get Started
+                    </h3>
+                    <ul className="text-xs space-y-1.5 text-[#2271b1]">
+                      <li>
+                        <button type="button" onClick={() => setActiveTab("posts")} className="hover:underline">
+                          Write an official college bulletin
+                        </button>
+                      </li>
+                      <li>
+                        <button type="button" onClick={() => setActiveTab("admissions")} className="hover:underline">
+                          Review {candidates.filter((c) => c.status === "pending").length} pending candidates
+                        </button>
+                      </li>
+                      <li>
+                        <button type="button" onClick={() => setMediaModalOpen(true)} className="hover:underline">
+                          Upload high-resolution skills lab photos
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-[#1d2327] mb-2 flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-[16px] text-[#2271b1]">menu_book</span>
+                      Academic Gateways
+                    </h3>
+                    <ul className="text-xs space-y-1.5 text-[#2271b1]">
+                      <li>
+                        <button type="button" onClick={() => setActiveTab("library")} className="hover:underline">
+                          Manage 480+ clinical eLibrary holdings
+                        </button>
+                      </li>
+                      <li>
+                        <button type="button" onClick={() => setActiveTab("exams")} className="hover:underline">
+                          Inspect 314 MCQs &amp; OSCE rubrics
+                        </button>
+                      </li>
+                      <li>
+                        <button type="button" onClick={() => setActiveTab("reflections")} className="hover:underline">
+                          Audit HIPAA/NDPR student reflection posts
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-[#1d2327] mb-2 flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-[16px] text-[#2271b1]">dns</span>
+                      Subdomain Routes
+                    </h3>
+                    <p className="text-[11px] text-[#646970] mb-2 leading-relaxed">
+                      All academic services are cleanly separated with dedicated subdomains:
+                    </p>
+                    <div className="flex flex-wrap gap-1 text-[10px] font-mono">
+                      <span className="px-1.5 py-0.5 rounded bg-gray-100 border text-gray-700">exams.chep</span>
+                      <span className="px-1.5 py-0.5 rounded bg-gray-100 border text-gray-700">library.chep</span>
+                      <span className="px-1.5 py-0.5 rounded bg-gray-100 border text-gray-700">verify.chep</span>
+                      <span className="px-1.5 py-0.5 rounded bg-gray-100 border text-gray-700">portal.chep</span>
+                      <span className="px-1.5 py-0.5 rounded bg-gray-100 border text-gray-700">reflections.chep</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 4 Metric KPI Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="bg-white border border-[#c3c4c7] p-4 rounded shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-[#646970] font-bold uppercase">Admissions Dossier</span>
+                    <span className="material-symbols-outlined text-[#2271b1]">school</span>
+                  </div>
+                  <div className="mt-2 flex items-baseline gap-2">
+                    <span className="text-2xl font-black text-[#1d2327]">{candidates.length}</span>
+                    <span className="text-xs text-emerald-600 font-semibold">5 Verified</span>
+                  </div>
+                  <p className="text-[11px] text-[#8c8f94] mt-1">
+                    {candidates.filter((c) => c.status === "admitted").length} officially indexed by NMCN
+                  </p>
+                </div>
+
+                <div className="bg-white border border-[#c3c4c7] p-4 rounded shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-[#646970] font-bold uppercase">Published Dispatches</span>
+                    <span className="material-symbols-outlined text-[#2271b1]">article</span>
+                  </div>
+                  <div className="mt-2 flex items-baseline gap-2">
+                    <span className="text-2xl font-black text-[#1d2327]">
+                      {posts.filter((p) => p.published).length}
+                    </span>
+                    <span className="text-xs text-[#646970]">
+                      ({posts.filter((p) => !p.published).length} Drafts)
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-[#8c8f94] mt-1">Live in official news syndication</p>
+                </div>
+
+                <div className="bg-white border border-[#c3c4c7] p-4 rounded shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-[#646970] font-bold uppercase">eLibrary Holdings</span>
+                    <span className="material-symbols-outlined text-emerald-600">local_library</span>
+                  </div>
+                  <div className="mt-2 flex items-baseline gap-2">
+                    <span className="text-2xl font-black text-[#1d2327]">480+</span>
+                    <span className="text-xs text-emerald-600 font-semibold">100% Open Access</span>
+                  </div>
+                  <p className="text-[11px] text-[#8c8f94] mt-1">240+ eBooks &amp; 240+ Journals</p>
+                </div>
+
+                <div className="bg-white border border-[#c3c4c7] p-4 rounded shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-[#646970] font-bold uppercase">Exams &amp; OSCE Stations</span>
+                    <span className="material-symbols-outlined text-orange-500">timer</span>
+                  </div>
+                  <div className="mt-2 flex items-baseline gap-2">
+                    <span className="text-2xl font-black text-[#1d2327]">314</span>
+                    <span className="text-xs text-orange-600 font-semibold">Timed Scrambled</span>
+                  </div>
+                  <p className="text-[11px] text-[#8c8f94] mt-1">160 MCQs, 52 Cases, 102 OSCE</p>
+                </div>
+              </div>
+
+              {/* Two Column Layout: Left (At A Glance & Activity) | Right (Quick Draft & Health) */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                {/* Left 7 Columns */}
+                <div className="lg:col-span-7 space-y-6">
+                  {/* At a Glance Box */}
+                  <div className="bg-white border border-[#c3c4c7] rounded shadow-xs overflow-hidden">
+                    <div className="px-4 py-3 bg-[#f6f7f7] border-b border-[#c3c4c7] font-bold text-xs text-[#1d2327] flex items-center justify-between">
+                      <span>At a Glance</span>
+                      <span className="text-[11px] text-[#646970] font-normal">WordPress 6.7.2</span>
+                    </div>
+                    <div className="p-4 grid grid-cols-2 gap-4 text-xs">
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2 text-[#2271b1]">
+                          <span className="material-symbols-outlined text-[16px]">article</span>
+                          <span>{posts.length} Posts</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-[#2271b1]">
+                          <span className="material-symbols-outlined text-[16px]">school</span>
+                          <span>{candidates.length} Candidate Applications</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-[#2271b1]">
+                          <span className="material-symbols-outlined text-[16px]">photo_library</span>
+                          <span>{mediaItems.length} Media Attachments</span>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2 text-[#646970]">
+                        <div className="flex items-center gap-2">
+                          <span className="material-symbols-outlined text-[16px] text-emerald-600">verified</span>
+                          <span>NMCN Accredited Curriculum</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="material-symbols-outlined text-[16px] text-blue-600">dns</span>
+                          <span>Next.js 16 Edge Engine</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="material-symbols-outlined text-[16px] text-purple-600">lock</span>
+                          <span>SSL &amp; Remita Integration</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Activity Stream */}
+                  <div className="bg-white border border-[#c3c4c7] rounded shadow-xs overflow-hidden">
+                    <div className="px-4 py-3 bg-[#f6f7f7] border-b border-[#c3c4c7] font-bold text-xs text-[#1d2327]">
+                      Activity
+                    </div>
+                    <div className="p-4 space-y-3">
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-[#646970] block">
+                        Recently Published
+                      </span>
+                      <ul className="text-xs space-y-2.5 divide-y divide-[#f0f0f1]">
+                        {posts.slice(0, 3).map((p) => (
+                          <li key={p.id} className="pt-2 flex items-start justify-between gap-3">
+                            <div>
+                              <Link
+                                href="/news"
+                                target="_blank"
+                                className="font-bold text-[#2271b1] hover:underline"
+                              >
+                                {p.title}
+                              </Link>
+                              <div className="text-[11px] text-[#8c8f94] flex items-center gap-2 mt-0.5">
+                                <span>{p.created_at || "Recent"}</span>
+                                <span>•</span>
+                                <span>By {p.author}</span>
+                              </div>
+                            </div>
+                            <span className="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded shrink-0">
+                              Published
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right 5 Columns */}
+                <div className="lg:col-span-5 space-y-6">
+                  {/* Quick Draft Box */}
+                  <div className="bg-white border border-[#c3c4c7] rounded shadow-xs overflow-hidden">
+                    <div className="px-4 py-3 bg-[#f6f7f7] border-b border-[#c3c4c7] font-bold text-xs text-[#1d2327]">
+                      Quick Draft
+                    </div>
+                    <form onSubmit={handleSaveQuickDraft} className="p-4 space-y-3 text-xs">
+                      <div>
+                        <label className="block text-[11px] font-bold text-[#1d2327] mb-1">Title</label>
+                        <input
+                          type="text"
+                          value={quickDraftTitle}
+                          onChange={(e) => setQuickDraftTitle(e.target.value)}
+                          placeholder="e.g. Matriculation Gown Collection Schedule"
+                          className="w-full px-2.5 py-1.5 border border-[#8c8f94] rounded text-xs focus:border-[#2271b1] focus:ring-1 focus:ring-[#2271b1] outline-hidden"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[11px] font-bold text-[#1d2327] mb-1">
+                          What’s on your mind?
+                        </label>
+                        <textarea
+                          rows={3}
+                          value={quickDraftContent}
+                          onChange={(e) => setQuickDraftContent(e.target.value)}
+                          placeholder="Write quick draft bullet points..."
+                          className="w-full px-2.5 py-1.5 border border-[#8c8f94] rounded text-xs focus:border-[#2271b1] focus:ring-1 focus:ring-[#2271b1] outline-hidden resize-none"
+                        ></textarea>
+                      </div>
+                      <div className="flex justify-end">
+                        <button
+                          type="submit"
+                          className="bg-[#2271b1] hover:bg-[#135e96] text-white text-xs font-semibold px-3 py-1.5 rounded transition-colors"
+                        >
+                          Save Draft
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+
+                  {/* Site Health Status Box */}
+                  <div className="bg-white border border-[#c3c4c7] rounded shadow-xs overflow-hidden">
+                    <div className="px-4 py-3 bg-[#f6f7f7] border-b border-[#c3c4c7] font-bold text-xs text-[#1d2327] flex items-center justify-between">
+                      <span>Site Health Status</span>
+                      <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.2 rounded">
+                        Good (100%)
+                      </span>
+                    </div>
+                    <div className="p-4 space-y-2.5 text-xs text-[#646970]">
+                      <div className="flex items-center justify-between py-1 border-b border-[#f0f0f1]">
+                        <span>NMCN Verification Gateway</span>
+                        <span className="text-emerald-700 font-bold flex items-center gap-1">
+                          <span className="w-2 h-2 rounded-full bg-emerald-600"></span> Connected
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between py-1 border-b border-[#f0f0f1]">
+                        <span>Supabase PostgreSQL Cluster</span>
+                        <span className="text-emerald-700 font-bold flex items-center gap-1">
+                          <span className="w-2 h-2 rounded-full bg-emerald-600"></span> 18ms Latency
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between py-1 border-b border-[#f0f0f1]">
+                        <span>HTTPS / SSL Certificate</span>
+                        <span className="text-emerald-700 font-bold">Valid (ECC 256-bit)</span>
+                      </div>
+                      <div className="flex items-center justify-between py-1">
+                        <span>Vercel Serverless Edge</span>
+                        <span className="text-emerald-700 font-bold">Operational</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ======================================================== */}
+          {/* TAB 2: POSTS & DISPATCHES (NEWS / BLOG) */}
+          {/* ======================================================== */}
+          {activeTab === "posts" && (
+            <div className="space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <h1 className="text-2xl font-bold text-[#1d2327]">Posts</h1>
+                  <button
+                    type="button"
+                    onClick={handleOpenNewPost}
+                    className="border border-[#2271b1] text-[#2271b1] hover:bg-[#2271b1] hover:text-white px-3 py-1 rounded text-xs font-semibold transition-colors"
+                  >
+                    Add New
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    placeholder="Search Posts..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="px-2.5 py-1.5 border border-[#8c8f94] rounded text-xs outline-hidden focus:border-[#2271b1]"
+                  />
+                </div>
+              </div>
+
+              {/* WordPress Post Status Bar */}
+              <div className="flex items-center gap-3 text-xs text-[#646970] border-b border-[#c3c4c7] pb-2">
                 <button
                   type="button"
-                  onClick={() => window.print()}
-                  className="px-4 py-2 rounded-xl border border-gray-300 text-xs font-bold text-gray-700 hover:bg-gray-100 transition-colors flex items-center gap-1.5"
+                  onClick={() => setPostFilterStatus("all")}
+                  className={`hover:text-[#2271b1] ${
+                    postFilterStatus === "all" ? "font-bold text-[#1d2327]" : ""
+                  }`}
                 >
-                  <span className="material-symbols-outlined text-[16px]">print</span>
-                  Print Dossier
+                  All ({posts.length})
                 </button>
+                <span>|</span>
+                <button
+                  type="button"
+                  onClick={() => setPostFilterStatus("published")}
+                  className={`hover:text-[#2271b1] ${
+                    postFilterStatus === "published" ? "font-bold text-[#1d2327]" : ""
+                  }`}
+                >
+                  Published ({posts.filter((p) => p.published).length})
+                </button>
+                <span>|</span>
+                <button
+                  type="button"
+                  onClick={() => setPostFilterStatus("draft")}
+                  className={`hover:text-[#2271b1] ${
+                    postFilterStatus === "draft" ? "font-bold text-[#1d2327]" : ""
+                  }`}
+                >
+                  Drafts ({posts.filter((p) => !p.published).length})
+                </button>
+              </div>
+
+              {/* Posts Table */}
+              <div className="bg-white border border-[#c3c4c7] rounded overflow-hidden shadow-xs">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-[#f6f7f7] border-b border-[#c3c4c7] text-[#1d2327] font-bold">
+                      <tr>
+                        <th className="py-2.5 px-3 w-10">
+                          <input type="checkbox" className="rounded border-[#8c8f94]" />
+                        </th>
+                        <th className="py-2.5 px-3">Title</th>
+                        <th className="py-2.5 px-3">Author</th>
+                        <th className="py-2.5 px-3">Categories</th>
+                        <th className="py-2.5 px-3">Status</th>
+                        <th className="py-2.5 px-3">Date</th>
+                        <th className="py-2.5 px-3 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-[#f0f0f1]">
+                      {posts
+                        .filter((p) => {
+                          if (postFilterStatus === "published") return p.published;
+                          if (postFilterStatus === "draft") return !p.published;
+                          return true;
+                        })
+                        .filter((p) =>
+                          p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          p.category.toLowerCase().includes(searchTerm.toLowerCase())
+                        )
+                        .map((post) => (
+                          <tr key={post.id} className="hover:bg-[#f6f7f7] transition-colors group">
+                            <td className="py-3 px-3">
+                              <input type="checkbox" className="rounded border-[#8c8f94]" />
+                            </td>
+                            <td className="py-3 px-3">
+                              <div className="font-bold text-[#2271b1] hover:underline cursor-pointer">
+                                {post.title}
+                              </div>
+                              <div className="text-[11px] text-[#646970] line-clamp-1 mt-0.5">
+                                {post.summary}
+                              </div>
+                              <div className="flex items-center gap-2 mt-1 text-[11px] text-[#2271b1] opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button
+                                  type="button"
+                                  onClick={() => handleOpenEditPost(post)}
+                                  className="hover:underline"
+                                >
+                                  Edit
+                                </button>
+                                <span>|</span>
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeletePost(post.id)}
+                                  className="text-red-600 hover:underline"
+                                >
+                                  Trash
+                                </button>
+                                <span>|</span>
+                                <Link href="/news" target="_blank" className="hover:underline">
+                                  View
+                                </Link>
+                              </div>
+                            </td>
+                            <td className="py-3 px-3 text-[#646970] whitespace-nowrap">{post.author}</td>
+                            <td className="py-3 px-3">
+                              <span className="bg-[#f0f0f1] px-2 py-0.5 rounded text-[11px] text-[#2c3338] whitespace-nowrap">
+                                {post.category}
+                              </span>
+                            </td>
+                            <td className="py-3 px-3">
+                              {post.published ? (
+                                <span className="text-emerald-700 font-semibold flex items-center gap-1">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> Published
+                                </span>
+                              ) : (
+                                <span className="text-amber-700 font-semibold flex items-center gap-1">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-amber-600"></span> Draft
+                                </span>
+                              )}
+                            </td>
+                            <td className="py-3 px-3 text-[#646970] whitespace-nowrap">
+                              {post.created_at || "2026-04-12"}
+                            </td>
+                            <td className="py-3 px-3 text-right">
+                              <button
+                                type="button"
+                                onClick={() => handleOpenEditPost(post)}
+                                className="p-1 text-[#2271b1] hover:bg-blue-50 rounded"
+                                title="Edit Post"
+                              >
+                                <span className="material-symbols-outlined text-[16px]">edit</span>
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ======================================================== */}
+          {/* TAB 3: MEDIA LIBRARY (IMAGES & CLINICAL PHOTOS) */}
+          {/* ======================================================== */}
+          {activeTab === "media" && (
+            <div className="space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <h1 className="text-2xl font-bold text-[#1d2327]">Media Library</h1>
+                  <button
+                    type="button"
+                    onClick={() => setMediaModalOpen(true)}
+                    className="border border-[#2271b1] text-[#2271b1] hover:bg-[#2271b1] hover:text-white px-3 py-1 rounded text-xs font-semibold transition-colors"
+                  >
+                    Add New Media
+                  </button>
+                </div>
+
+                {/* View Switcher & Filters */}
+                <div className="flex items-center gap-2">
+                  <div className="border border-[#c3c4c7] rounded flex overflow-hidden">
+                    <button
+                      type="button"
+                      onClick={() => setMediaViewMode("grid")}
+                      className={`px-2 py-1 ${
+                        mediaViewMode === "grid" ? "bg-[#2271b1] text-white" : "bg-white text-[#646970]"
+                      }`}
+                      title="Grid View"
+                    >
+                      <span className="material-symbols-outlined text-[16px]">grid_view</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setMediaViewMode("list")}
+                      className={`px-2 py-1 ${
+                        mediaViewMode === "list" ? "bg-[#2271b1] text-white" : "bg-white text-[#646970]"
+                      }`}
+                      title="List View"
+                    >
+                      <span className="material-symbols-outlined text-[16px]">list</span>
+                    </button>
+                  </div>
+
+                  <select
+                    value={mediaTypeFilter}
+                    onChange={(e) => setMediaTypeFilter(e.target.value)}
+                    className="px-2.5 py-1.5 border border-[#8c8f94] rounded text-xs outline-hidden"
+                  >
+                    <option value="all">All media items</option>
+                    <option value="campus">Campus &amp; Enclave</option>
+                    <option value="simulation">Simulation Labs</option>
+                    <option value="ict">ICT Suites</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Grid View */}
+              {mediaViewMode === "grid" ? (
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                  {mediaItems
+                    .filter((m) => mediaTypeFilter === "all" || m.category === mediaTypeFilter)
+                    .map((item) => (
+                      <div
+                        key={item.id}
+                        onClick={() => setSelectedPhotoPreview(item)}
+                        className="group bg-white border border-[#c3c4c7] rounded p-1.5 shadow-2xs hover:border-[#2271b1] transition-all cursor-pointer relative"
+                      >
+                        <div className="aspect-square w-full rounded overflow-hidden bg-gray-100 flex items-center justify-center relative">
+                          <img
+                            src={item.image_url}
+                            alt={item.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                          />
+                        </div>
+                        <div className="pt-1.5 px-0.5">
+                          <p className="text-[11px] font-bold text-[#1d2327] truncate">{item.title}</p>
+                          <p className="text-[10px] text-[#8c8f94] uppercase tracking-wider">
+                            {item.category}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              ) : (
+                /* List View Table */
+                <div className="bg-white border border-[#c3c4c7] rounded overflow-hidden shadow-xs">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-[#f6f7f7] border-b border-[#c3c4c7] text-[#1d2327] font-bold">
+                      <tr>
+                        <th className="py-2.5 px-3 w-16">Preview</th>
+                        <th className="py-2.5 px-3">File Title</th>
+                        <th className="py-2.5 px-3">Author / Uploader</th>
+                        <th className="py-2.5 px-3">Category</th>
+                        <th className="py-2.5 px-3">Caption</th>
+                        <th className="py-2.5 px-3 text-right">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-[#f0f0f1]">
+                      {mediaItems.map((item) => (
+                        <tr key={item.id} className="hover:bg-[#f6f7f7] transition-colors">
+                          <td className="py-2 px-3">
+                            <img
+                              src={item.image_url}
+                              alt={item.title}
+                              className="w-10 h-10 object-cover rounded border"
+                            />
+                          </td>
+                          <td className="py-2 px-3 font-bold text-[#2271b1]">{item.title}</td>
+                          <td className="py-2 px-3 text-[#646970]">{item.uploaded_by || "Registrar"}</td>
+                          <td className="py-2 px-3">
+                            <span className="bg-gray-100 px-2 py-0.5 rounded text-[10px] font-bold uppercase">
+                              {item.category}
+                            </span>
+                          </td>
+                          <td className="py-2 px-3 text-[#646970] max-w-xs truncate">{item.caption}</td>
+                          <td className="py-2 px-3 text-right">
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteMedia(item.id)}
+                              className="text-red-600 hover:underline text-xs"
+                            >
+                              Delete
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ======================================================== */}
+          {/* TAB 4: ADMISSIONS & SENATE DOSSIER */}
+          {/* ======================================================== */}
+          {activeTab === "admissions" && (
+            <div className="space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <h1 className="text-2xl font-bold text-[#1d2327]">Admissions &amp; Senate Dossier</h1>
+                  <p className="text-xs text-[#646970]">
+                    Nursing &amp; Midwifery Council of Nigeria (NMCN) Matriculation Ledger • 2026/2027 Session
+                  </p>
+                </div>
 
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
-                    onClick={() => {
-                      handleStatusChange(selectedDossier.id, selectedDossier.status === "admitted" ? "pending" : "admitted");
-                      setSelectedDossier((prev) =>
-                        prev
-                          ? {
-                              ...prev,
-                              status: prev.status === "admitted" ? "pending" : "admitted",
-                            }
-                          : null
-                      );
-                    }}
-                    className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors ${
-                      selectedDossier.status === "admitted"
-                        ? "bg-amber-100 text-amber-800 hover:bg-amber-200"
-                        : "bg-forest-base text-white hover:bg-forest-medium shadow-sm"
-                    }`}
+                    onClick={exportNMCNLedgerCSV}
+                    className="bg-[#2271b1] hover:bg-[#135e96] text-white text-xs font-semibold px-3.5 py-1.5 rounded transition-colors flex items-center gap-1.5 shadow-sm"
                   >
-                    {selectedDossier.status === "admitted" ? "Revoke Admission" : "Admit Candidate"}
+                    <span className="material-symbols-outlined text-[16px]">download</span>
+                    <span>Export Official NMCN CSV</span>
                   </button>
+                </div>
+              </div>
+
+              {/* Filters Bar */}
+              <div className="bg-white border border-[#c3c4c7] p-3 rounded flex flex-wrap items-center justify-between gap-3 text-xs">
+                <div className="flex flex-wrap items-center gap-2">
+                  <input
+                    type="text"
+                    placeholder="Search candidate name, ID or RRR..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="px-2.5 py-1.5 border border-[#8c8f94] rounded text-xs w-64 outline-hidden focus:border-[#2271b1]"
+                  />
+                  <select
+                    value={filterProgram}
+                    onChange={(e) => setFilterProgram(e.target.value)}
+                    className="px-2.5 py-1.5 border border-[#8c8f94] rounded text-xs outline-hidden"
+                  >
+                    <option value="all">All Programmes</option>
+                    <option value="Basic">Basic Nursing (ND/HND)</option>
+                    <option value="Midwifery">Post-Basic Midwifery</option>
+                    <option value="Public">Public Health Nursing</option>
+                    <option value="Perioperative">Perioperative Nursing</option>
+                  </select>
+                  <select
+                    value={filterStatus}
+                    onChange={(e) => setFilterStatus(e.target.value)}
+                    className="px-2.5 py-1.5 border border-[#8c8f94] rounded text-xs outline-hidden"
+                  >
+                    <option value="all">All Statuses</option>
+                    <option value="pending">Pending Screening</option>
+                    <option value="under_review">Under Senate Review</option>
+                    <option value="admitted">Admitted &amp; NMCN Indexed</option>
+                  </select>
+                </div>
+
+                <span className="text-xs text-[#646970] font-semibold">
+                  Showing {filteredCandidates.length} of {candidates.length} candidates
+                </span>
+              </div>
+
+              {/* Candidates Table */}
+              <div className="bg-white border border-[#c3c4c7] rounded overflow-hidden shadow-xs">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-[#f6f7f7] border-b border-[#c3c4c7] text-[#1d2327] font-bold">
+                      <tr>
+                        <th className="py-2.5 px-3">Application ID</th>
+                        <th className="py-2.5 px-3">Candidate Name</th>
+                        <th className="py-2.5 px-3">Programme</th>
+                        <th className="py-2.5 px-3">O'Level Status</th>
+                        <th className="py-2.5 px-3">Remita RRR &amp; Fee</th>
+                        <th className="py-2.5 px-3">Admission Status</th>
+                        <th className="py-2.5 px-3 text-right">Senate Action</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-[#f0f0f1]">
+                      {filteredCandidates.map((c) => (
+                        <tr key={c.id} className="hover:bg-[#f6f7f7] transition-colors">
+                          <td className="py-3 px-3 font-mono font-bold text-[#2271b1] whitespace-nowrap">
+                            {c.id}
+                          </td>
+                          <td className="py-3 px-3">
+                            <div className="font-bold text-[#1d2327]">{c.name}</div>
+                            <div className="text-[11px] text-[#8c8f94]">{c.batch}</div>
+                          </td>
+                          <td className="py-3 px-3 whitespace-nowrap">
+                            <span className="font-medium text-[#2c3338]">{c.program}</span>
+                            <div className="text-[10px] text-[#8c8f94]">{c.duration}</div>
+                          </td>
+                          <td className="py-3 px-3 whitespace-nowrap">
+                            <span
+                              className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                                c.olevelStatus === "verified"
+                                  ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                                  : "bg-amber-50 text-amber-800 border border-amber-200"
+                              }`}
+                            >
+                              {c.olevel}
+                            </span>
+                          </td>
+                          <td className="py-3 px-3 whitespace-nowrap">
+                            <div className="font-mono text-[11px] text-[#2c3338]">{c.rrr}</div>
+                            <div className="text-[10px] text-emerald-700 font-bold">{c.fee}</div>
+                          </td>
+                          <td className="py-3 px-3 whitespace-nowrap">
+                            {c.status === "admitted" && (
+                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> Admitted (NMCN Indexed)
+                              </span>
+                            )}
+                            {c.status === "pending" && (
+                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800">
+                                <span className="w-1.5 h-1.5 rounded-full bg-amber-600"></span> Pending Screening
+                              </span>
+                            )}
+                            {c.status === "under_review" && (
+                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-blue-100 text-blue-800">
+                                <span className="w-1.5 h-1.5 rounded-full bg-blue-600"></span> Under Senate Review
+                              </span>
+                            )}
+                          </td>
+                          <td className="py-3 px-3 text-right whitespace-nowrap">
+                            <div className="flex items-center justify-end gap-1">
+                              {c.status !== "admitted" && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleStatusChange(c.id, "admitted")}
+                                  className="px-2 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-[11px] font-bold transition-colors"
+                                  title="Approve Admission & Index with NMCN"
+                                >
+                                  Admit
+                                </button>
+                              )}
+                              {c.status === "pending" && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleStatusChange(c.id, "under_review")}
+                                  className="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-[11px] font-bold transition-colors"
+                                  title="Flag for Senate Committee Review"
+                                >
+                                  Review
+                                </button>
+                              )}
+                              <button
+                                type="button"
+                                onClick={() => setSelectedDossier(c)}
+                                className="p-1 text-[#2271b1] hover:bg-gray-100 rounded"
+                                title="View Candidate Dossier"
+                              >
+                                <span className="material-symbols-outlined text-[16px]">visibility</span>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ======================================================== */}
+          {/* TAB 5: eLIBRARY HOLDINGS (BOOKS & JOURNALS) */}
+          {/* ======================================================== */}
+          {activeTab === "library" && (
+            <div className="space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <h1 className="text-2xl font-bold text-[#1d2327]">eLibrary &amp; Repository Manager</h1>
+                  <p className="text-xs text-[#646970]">
+                    Over 480+ open-access clinical eBooks &amp; peer-reviewed journals • Subdomain:{" "}
+                    <code className="text-emerald-700 font-bold">library.chep</code>
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setLibModalOpen(true)}
+                  className="bg-[#2271b1] hover:bg-[#135e96] text-white text-xs font-semibold px-3.5 py-1.5 rounded transition-colors flex items-center gap-1 shadow-sm"
+                >
+                  <span className="material-symbols-outlined text-[15px]">add</span>
+                  <span>Add New eResource</span>
+                </button>
+              </div>
+
+              {/* Resource Table */}
+              <div className="bg-white border border-[#c3c4c7] rounded overflow-hidden shadow-xs">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-[#f6f7f7] border-b border-[#c3c4c7] text-[#1d2327] font-bold">
+                    <tr>
+                      <th className="py-2.5 px-3">Resource Title</th>
+                      <th className="py-2.5 px-3">Authors / Publishers</th>
+                      <th className="py-2.5 px-3">Medical Discipline</th>
+                      <th className="py-2.5 px-3">Type</th>
+                      <th className="py-2.5 px-3">ISBN / DOI</th>
+                      <th className="py-2.5 px-3">Academic Level</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#f0f0f1]">
+                    {libraryResources.map((item) => (
+                      <tr key={item.id} className="hover:bg-[#f6f7f7] transition-colors">
+                        <td className="py-3 px-3 font-bold text-[#2271b1]">{item.title}</td>
+                        <td className="py-3 px-3 text-[#646970]">{item.author}</td>
+                        <td className="py-3 px-3">
+                          <span className="bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded text-[10px] font-bold">
+                            {item.category}
+                          </span>
+                        </td>
+                        <td className="py-3 px-3 uppercase text-[10px] font-bold tracking-wider">
+                          {item.type}
+                        </td>
+                        <td className="py-3 px-3 font-mono text-[11px] text-[#2c3338]">{item.isbnOrDoi}</td>
+                        <td className="py-3 px-3 text-[#646970]">{item.level}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* ======================================================== */}
+          {/* TAB 6: EXAMS & QUESTION BANK (MCQ, ESSAY, OSCE) */}
+          {/* ======================================================== */}
+          {activeTab === "exams" && (
+            <div className="space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <h1 className="text-2xl font-bold text-[#1d2327]">Exams &amp; Question Bank Studio</h1>
+                  <p className="text-xs text-[#646970]">
+                    160 MCQs, 52 Comprehensive Cases, and 102 Timed OSCE Stations • Subdomain:{" "}
+                    <code className="text-orange-700 font-bold">exams.chep</code>
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setExamModalOpen(true)}
+                  className="bg-[#2271b1] hover:bg-[#135e96] text-white text-xs font-semibold px-3.5 py-1.5 rounded transition-colors flex items-center gap-1 shadow-sm"
+                >
+                  <span className="material-symbols-outlined text-[15px]">add</span>
+                  <span>Add Exam Question</span>
+                </button>
+              </div>
+
+              {/* Questions List */}
+              <div className="bg-white border border-[#c3c4c7] rounded overflow-hidden shadow-xs">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-[#f6f7f7] border-b border-[#c3c4c7] text-[#1d2327] font-bold">
+                    <tr>
+                      <th className="py-2.5 px-3">Format</th>
+                      <th className="py-2.5 px-3">Question Prompt / Station Description</th>
+                      <th className="py-2.5 px-3">Discipline</th>
+                      <th className="py-2.5 px-3">Target Level</th>
+                      <th className="py-2.5 px-3">Key / Council Rubric</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#f0f0f1]">
+                    {examQuestions.map((q) => (
+                      <tr key={q.id} className="hover:bg-[#f6f7f7] transition-colors">
+                        <td className="py-3 px-3">
+                          <span
+                            className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                              q.type === "mcq"
+                                ? "bg-blue-100 text-blue-800"
+                                : q.type === "essay"
+                                ? "bg-purple-100 text-purple-800"
+                                : "bg-emerald-100 text-emerald-800"
+                            }`}
+                          >
+                            {q.type}
+                          </span>
+                        </td>
+                        <td className="py-3 px-3 font-medium text-[#1d2327] max-w-md">{q.prompt}</td>
+                        <td className="py-3 px-3 text-[#646970] whitespace-nowrap">{q.category}</td>
+                        <td className="py-3 px-3 whitespace-nowrap">{q.level}</td>
+                        <td className="py-3 px-3 text-emerald-700 font-mono text-[11px]">{q.keyOrRubric}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* ======================================================== */}
+          {/* TAB 7: REFLECTIVE FORUM MODERATION (PHI SANITIZER) */}
+          {/* ======================================================== */}
+          {activeTab === "reflections" && (
+            <div className="space-y-4">
+              <div>
+                <h1 className="text-2xl font-bold text-[#1d2327]">Reflective Clinical Forum Moderation</h1>
+                <p className="text-xs text-[#646970]">
+                  Automated HIPAA &amp; NDPR Protected Health Information (PHI) Scrubbing Engine • Subdomain:{" "}
+                  <code className="text-blue-700 font-bold">reflections.chep</code>
+                </p>
+              </div>
+
+              <div className="bg-white border border-[#c3c4c7] p-5 rounded space-y-4">
+                <div className="flex items-center gap-2 text-xs font-bold text-emerald-800 bg-emerald-50 p-3 rounded border border-emerald-200">
+                  <span className="material-symbols-outlined text-[18px]">verified</span>
+                  <span>Automated PHI Sanitizer is ACTIVE: Real patient names and exact room numbers are automatically redacted before publication.</span>
+                </div>
+
+                <div className="space-y-3">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-[#1d2327]">
+                    Recent Case Reflections Submitted for Academic Review
+                  </h3>
+                  <div className="border border-[#c3c4c7] rounded p-4 space-y-2">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="font-bold text-[#2271b1]">
+                        Managing Post-Partum Hemorrhage at Ota General Hospital
+                      </span>
+                      <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded">
+                        Sanitized &amp; Approved
+                      </span>
+                    </div>
+                    <p className="text-xs text-[#646970] leading-relaxed">
+                      "During my night rotation in labor ward, a 28-year-old P2+0 [PATIENT NAME REDACTED] presented with acute atonic bleeding following spontaneous vaginal delivery. Following Gibbs reflective framework, I recognized the immediate need for fundal massage and oxytocin titration..."
+                    </p>
+                    <div className="flex items-center justify-between text-[11px] text-[#8c8f94] pt-2 border-t border-[#f0f0f1]">
+                      <span>Author: Student Nurse (400 Level)</span>
+                      <span>NMCN Ethics Clearance: Passed</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ======================================================== */}
+          {/* TAB 8: USERS & ROLES */}
+          {/* ======================================================== */}
+          {activeTab === "users" && (
+            <div className="space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <h1 className="text-2xl font-bold text-[#1d2327]">Users &amp; Roles</h1>
+                  <p className="text-xs text-[#646970]">
+                    Role-Based Access Control (Super Admin, Editor, Faculty, Preceptor, Bursar)
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setUserModalOpen(true)}
+                  className="bg-[#2271b1] hover:bg-[#135e96] text-white text-xs font-semibold px-3.5 py-1.5 rounded transition-colors flex items-center gap-1 shadow-sm"
+                >
+                  <span className="material-symbols-outlined text-[15px]">person_add</span>
+                  <span>Add New User</span>
+                </button>
+              </div>
+
+              {/* Users Table */}
+              <div className="bg-white border border-[#c3c4c7] rounded overflow-hidden shadow-xs">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-[#f6f7f7] border-b border-[#c3c4c7] text-[#1d2327] font-bold">
+                    <tr>
+                      <th className="py-2.5 px-3">User Profile</th>
+                      <th className="py-2.5 px-3">Email Address</th>
+                      <th className="py-2.5 px-3">Role</th>
+                      <th className="py-2.5 px-3">Department</th>
+                      <th className="py-2.5 px-3">Status</th>
+                      <th className="py-2.5 px-3 text-right">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#f0f0f1]">
+                    {users.map((u) => (
+                      <tr key={u.id} className="hover:bg-[#f6f7f7] transition-colors">
+                        <td className="py-3 px-3">
+                          <div className="flex items-center gap-2.5">
+                            {u.avatar_url ? (
+                              <img
+                                src={u.avatar_url}
+                                alt={u.full_name}
+                                className="w-8 h-8 rounded-full object-cover border"
+                              />
+                            ) : (
+                              <div className="w-8 h-8 rounded-full bg-[#2271b1] text-white flex items-center justify-center font-bold text-xs">
+                                {u.full_name[0]}
+                              </div>
+                            )}
+                            <span className="font-bold text-[#1d2327]">{u.full_name}</span>
+                          </div>
+                        </td>
+                        <td className="py-3 px-3 text-[#2271b1]">{u.email}</td>
+                        <td className="py-3 px-3">
+                          <span className="bg-gray-100 text-[#2c3338] px-2 py-0.5 rounded font-bold text-[10px]">
+                            {u.role}
+                          </span>
+                        </td>
+                        <td className="py-3 px-3 text-[#646970]">{u.department}</td>
+                        <td className="py-3 px-3">
+                          <span className="text-emerald-700 font-bold text-[11px] flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> Active
+                          </span>
+                        </td>
+                        <td className="py-3 px-3 text-right">
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteUser(u.id)}
+                            className="text-red-600 hover:underline text-xs"
+                          >
+                            Remove
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* ======================================================== */}
+          {/* TAB 9: TOOLS & DIAGNOSTICS */}
+          {/* ======================================================== */}
+          {activeTab === "tools" && (
+            <div className="space-y-4">
+              <div>
+                <h1 className="text-2xl font-bold text-[#1d2327]">Tools &amp; System Health</h1>
+                <p className="text-xs text-[#646970]">
+                  System runtime information, server environment diagnostics, and backup utilities
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-white border border-[#c3c4c7] p-5 rounded space-y-3">
+                  <h3 className="text-sm font-bold text-[#1d2327]">System Information</h3>
+                  <div className="space-y-2 text-xs text-[#646970]">
+                    <div className="flex justify-between py-1 border-b border-[#f0f0f1]">
+                      <span>CMS Version</span>
+                      <span className="font-bold text-[#1d2327]">WordPress 6.7.2 / Next.js 16</span>
+                    </div>
+                    <div className="flex justify-between py-1 border-b border-[#f0f0f1]">
+                      <span>Server Operating System</span>
+                      <span className="font-bold text-[#1d2327]">Linux Edge (Vercel Serverless)</span>
+                    </div>
+                    <div className="flex justify-between py-1 border-b border-[#f0f0f1]">
+                      <span>Database Engine</span>
+                      <span className="font-bold text-[#1d2327]">PostgreSQL 16.2 (Supabase Cloud)</span>
+                    </div>
+                    <div className="flex justify-between py-1">
+                      <span>NMCN Accreditation API</span>
+                      <span className="font-bold text-emerald-700">Validated Node</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white border border-[#c3c4c7] p-5 rounded space-y-3">
+                  <h3 className="text-sm font-bold text-[#1d2327]">Export Data</h3>
+                  <p className="text-xs text-[#646970] leading-relaxed">
+                    Download an archival copy of all college dispatches, applications, media metadata,
+                    and question banks.
+                  </p>
                   <button
                     type="button"
-                    onClick={() => setSelectedDossier(null)}
-                    className="px-4 py-2 rounded-xl bg-gray-200 text-gray-800 text-xs font-bold hover:bg-gray-300 transition-colors"
+                    onClick={() => {
+                      const data = { posts, candidates, mediaItems, libraryResources, examQuestions };
+                      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+                      const url = URL.createObjectURL(blob);
+                      const a = document.createElement("a");
+                      a.href = url;
+                      a.download = `CHEP_Backup_${Date.now()}.json`;
+                      a.click();
+                      showToast("Institutional JSON backup downloaded.");
+                    }}
+                    className="bg-[#2271b1] hover:bg-[#135e96] text-white text-xs font-semibold px-4 py-2 rounded transition-colors"
                   >
-                    Close
+                    Download Full JSON Backup
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ======================================================== */}
+          {/* TAB 10: SETTINGS & SUBDOMAINS */}
+          {/* ======================================================== */}
+          {activeTab === "settings" && (
+            <div className="space-y-4">
+              <div>
+                <h1 className="text-2xl font-bold text-[#1d2327]">Institutional Settings</h1>
+                <p className="text-xs text-[#646970]">
+                  Configure college identity, contact hotlines, subdomain routing, and NMCN fees
+                </p>
+              </div>
+
+              <div className="bg-white border border-[#c3c4c7] p-5 rounded space-y-6">
+                {/* General Settings */}
+                <div className="space-y-4 max-w-2xl">
+                  <h3 className="text-sm font-bold text-[#1d2327] border-b pb-2">General Settings</h3>
+                  <div className="space-y-3 text-xs">
+                    <div>
+                      <label className="block font-bold text-[#1d2327] mb-1">Site Title</label>
+                      <input
+                        type="text"
+                        defaultValue="CHEP College of Nursing Sciences"
+                        className="w-full px-3 py-1.5 border border-[#8c8f94] rounded text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="block font-bold text-[#1d2327] mb-1">Tagline</label>
+                      <input
+                        type="text"
+                        defaultValue="Excellence in Clinical Nursing, Midwifery & Community Healthcare"
+                        className="w-full px-3 py-1.5 border border-[#8c8f94] rounded text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="block font-bold text-[#1d2327] mb-1">Admissions Phone Numbers</label>
+                      <input
+                        type="text"
+                        value={settingsPhone}
+                        onChange={(e) => setSettingsPhone(e.target.value)}
+                        className="w-full px-3 py-1.5 border border-[#8c8f94] rounded text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="block font-bold text-[#1d2327] mb-1">Official Registry Email</label>
+                      <input
+                        type="email"
+                        value={settingsEmail}
+                        onChange={(e) => setSettingsEmail(e.target.value)}
+                        className="w-full px-3 py-1.5 border border-[#8c8f94] rounded text-xs"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Subdomain Configuration Table */}
+                <div className="space-y-3">
+                  <h3 className="text-sm font-bold text-[#1d2327] border-b pb-2">
+                    Campus Subdomain Organization
+                  </h3>
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-[#f6f7f7] border-b border-[#c3c4c7]">
+                      <tr>
+                        <th className="py-2 px-3">Subdomain Host</th>
+                        <th className="py-2 px-3">Target Service</th>
+                        <th className="py-2 px-3">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-[#f0f0f1]">
+                      <tr>
+                        <td className="py-2 px-3 font-mono font-bold text-[#2271b1]">exams.chep</td>
+                        <td className="py-2 px-3">CBT &amp; OSCE Testing Studio</td>
+                        <td className="py-2 px-3 text-emerald-700 font-bold">Active DNS</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 px-3 font-mono font-bold text-[#2271b1]">library.chep</td>
+                        <td className="py-2 px-3">Virtual eLibrary &amp; AI Care Plan</td>
+                        <td className="py-2 px-3 text-emerald-700 font-bold">Active DNS</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 px-3 font-mono font-bold text-[#2271b1]">reflections.chep</td>
+                        <td className="py-2 px-3">Protected Reflective Clinical Forum</td>
+                        <td className="py-2 px-3 text-emerald-700 font-bold">Active DNS</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 px-3 font-mono font-bold text-[#2271b1]">verify.chep</td>
+                        <td className="py-2 px-3">Credential &amp; License Verification</td>
+                        <td className="py-2 px-3 text-emerald-700 font-bold">Active DNS</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 px-3 font-mono font-bold text-[#2271b1]">portal.chep</td>
+                        <td className="py-2 px-3">Student &amp; Faculty Academic LMS</td>
+                        <td className="py-2 px-3 text-emerald-700 font-bold">Active DNS</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 px-3 font-mono font-bold text-[#2271b1]">admin.chep</td>
+                        <td className="py-2 px-3">Enterprise WordPress CMS Suite</td>
+                        <td className="py-2 px-3 text-emerald-700 font-bold">Active DNS</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={() => showToast("Institutional settings saved successfully.")}
+                    className="bg-[#2271b1] hover:bg-[#135e96] text-white text-xs font-semibold px-4 py-2 rounded transition-colors"
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </main>
+      </div>
+
+      {/* ======================================================== */}
+      {/* MODAL: ADD / EDIT POST (CLASSIC WP EDITOR STYLE) */}
+      {/* ======================================================== */}
+      {postModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-2xl max-w-2xl w-full overflow-hidden border border-[#c3c4c7] animate-scaleIn">
+            <div className="px-4 py-3 bg-[#f6f7f7] border-b border-[#c3c4c7] flex items-center justify-between">
+              <h3 className="font-bold text-sm text-[#1d2327]">
+                {editingPost ? "Edit Dispatch" : "Add New Post"}
+              </h3>
+              <button
+                type="button"
+                onClick={() => setPostModalOpen(false)}
+                className="text-gray-500 hover:text-gray-800"
+              >
+                <span className="material-symbols-outlined text-[20px]">close</span>
+              </button>
+            </div>
+
+            <form onSubmit={handleSavePost} className="p-4 sm:p-6 space-y-4 text-xs">
+              <div>
+                <label className="block font-bold text-[#1d2327] mb-1">Post Title</label>
+                <input
+                  type="text"
+                  value={postTitle}
+                  onChange={(e) => setPostTitle(e.target.value)}
+                  placeholder="Enter title here..."
+                  className="w-full px-3 py-2 border border-[#8c8f94] rounded text-sm focus:border-[#2271b1] outline-hidden"
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block font-bold text-[#1d2327] mb-1">Category</label>
+                  <select
+                    value={postCategory}
+                    onChange={(e) => setPostCategory(e.target.value)}
+                    className="w-full px-3 py-1.5 border border-[#8c8f94] rounded text-xs outline-hidden"
+                  >
+                    <option value="Admissions 2026/2027">Admissions 2026/2027</option>
+                    <option value="Community Health">Community Health</option>
+                    <option value="Total Care">Total Care</option>
+                    <option value="Accreditation">Accreditation</option>
+                    <option value="Clinical Skills">Clinical Skills</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block font-bold text-[#1d2327] mb-1">Author</label>
+                  <input
+                    type="text"
+                    value={postAuthor}
+                    onChange={(e) => setPostAuthor(e.target.value)}
+                    className="w-full px-3 py-1.5 border border-[#8c8f94] rounded text-xs outline-hidden"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-bold text-[#1d2327] mb-1">Short Excerpt / Summary</label>
+                <textarea
+                  rows={2}
+                  value={postSummary}
+                  onChange={(e) => setPostSummary(e.target.value)}
+                  placeholder="One or two sentences summarizing this news..."
+                  className="w-full px-3 py-1.5 border border-[#8c8f94] rounded text-xs outline-hidden resize-none"
+                ></textarea>
+              </div>
+
+              <div>
+                <label className="block font-bold text-[#1d2327] mb-1">Full Content</label>
+                <textarea
+                  rows={6}
+                  value={postContent}
+                  onChange={(e) => setPostContent(e.target.value)}
+                  placeholder="Compose full dispatch text..."
+                  className="w-full px-3 py-1.5 border border-[#8c8f94] rounded text-xs outline-hidden"
+                  required
+                ></textarea>
+              </div>
+
+              <div className="flex items-center gap-4 pt-2">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={postPublished}
+                    onChange={(e) => setPostPublished(e.target.checked)}
+                    className="rounded border-[#8c8f94]"
+                  />
+                  <span className="font-bold text-[#1d2327]">Publish immediately to live site</span>
+                </label>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-3 border-t">
+                <button
+                  type="button"
+                  onClick={() => setPostModalOpen(false)}
+                  className="px-4 py-2 border border-[#8c8f94] rounded text-xs font-semibold hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-[#2271b1] hover:bg-[#135e96] text-white rounded text-xs font-semibold shadow-xs"
+                >
+                  {editingPost ? "Update Post" : "Publish Post"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* MODAL: ADD MEDIA ASSET */}
+      {/* ======================================================== */}
+      {mediaModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-2xl max-w-lg w-full overflow-hidden border border-[#c3c4c7] animate-scaleIn">
+            <div className="px-4 py-3 bg-[#f6f7f7] border-b border-[#c3c4c7] flex items-center justify-between">
+              <h3 className="font-bold text-sm text-[#1d2327]">Upload New Media Asset</h3>
+              <button
+                type="button"
+                onClick={() => setMediaModalOpen(false)}
+                className="text-gray-500 hover:text-gray-800"
+              >
+                <span className="material-symbols-outlined text-[20px]">close</span>
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveMedia} className="p-4 sm:p-6 space-y-4 text-xs">
+              <div>
+                <label className="block font-bold text-[#1d2327] mb-1">Asset Title</label>
+                <input
+                  type="text"
+                  value={mediaTitle}
+                  onChange={(e) => setMediaTitle(e.target.value)}
+                  placeholder="e.g. Simulation Lab Manikin Training"
+                  className="w-full px-3 py-1.5 border border-[#8c8f94] rounded text-xs outline-hidden"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-[#1d2327] mb-1">Media Category</label>
+                <select
+                  value={mediaCategory}
+                  onChange={(e) => setMediaCategory(e.target.value)}
+                  className="w-full px-3 py-1.5 border border-[#8c8f94] rounded text-xs outline-hidden"
+                >
+                  <option value="campus">Campus &amp; Main Complex</option>
+                  <option value="simulation">Clinical Simulation Lab</option>
+                  <option value="ict">ICT Digital Suites</option>
+                  <option value="hostel">Hostels &amp; Residential Quarters</option>
+                  <option value="outreach">Community Health Outreach</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block font-bold text-[#1d2327] mb-1">Image URL / Path</label>
+                <input
+                  type="text"
+                  value={mediaUrl}
+                  onChange={(e) => setMediaUrl(e.target.value)}
+                  placeholder="/images/chep/..."
+                  className="w-full px-3 py-1.5 border border-[#8c8f94] rounded text-xs font-mono outline-hidden"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-[#1d2327] mb-1">Caption / Description</label>
+                <textarea
+                  rows={2}
+                  value={mediaCaption}
+                  onChange={(e) => setMediaCaption(e.target.value)}
+                  placeholder="Official caption displayed in gallery..."
+                  className="w-full px-3 py-1.5 border border-[#8c8f94] rounded text-xs outline-hidden resize-none"
+                ></textarea>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-3 border-t">
+                <button
+                  type="button"
+                  onClick={() => setMediaModalOpen(false)}
+                  className="px-4 py-2 border border-[#8c8f94] rounded text-xs font-semibold hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-[#2271b1] hover:bg-[#135e96] text-white rounded text-xs font-semibold shadow-xs"
+                >
+                  Save Asset
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* MODAL: PHOTO DETAILS PREVIEW */}
+      {/* ======================================================== */}
+      {selectedPhotoPreview && (
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-2xl max-w-2xl w-full overflow-hidden border border-[#c3c4c7] animate-scaleIn">
+            <div className="p-4 bg-[#f6f7f7] border-b border-[#c3c4c7] flex items-center justify-between">
+              <h3 className="font-bold text-sm text-[#1d2327]">{selectedPhotoPreview.title}</h3>
+              <button
+                type="button"
+                onClick={() => setSelectedPhotoPreview(null)}
+                className="text-gray-500 hover:text-gray-800"
+              >
+                <span className="material-symbols-outlined text-[20px]">close</span>
+              </button>
+            </div>
+            <div className="p-4 space-y-3">
+              <img
+                src={selectedPhotoPreview.image_url}
+                alt={selectedPhotoPreview.title}
+                className="w-full max-h-80 object-cover rounded border"
+              />
+              <div className="text-xs space-y-1">
+                <p className="text-[#646970]">
+                  <strong>Caption:</strong> {selectedPhotoPreview.caption}
+                </p>
+                <p className="text-[#646970]">
+                  <strong>Category:</strong> {selectedPhotoPreview.category}
+                </p>
+                <div className="flex items-center gap-2 pt-2">
+                  <input
+                    type="text"
+                    readOnly
+                    value={selectedPhotoPreview.image_url}
+                    className="w-full px-2 py-1 bg-gray-50 border rounded font-mono text-[11px]"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(selectedPhotoPreview.image_url);
+                      showToast("Image URL copied to clipboard.");
+                    }}
+                    className="px-3 py-1 bg-[#2271b1] text-white rounded font-semibold text-xs whitespace-nowrap"
+                  >
+                    Copy URL
                   </button>
                 </div>
               </div>
             </div>
           </div>
-        )}
-      </main>
+        </div>
+      )}
 
-      <Footer />
-    </>
+      {/* ======================================================== */}
+      {/* MODAL: DOSSIER INSPECTOR */}
+      {/* ======================================================== */}
+      {selectedDossier && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl shadow-2xl max-w-lg w-full overflow-hidden border border-[#c3c4c7] animate-scaleIn">
+            <div className="p-4 bg-[#f6f7f7] border-b border-[#c3c4c7] flex items-center justify-between">
+              <div>
+                <h3 className="font-bold text-sm text-[#1d2327]">{selectedDossier.name}</h3>
+                <p className="text-[11px] font-mono text-[#2271b1]">{selectedDossier.id}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedDossier(null)}
+                className="text-gray-500 hover:text-gray-800"
+              >
+                <span className="material-symbols-outlined text-[20px]">close</span>
+              </button>
+            </div>
+            <div className="p-5 space-y-3 text-xs">
+              <div className="grid grid-cols-2 gap-3 py-2 border-b border-[#f0f0f1]">
+                <div>
+                  <span className="text-[#8c8f94] block">Programme</span>
+                  <span className="font-bold text-[#1d2327]">{selectedDossier.program}</span>
+                </div>
+                <div>
+                  <span className="text-[#8c8f94] block">Duration</span>
+                  <span className="font-bold text-[#1d2327]">{selectedDossier.duration}</span>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3 py-2 border-b border-[#f0f0f1]">
+                <div>
+                  <span className="text-[#8c8f94] block">O'Level Status</span>
+                  <span className="font-bold text-emerald-700">{selectedDossier.olevel}</span>
+                </div>
+                <div>
+                  <span className="text-[#8c8f94] block">Screening Batch</span>
+                  <span className="font-bold text-[#1d2327]">{selectedDossier.batch}</span>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3 py-2 border-b border-[#f0f0f1]">
+                <div>
+                  <span className="text-[#8c8f94] block">Remita RRR</span>
+                  <span className="font-mono font-bold text-[#1d2327]">{selectedDossier.rrr}</span>
+                </div>
+                <div>
+                  <span className="text-[#8c8f94] block">Payment Fee</span>
+                  <span className="font-bold text-emerald-700">{selectedDossier.fee}</span>
+                </div>
+              </div>
+              <div className="pt-3 flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleStatusChange(selectedDossier.id, "admitted")}
+                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded"
+                >
+                  Confirm Full Admission (NMCN Indexing)
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* MODAL: ADD USER */}
+      {/* ======================================================== */}
+      {userModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-2xl max-w-md w-full overflow-hidden border border-[#c3c4c7] animate-scaleIn">
+            <div className="px-4 py-3 bg-[#f6f7f7] border-b border-[#c3c4c7] flex items-center justify-between">
+              <h3 className="font-bold text-sm text-[#1d2327]">Register New User Account</h3>
+              <button
+                type="button"
+                onClick={() => setUserModalOpen(false)}
+                className="text-gray-500 hover:text-gray-800"
+              >
+                <span className="material-symbols-outlined text-[20px]">close</span>
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveUser} className="p-4 sm:p-6 space-y-4 text-xs">
+              <div>
+                <label className="block font-bold text-[#1d2327] mb-1">Full Name</label>
+                <input
+                  type="text"
+                  value={userFullName}
+                  onChange={(e) => setUserFullName(e.target.value)}
+                  placeholder="e.g. Dr. K. O. Adeleke"
+                  className="w-full px-3 py-1.5 border border-[#8c8f94] rounded text-xs outline-hidden"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-[#1d2327] mb-1">Institutional Email</label>
+                <input
+                  type="email"
+                  value={userEmail}
+                  onChange={(e) => setUserEmail(e.target.value)}
+                  placeholder="adeleke.k@chepnursingcollege.org"
+                  className="w-full px-3 py-1.5 border border-[#8c8f94] rounded text-xs outline-hidden"
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-bold text-[#1d2327] mb-1">Role</label>
+                  <select
+                    value={userRole}
+                    onChange={(e) => setUserRole(e.target.value)}
+                    className="w-full px-3 py-1.5 border border-[#8c8f94] rounded text-xs outline-hidden"
+                  >
+                    <option value="Super Admin">Super Admin</option>
+                    <option value="Editor">Editor</option>
+                    <option value="Faculty Lecturer">Faculty Lecturer</option>
+                    <option value="Clinical Preceptor">Clinical Preceptor</option>
+                    <option value="Bursar">Bursar</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block font-bold text-[#1d2327] mb-1">Department</label>
+                  <input
+                    type="text"
+                    value={userDept}
+                    onChange={(e) => setUserDept(e.target.value)}
+                    placeholder="e.g. Nursing Sciences"
+                    className="w-full px-3 py-1.5 border border-[#8c8f94] rounded text-xs outline-hidden"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-3 border-t">
+                <button
+                  type="button"
+                  onClick={() => setUserModalOpen(false)}
+                  className="px-4 py-2 border border-[#8c8f94] rounded text-xs font-semibold hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-[#2271b1] hover:bg-[#135e96] text-white rounded text-xs font-semibold shadow-xs"
+                >
+                  Create Account
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* MODAL: ADD eLIBRARY ITEM */}
+      {/* ======================================================== */}
+      {libModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-2xl max-w-md w-full overflow-hidden border border-[#c3c4c7] animate-scaleIn">
+            <div className="px-4 py-3 bg-[#f6f7f7] border-b border-[#c3c4c7] flex items-center justify-between">
+              <h3 className="font-bold text-sm text-[#1d2327]">Register New eResource</h3>
+              <button
+                type="button"
+                onClick={() => setLibModalOpen(false)}
+                className="text-gray-500 hover:text-gray-800"
+              >
+                <span className="material-symbols-outlined text-[20px]">close</span>
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveLibrary} className="p-4 sm:p-6 space-y-4 text-xs">
+              <div>
+                <label className="block font-bold text-[#1d2327] mb-1">Title</label>
+                <input
+                  type="text"
+                  value={libTitle}
+                  onChange={(e) => setLibTitle(e.target.value)}
+                  placeholder="e.g. Lippincott Manual of Nursing Practice"
+                  className="w-full px-3 py-1.5 border border-[#8c8f94] rounded text-xs outline-hidden"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-[#1d2327] mb-1">Authors</label>
+                <input
+                  type="text"
+                  value={libAuthor}
+                  onChange={(e) => setLibAuthor(e.target.value)}
+                  placeholder="e.g. Sandra M. Nettina"
+                  className="w-full px-3 py-1.5 border border-[#8c8f94] rounded text-xs outline-hidden"
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-bold text-[#1d2327] mb-1">Type</label>
+                  <select
+                    value={libType}
+                    onChange={(e) => setLibType(e.target.value as any)}
+                    className="w-full px-3 py-1.5 border border-[#8c8f94] rounded text-xs outline-hidden"
+                  >
+                    <option value="ebook">eBook (Textbook)</option>
+                    <option value="journal">Peer-Reviewed Journal</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block font-bold text-[#1d2327] mb-1">Discipline</label>
+                  <select
+                    value={libCategory}
+                    onChange={(e) => setLibCategory(e.target.value)}
+                    className="w-full px-3 py-1.5 border border-[#8c8f94] rounded text-xs outline-hidden"
+                  >
+                    <option value="Medical-Surgical">Medical-Surgical</option>
+                    <option value="Pharmacology">Pharmacology</option>
+                    <option value="Midwifery">Midwifery</option>
+                    <option value="Public Health">Public Health</option>
+                    <option value="Fundamentals">Fundamentals</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-bold text-[#1d2327] mb-1">ISBN / DOI</label>
+                  <input
+                    type="text"
+                    value={libIsbn}
+                    onChange={(e) => setLibIsbn(e.target.value)}
+                    placeholder="978-..."
+                    className="w-full px-3 py-1.5 border border-[#8c8f94] rounded text-xs font-mono outline-hidden"
+                  />
+                </div>
+                <div>
+                  <label className="block font-bold text-[#1d2327] mb-1">Target Level</label>
+                  <input
+                    type="text"
+                    value={libLevel}
+                    onChange={(e) => setLibLevel(e.target.value)}
+                    placeholder="300 Level"
+                    className="w-full px-3 py-1.5 border border-[#8c8f94] rounded text-xs outline-hidden"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-3 border-t">
+                <button
+                  type="button"
+                  onClick={() => setLibModalOpen(false)}
+                  className="px-4 py-2 border border-[#8c8f94] rounded text-xs font-semibold hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-[#2271b1] hover:bg-[#135e96] text-white rounded text-xs font-semibold shadow-xs"
+                >
+                  Save to OPAC
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* MODAL: ADD EXAM QUESTION */}
+      {/* ======================================================== */}
+      {examModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-2xl max-w-md w-full overflow-hidden border border-[#c3c4c7] animate-scaleIn">
+            <div className="px-4 py-3 bg-[#f6f7f7] border-b border-[#c3c4c7] flex items-center justify-between">
+              <h3 className="font-bold text-sm text-[#1d2327]">Add Question to Council Bank</h3>
+              <button
+                type="button"
+                onClick={() => setExamModalOpen(false)}
+                className="text-gray-500 hover:text-gray-800"
+              >
+                <span className="material-symbols-outlined text-[20px]">close</span>
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveExamQuestion} className="p-4 sm:p-6 space-y-4 text-xs">
+              <div className="grid grid-cols-3 gap-2">
+                <div>
+                  <label className="block font-bold text-[#1d2327] mb-1">Format</label>
+                  <select
+                    value={examType}
+                    onChange={(e) => setExamType(e.target.value as any)}
+                    className="w-full px-2 py-1.5 border border-[#8c8f94] rounded text-xs outline-hidden"
+                  >
+                    <option value="mcq">MCQ</option>
+                    <option value="essay">Clinical Essay</option>
+                    <option value="osce">OSCE Station</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block font-bold text-[#1d2327] mb-1">Discipline</label>
+                  <input
+                    type="text"
+                    value={examCategory}
+                    onChange={(e) => setExamCategory(e.target.value)}
+                    className="w-full px-2 py-1.5 border border-[#8c8f94] rounded text-xs outline-hidden"
+                  />
+                </div>
+                <div>
+                  <label className="block font-bold text-[#1d2327] mb-1">Level</label>
+                  <input
+                    type="text"
+                    value={examLevel}
+                    onChange={(e) => setExamLevel(e.target.value)}
+                    className="w-full px-2 py-1.5 border border-[#8c8f94] rounded text-xs outline-hidden"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-bold text-[#1d2327] mb-1">
+                  Question Prompt / Clinical Case Stem
+                </label>
+                <textarea
+                  rows={4}
+                  value={examPrompt}
+                  onChange={(e) => setExamPrompt(e.target.value)}
+                  placeholder="Enter full clinical question prompt..."
+                  className="w-full px-3 py-1.5 border border-[#8c8f94] rounded text-xs outline-hidden"
+                  required
+                ></textarea>
+              </div>
+
+              <div>
+                <label className="block font-bold text-[#1d2327] mb-1">Correct Key / Scoring Rubric</label>
+                <textarea
+                  rows={2}
+                  value={examRubric}
+                  onChange={(e) => setExamRubric(e.target.value)}
+                  placeholder="Official NMCN scoring breakdown..."
+                  className="w-full px-3 py-1.5 border border-[#8c8f94] rounded text-xs outline-hidden resize-none"
+                ></textarea>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-3 border-t">
+                <button
+                  type="button"
+                  onClick={() => setExamModalOpen(false)}
+                  className="px-4 py-2 border border-[#8c8f94] rounded text-xs font-semibold hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-[#2271b1] hover:bg-[#135e96] text-white rounded text-xs font-semibold shadow-xs"
+                >
+                  Save Question
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
