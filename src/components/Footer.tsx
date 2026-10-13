@@ -204,9 +204,9 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/admin" className="text-amber-400 hover:text-white transition-colors flex items-center gap-1.5 font-bold">
-                  <span className="material-symbols-outlined text-[16px]">admin_panel_settings</span>
-                  Admin CMS Dashboard
+                <Link href="/admission/slip" className="text-gray-300 hover:text-primary-fixed transition-colors flex items-center gap-1.5">
+                  <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+                  Screening Slip &amp; Status
                 </Link>
               </li>
             </ul>
