@@ -108,8 +108,8 @@ export default function Navbar() {
           </div>
         </Link>
 
-        {/* Desktop Navigation Links */}
-        <nav className="hidden xl:flex items-center gap-6">
+        {/* Desktop Horizontal Navigation Links */}
+        <nav className="hidden lg:flex items-center gap-2 xl:gap-4">
           {navLinks.map((item) => {
             const isActive = pathname === item.href;
             if (item.dropdown) {
@@ -117,19 +117,19 @@ export default function Navbar() {
                 <div key={item.label} className="relative group">
                   <Link
                     href={item.href}
-                    className={`text-sm font-medium transition-colors py-2 flex items-center gap-1 ${
+                    className={`text-xs xl:text-sm font-semibold transition-colors py-2 px-1.5 flex items-center gap-0.5 ${
                       isActive ? "text-forest-base font-bold" : "text-gray-700 hover:text-forest-base"
                     }`}
                   >
                     {item.label}
                     <span className="material-symbols-outlined text-[16px]">expand_more</span>
                   </Link>
-                  <div className="dropdown-menu absolute left-0 top-full hidden w-56 bg-white rounded-lg shadow-xl py-2 mt-1 border border-border-subtle z-50">
+                  <div className="dropdown-menu absolute left-0 top-full hidden group-hover:block w-64 bg-white rounded-xl shadow-2xl py-2 mt-1 border border-gray-200 z-50">
                     {item.dropdown.map((sub) => (
                       <Link
                         key={sub.label}
                         href={sub.href}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-surface-tint hover:text-forest-base transition-colors"
+                        className="block px-4 py-2 text-xs xl:text-sm text-gray-700 hover:bg-emerald-50 hover:text-forest-base transition-colors"
                       >
                         {sub.label}
                       </Link>
@@ -142,7 +142,7 @@ export default function Navbar() {
               <Link
                 key={item.label}
                 href={item.href}
-                className={`text-sm font-medium transition-colors py-2 ${
+                className={`text-xs xl:text-sm font-semibold transition-colors py-2 px-1.5 whitespace-nowrap ${
                   isActive ? "text-forest-base font-bold" : "text-gray-700 hover:text-forest-base"
                 }`}
               >
@@ -153,10 +153,10 @@ export default function Navbar() {
         </nav>
 
         {/* Action CTAs */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <Link
             href="/admission"
-            className="bg-orange-action hover:bg-tertiary-container text-white font-semibold text-sm px-5 py-2.5 rounded-lg shadow-sm transition-all hover:shadow-md"
+            className="bg-orange-action hover:bg-orange-700 text-white font-bold text-xs sm:text-sm px-4 sm:px-5 py-2.5 rounded-xl shadow-sm transition-all hover:shadow-md"
           >
             Enrol Now
           </Link>
@@ -164,7 +164,7 @@ export default function Navbar() {
           {/* Mobile Menu Trigger */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="xl:hidden p-2 rounded-lg text-forest-dark hover:bg-gray-100 transition-colors"
+            className="lg:hidden p-2 rounded-lg text-forest-dark hover:bg-gray-100 transition-colors"
             aria-label="Toggle Navigation Menu"
           >
             <span className="material-symbols-outlined text-[24px]">
@@ -176,7 +176,7 @@ export default function Navbar() {
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="xl:hidden border-t border-border-subtle bg-white px-6 py-4 space-y-3 shadow-lg">
+        <div className="lg:hidden border-t border-border-subtle bg-white px-6 py-4 space-y-3 shadow-lg max-h-[80vh] overflow-y-auto">
           {navLinks.map((item) => (
             <div key={item.label}>
               <Link
