@@ -1,0 +1,123 @@
+@import "tailwindcss";
+
+@theme {
+  --font-heading: var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* Institutional Healthcare Colors */
+  --color-primary: #003f1a;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #055928;
+  --color-on-primary-container: #84ce90;
+  --color-inverse-primary: #8cd799;
+
+  --color-secondary: #006d30;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #92f5a4;
+  --color-on-secondary-container: #007233;
+
+  --color-tertiary: #631f00;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #892e00;
+  --color-on-tertiary-container: #ffa886;
+
+  --color-forest-dark: #033b1a;
+  --color-forest-base: #055928;
+  --color-forest-medium: #0e7039;
+  --color-emerald-accent: #15803d;
+  --color-emerald-light: #dcfce7;
+  --color-amber-vibrant: #f97316;
+  --color-orange-action: #ea580c;
+
+  --color-surface: #faf8ff;
+  --color-surface-dim: #d2d9f4;
+  --color-surface-bright: #faf8ff;
+  --color-surface-canvas: #f8fafc;
+  --color-surface-white: #ffffff;
+  --color-surface-container: #eaedff;
+  --color-surface-container-low: #f2f3ff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-high: #e2e7ff;
+  --color-surface-container-highest: #dae2fd;
+  --color-surface-variant: #dae2fd;
+  --color-surface-tint: #f0fdf4;
+
+  --color-on-surface: #131b2e;
+  --color-on-surface-variant: #404940;
+  --color-inverse-surface: #283044;
+  --color-inverse-on-surface: #eef0ff;
+
+  --color-outline: #707a6f;
+  --color-outline-variant: #bfc9bd;
+  --color-border-subtle: #e2e8f0;
+  --color-text-muted: #64748b;
+
+  --color-primary-fixed: #a8f4b3;
+  --color-primary-fixed-dim: #8cd799;
+  --color-on-primary-fixed: #00210a;
+  --color-on-primary-fixed-variant: #005324;
+
+  --color-secondary-fixed: #95f8a7;
+  --color-secondary-fixed-dim: #79db8d;
+  --color-on-secondary-fixed: #00210a;
+  --color-on-secondary-fixed-variant: #005323;
+
+  --color-tertiary-fixed: #ffdbce;
+  --color-tertiary-fixed-dim: #ffb599;
+  --color-on-tertiary-fixed: #370e00;
+  --color-on-tertiary-fixed-variant: #7f2b00;
+
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-on-error: #ffffff;
+  --color-on-error-container: #93000a;
+
+  /* Custom Spacing Tokens */
+  --spacing-gutter: 1.5rem;
+  --spacing-gutter-mobile: 1rem;
+  --spacing-margin: 2rem;
+  --spacing-margin-mobile: 1rem;
+  --spacing-space-xs: 0.25rem;
+  --spacing-space-sm: 0.5rem;
+  --spacing-space-md: 1rem;
+  --spacing-space-lg: 1.5rem;
+  --spacing-space-xl: 2.5rem;
+  --spacing-space-2xl: 4rem;
+  --spacing-space-3xl: 6rem;
+}
+
+@layer base {
+  html, body {
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    background-color: var(--color-surface-canvas);
+    color: var(--color-on-surface);
+    font-family: var(--font-body);
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Dropdown hover helper */
+.group:hover .dropdown-menu {
+  display: block;
+}

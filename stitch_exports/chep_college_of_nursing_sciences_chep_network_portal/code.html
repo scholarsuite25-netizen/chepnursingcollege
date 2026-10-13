@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}.group:hover .dropdown-menu{display:block;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "tertiary-fixed": "#ffdbce",
+          "background": "#faf8ff",
+          "inverse-primary": "#8cd799",
+          "on-primary-fixed-variant": "#005324",
+          "surface-bright": "#faf8ff",
+          "on-background": "#131b2e",
+          "on-tertiary-fixed-variant": "#7f2b00",
+          "tertiary": "#631f00",
+          "on-secondary-fixed-variant": "#005323",
+          "amber-vibrant": "#f97316",
+          "outline": "#707a6f",
+          "on-tertiary-fixed": "#370e00",
+          "emerald-light": "#dcfce7",
+          "outline-variant": "#bfc9bd",
+          "tertiary-fixed-dim": "#ffb599",
+          "primary-fixed": "#a8f4b3",
+          "error": "#ba1a1a",
+          "secondary-container": "#92f5a4",
+          "primary-container": "#055928",
+          "forest-medium": "#0e7039",
+          "on-primary": "#ffffff",
+          "secondary-fixed-dim": "#79db8d",
+          "surface-white": "#ffffff",
+          "on-error-container": "#93000a",
+          "surface-container-low": "#f2f3ff",
+          "on-error": "#ffffff",
+          "on-tertiary-container": "#ffa886",
+          "on-surface": "#131b2e",
+          "inverse-on-surface": "#eef0ff",
+          "surface-dim": "#d2d9f4",
+          "on-surface-variant": "#404940",
+          "on-secondary-container": "#007233",
+          "on-primary-fixed": "#00210a",
+          "surface-container": "#eaedff",
+          "surface-canvas": "#f8fafc",
+          "surface-container-highest": "#dae2fd",
+          "error-container": "#ffdad6",
+          "border-subtle": "#e2e8f0",
+          "surface-tint": "#f0fdf4",
+          "secondary-fixed": "#95f8a7",
+          "surface-container-high": "#e2e7ff",
+          "on-primary-container": "#84ce90",
+          "on-secondary-fixed": "#00210a",
+          "text-muted": "#64748b",
+          "primary": "#003f1a",
+          "forest-dark": "#033b1a",
+          "emerald-accent": "#15803d",
+          "on-tertiary": "#ffffff",
+          "surface": "#faf8ff",
+          "forest-base": "#055928",
+          "on-secondary": "#ffffff",
+          "surface-variant": "#dae2fd",
+          "inverse-surface": "#283044",
+          "tertiary-container": "#892e00",
+          "secondary": "#006d30",
+          "primary-fixed-dim": "#8cd799",
+          "surface-container-lowest": "#ffffff",
+          "orange-action": "#ea580c"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "gutter-mobile": "1rem",
+          "space-lg": "1.5rem",
+          "space-xl": "2.5rem",
+          "space-md": "1rem",
+          "space-xs": "0.25rem",
+          "space-sm": "0.5rem",
+          "margin": "2rem",
+          "margin-mobile": "1rem",
+          "space-2xl": "4rem",
+          "gutter": "1.5rem",
+          "space-3xl": "6rem"
+        },
+        "fontFamily": {
+          "headline-md": [
+            "Plus Jakarta Sans"
+          ],
+          "label-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "display-lg-mobile": [
+            "Plus Jakarta Sans"
+          ],
+          "body-sm": [
+            "Inter"
+          ],
+          "label-md": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-xl": [
+            "Plus Jakarta Sans"
+          ],
+          "body-lg": [
+            "Inter"
+          ],
+          "headline-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "label-sm": [
+            "Plus Jakarta Sans"
+          ],
+          "body-md": [
+            "Inter"
+          ],
+          "headline-xl-mobile": [
+            "Plus Jakarta Sans"
+          ],
+          "display-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-sm": [
+            "Plus Jakarta Sans"
+          ]
+        },
+        "fontSize": {
+          "headline-md": [
+            "1.5rem",
+            {
+              "lineHeight": "2rem",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "600"
+            }
+          ],
+          "label-lg": [
+            "0.9375rem",
+            {
+              "lineHeight": "1.25rem",
+              "letterSpacing": "0.01em",
+              "fontWeight": "600"
+            }
+          ],
+          "display-lg-mobile": [
+            "2.25rem",
+            {
+              "lineHeight": "2.75rem",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "800"
+            }
+          ],
+          "body-sm": [
+            "0.875rem",
+            {
+              "lineHeight": "1.4rem",
+              "fontWeight": "400"
+            }
+          ],
+          "label-md": [
+            "0.8125rem",
+            {
+              "lineHeight": "1rem",
+              "letterSpacing": "0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-xl": [
+            "2.5rem",
+            {
+              "lineHeight": "3rem",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "700"
+            }
+          ],
+          "body-lg": [
+            "1.125rem",
+            {
+              "lineHeight": "1.75rem",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-lg": [
+            "2rem",
+            {
+              "lineHeight": "2.5rem",
+              "letterSpacing": "-0.015em",
+              "fontWeight": "700"
+            }
+          ],
+          "label-sm": [
+            "0.6875rem",
+            {
+              "lineHeight": "0.875rem",
+              "letterSpacing": "0.05em",
+              "fontWeight": "700"
+            }
+          ],
+          "body-md": [
+            "1rem",
+            {
+              "lineHeight": "1.6rem",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-xl-mobile": [
+            "1.875rem",
+            {
+              "lineHeight": "2.35rem",
+              "letterSpacing": "-0.015em",
+              "fontWeight": "700"
+            }
+          ],
+          "display-lg": [
+            "3.5rem",
+            {
+              "lineHeight": "4.25rem",
+              "letterSpacing": "-0.025em",
+              "fontWeight": "800"
+            }
+          ],
+          "headline-sm": [
+            "1.25rem",
+            {
+              "lineHeight": "1.75rem",
+              "fontWeight": "600"
+            }
+          ]
+        }
+      },
+    },
+  }</script></head><body class="bg-surface-canvas font-body-md text-on-surface antialiased"><header class="fixed top-0 left-0 right-0 z-50 bg-surface-white/95 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="bg-forest-dark text-on-primary py-1 px-margin"><div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between text-body-sm"><div class="flex items-center gap-space-lg"><span class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[16px] text-primary-fixed">call</span>+234 916 635 674</span><span class="hidden md:flex items-center gap-space-xs"><span class="material-symbols-outlined text-[16px] text-primary-fixed">mail</span>enquiries@chepnursingcollege.org</span></div><div class="flex items-center gap-space-md"><span class="hidden lg:inline text-label-sm uppercase tracking-wider text-emerald-light">Nursing &amp; Midwifery Council of Nigeria Accredited</span><a class="inline-flex items-center gap-space-xs font-label-md text-label-md text-primary-fixed hover:text-on-primary transition-colors" data-path="portal-login" href="#"><span class="material-symbols-outlined text-[16px]">lock</span>Portal Login</a></div></div></div><div class="h-20 max-w-7xl mx-auto px-margin flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-sm"><img alt="CHEP College Crest" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UKSDRoYiyQKsVN9-S3n7EfmOpw6-6iaO7rYrxwuhyRoJVMl91GnctonG5Zuz7e0WZEQC21oHkmbtNi-gjIMSCT8p2KDNssugWjMCbiC0fwxlpCVNnGW3aqTwhIlIl51lfuaKeNA90yJEWy7gycSDKo5LnbN_jTpaxSrRvegZaoOyXVoCmUx57MbRhR4xFkVFTH_hfBQw5OPm_AtTD2E99TXZms8JGKnbJz2tLyz4W54Ag3DVlWL7qoRoY"/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-forest-dark leading-none tracking-tight">CHEP College</span><span class="font-label-sm text-label-sm uppercase tracking-wider text-forest-medium mt-space-xs">of Nursing Sciences</span></div></div><nav class="hidden xl:flex items-center gap-space-md" data-active-classes="text-forest-base font-bold"><a class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-tint hover:text-forest-base transition-colors" data-path="home" href="#">Home</a><div class="relative group"><button class="font-label-md text-label-md text-on-surface-variant hover:text-forest-base transition-colors py-2 flex items-center gap-1">About<span class="material-symbols-outlined text-[16px]">expand_more</span></button><div class="dropdown-menu absolute left-0 top-full hidden w-56 bg-surface-white rounded-lg shadow-lg py-2 mt-1 border border-border-subtle"><a class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-tint hover:text-forest-base transition-colors" data-path="about-us" href="#">About Us</a><a class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-tint hover:text-forest-base transition-colors" data-path="board-of-trustees" href="#">Board of Trustees</a><a class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-tint hover:text-forest-base transition-colors" data-path="management-team" href="#">Management Team</a></div></div><a class="font-label-md text-label-md text-on-surface-variant hover:text-forest-base transition-colors py-2" data-path="admission" href="#">Admission</a><div class="relative group"><button class="font-label-md text-label-md text-on-surface-variant hover:text-forest-base transition-colors py-2 flex items-center gap-1">Virtual Library<span class="material-symbols-outlined text-[16px]">expand_more</span></button><div class="dropdown-menu absolute left-0 top-full hidden w-60 bg-surface-white rounded-lg shadow-lg py-2 mt-1 border border-border-subtle"><a class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-tint hover:text-forest-base transition-colors" data-path="virtual-library" href="#">Chep Library</a><a class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-tint hover:text-forest-base transition-colors" data-path="library-services" href="#">Services</a><a class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-tint hover:text-forest-base transition-colors" data-path="library-ebooks" href="#">eBooks</a><a class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-tint hover:text-forest-base transition-colors" data-path="library-ejournals" href="#">eJournals</a><a class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-tint hover:text-forest-base transition-colors" data-path="library-opac" href="#">OPAC Catalog</a><a class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-tint hover:text-forest-base transition-colors" data-path="library-databases" href="#">Databases</a></div></div><a class="font-label-md text-label-md text-on-surface-variant hover:text-forest-base transition-colors py-2" data-path="chep-network" href="#">CHEP Network</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-forest-base transition-colors py-2" data-path="gallery" href="#">Gallery</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-forest-base transition-colors py-2" data-path="news" href="#">News</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-forest-base transition-colors py-2" data-path="contact-us" href="#">Contact Us</a></nav><div class="flex items-center gap-space-sm"><a class="bg-orange-action hover:bg-tertiary-container text-on-primary font-label-lg text-label-lg px-space-lg py-2.5 rounded-lg shadow-sm transition-colors text-center" data-path="admission" href="#">Enrol Now</a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-20 bg-surface-canvas"><div class="flex flex-col w-full">
+<!-- Status & Security Banner -->
+<div class="w-full bg-forest-dark text-on-primary">
+<div class="max-w-7xl mx-auto px-margin py-space-sm flex flex-wrap items-center justify-between text-body-sm gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="inline-flex items-center px-space-sm py-0.5 rounded-full bg-forest-medium text-emerald-light font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-emerald-accent mr-1.5 animate-pulse"></span>
+          PORTAL LIVE • 2025/2026 SESSION
+        </span>
+<span class="hidden md:inline text-surface-variant font-body-sm">NMCN Indexing, e-Logbook &amp; Remita Verification Gateway</span>
+</div>
+<div class="flex items-center gap-space-md text-surface-variant text-label-sm font-label-sm">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary-fixed">verified_user</span>
+          256-Bit TLS Encrypted
+        </span>
+<span class="hidden sm:inline">|</span>
+<a class="text-primary-fixed hover:text-surface-white transition-colors flex items-center gap-1" href="#helpdesk-section">
+<span class="material-symbols-outlined text-[16px]">headset_mic</span>
+          ICT Helpdesk
+        </a>
+</div>
+</div>
+</div>
+<!-- Breadcrumbs & Header Strip -->
+<div class="w-full bg-surface-white shadow-sm">
+<div class="max-w-7xl mx-auto px-margin py-space-md flex flex-wrap items-center justify-between gap-space-sm">
+<nav aria-label="Breadcrumb" class="flex items-center gap-2 font-label-md text-label-md text-text-muted">
+<a class="hover:text-forest-base transition-colors flex items-center gap-1" data-path="home" href="#">
+<span class="material-symbols-outlined text-[18px]">home</span>
+          Home
+        </a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<a class="hover:text-forest-base transition-colors" data-path="chep-network" href="#">CHEP Network</a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="text-forest-dark font-label-md font-bold">Portal Login &amp; Gateway</span>
+</nav>
+<div class="flex items-center gap-space-sm text-label-sm font-label-sm text-forest-medium">
+<span class="material-symbols-outlined text-[18px]">school</span>
+<span>Accredited by Nursing &amp; Midwifery Council of Nigeria (NMCN)</span>
+</div>
+</div>
+</div>
+<!-- Core Gateway Section: Two-Column Login Grid -->
+<section class="w-full py-space-2xl bg-surface-canvas">
+<div class="max-w-7xl mx-auto px-margin">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
+<!-- Left Column: Welcome & System Status (7 cols) -->
+<div class="lg:col-span-7 flex flex-col space-y-space-xl">
+<!-- Editorial Intro Block -->
+<div class="space-y-space-md">
+<div class="inline-flex items-center gap-space-xs px-3 py-1 rounded-full bg-emerald-light text-forest-dark font-label-sm text-label-sm tracking-wider uppercase">
+<span class="material-symbols-outlined text-[16px] text-forest-medium">account_balance</span>
+              Unified Health Academic Network (UHAN)
+            </div>
+<h1 class="font-headline-xl text-headline-xl text-forest-dark tracking-tight leading-tight">
+              Welcome to the CHEP Academic &amp; Clinical Gateway
+            </h1>
+<p class="font-body-lg text-body-lg text-text-muted leading-relaxed">
+              Access your personalized clinical rotation logs, verify Remita RRR school fee clearances, register semester nursing modules, and interact directly with preceptors across our affiliated tertiary medical centers.
+            </p>
+</div>
+<!-- Feature Stack with Rich Icons -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+<!-- Feature 1 -->
+<div class="p-space-lg rounded-xl bg-surface-white shadow-sm flex flex-col space-y-space-xs transition-transform duration-200 hover:-translate-y-1">
+<div class="w-12 h-12 rounded-lg bg-emerald-light flex items-center justify-center text-forest-base">
+<span class="material-symbols-outlined text-[26px]">assignment_turned_in</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-forest-dark pt-space-xs">Course &amp; Exam Slip Registration</h2>
+<p class="font-body-sm text-body-sm text-text-muted">
+                Complete basic and post-basic nursing course registration. Download authorized biometric exam clearance slips.
+              </p>
+</div>
+<!-- Feature 2 -->
+<div class="p-space-lg rounded-xl bg-surface-white shadow-sm flex flex-col space-y-space-xs transition-transform duration-200 hover:-translate-y-1">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center text-forest-medium">
+<span class="material-symbols-outlined text-[26px]">clinical_notes</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-forest-dark pt-space-xs">e-Clinical Logbook Submission</h2>
+<p class="font-body-sm text-body-sm text-text-muted">
+                Document real-time bedside procedures, pediatric ward hours, and secure instantaneous preceptor clinical sign-offs.
+              </p>
+</div>
+<!-- Feature 3 -->
+<div class="p-space-lg rounded-xl bg-surface-white shadow-sm flex flex-col space-y-space-xs transition-transform duration-200 hover:-translate-y-1">
+<div class="w-12 h-12 rounded-lg bg-surface-tint/20 flex items-center justify-center text-forest-dark">
+<span class="material-symbols-outlined text-[26px]">payments</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-forest-dark pt-space-xs">Remita RRR Fee Verification</h2>
+<p class="font-body-sm text-body-sm text-text-muted">
+                Instant RRR transaction checking, tuition receipts, accommodation levy records, and NMCN indexing fee confirmations.
+              </p>
+</div>
+<!-- Feature 4 -->
+<div class="p-space-lg rounded-xl bg-surface-white shadow-sm flex flex-col space-y-space-xs transition-transform duration-200 hover:-translate-y-1">
+<div class="w-12 h-12 rounded-lg bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed-variant">
+<span class="material-symbols-outlined text-[26px]">local_library</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-forest-dark pt-space-xs">Remote Virtual Library Access</h2>
+<p class="font-body-sm text-body-sm text-text-muted">
+                Seamless federated SSO into HINARI, ScienceDirect, ProQuest nursing databases, and college clinical monographs.
+              </p>
+</div>
+</div>
+<!-- Academic Calendar & Alert Card -->
+<div class="p-space-lg rounded-xl bg-forest-dark text-on-primary shadow-md relative overflow-hidden">
+<div class="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-emerald-accent/10 pointer-events-none"></div>
+<div class="flex items-start gap-space-md">
+<div class="w-10 h-10 rounded-full bg-surface-white/10 flex items-center justify-center flex-shrink-0 text-primary-fixed">
+<span class="material-symbols-outlined text-[22px]">campaign</span>
+</div>
+<div class="space-y-space-xs">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-md text-label-md text-primary-fixed uppercase tracking-wider">Senate Notice</span>
+<span class="font-label-sm text-label-sm text-surface-variant">March 2026</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-surface-white">2025/2026 First Semester Mid-Term &amp; Hospital Postings</h3>
+<p class="font-body-sm text-body-sm text-surface-variant/90 leading-relaxed">
+                  All Year II &amp; Year III Student Nurses must upload validated hospital rotation shifts before Friday, 28th March. Hospital preceptor digital signatures close automatically on portal midnight.
+                </p>
+</div>
+</div>
+</div>
+<!-- Visual Showcase: Campus Life and Clinicals -->
+<div class="grid grid-cols-2 gap-space-md pt-space-xs">
+<div class="rounded-xl overflow-hidden shadow-sm relative group h-44">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A focused Nigerian female student nurse in a clean modern clinical anatomy lab wearing dark green clinical scrubs and a stethoscope examining a high-fidelity patient simulation mannequin with soft clinical morning lighting and medical monitors in the background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlywVMQPERFdDkymzeqdu7Hyfd03fuRPy1lG3N3Sp6y5S_GG_Qn3Aa_2K9Lxx_SU4C3LrTfNWjL-Ef6xEJ7CtjITJExRCYTJp7N8QmorMDZZkEISP77nSuH5ZsV7L7Lnem-BDPmOsDYilQFC593RPEWFuIl3cbmLbZWk1nQwprHCGul8jwTzOlo2CcVjL32hCe6jD2WZtbgvyibp0N-bcK-AYRsydfizURJoYlyFSnDReia3kscbt0"/>
+<div class="absolute inset-0 bg-gradient-to-t from-forest-dark/90 via-transparent to-transparent flex items-end p-space-md">
+<span class="text-on-primary font-label-md text-label-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary-fixed">biotech</span>
+                  High-Fidelity Sim Labs
+                </span>
+</div>
+</div>
+<div class="rounded-xl overflow-hidden shadow-sm relative group h-44">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Two professional nursing instructors in crisp white laboratory coats mentoring an attentive student nurse in a bright modern college library surrounded by medical references and tablet computers with warm interior daylight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6YxXHrn218Uxu63OQNF1Z6wFx0FEv5IyOZ3JFehDMLzJtXjZ1Pdn6-yqZ0SX0KbrxrRB1kF7ofNNl-k-Gog-QKzSHeSIQoIqofO7YSPx3Nq-PhMC3B3IpOAw-HoZI1XC5QMIo2TcutFk5r1uwGtYZnaVh-aZhKwI6nLE0Jbwy5Xs5TYwciiALmRUUVSfJBA-nr0Ej2IomyKjBFKEymT5Wziu9OuzX70xgvq2CrHkDYrXzDoQMqw6M"/>
+<div class="absolute inset-0 bg-gradient-to-t from-forest-dark/90 via-transparent to-transparent flex items-end p-space-md">
+<span class="text-on-primary font-label-md text-label-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary-fixed">groups</span>
+                  Preceptor Clinical Ward Rounds
+                </span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Interactive Multi-Role Authentication Card (5 cols) -->
+<div class="lg:col-span-5">
+<div class="rounded-xl bg-surface-white shadow-xl p-space-xl sticky top-28">
+<!-- Auth Header -->
+<div class="flex items-center justify-between pb-space-md">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-forest-medium font-bold block">Secure Gateway</span>
+<h2 class="font-headline-md text-headline-md text-forest-dark">CHEP Network SSO</h2>
+</div>
+<div class="w-12 h-12 rounded-xl bg-forest-base/10 flex items-center justify-center text-forest-base">
+<span class="material-symbols-outlined text-[28px]">lock</span>
+</div>
+</div>
+<!-- Role Selector Tabs -->
+<div class="pt-space-xs pb-space-md">
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-1 p-1 bg-surface-canvas rounded-lg" id="role-tab-group">
+<button class="py-2 px-2 text-center rounded-lg font-label-sm text-label-sm transition-all bg-forest-base text-on-primary shadow-sm" id="tab-student" onclick="selectRole('student')" type="button">
+                  Student Nurse
+                </button>
+<button class="py-2 px-2 text-center rounded-lg font-label-sm text-label-sm transition-all text-text-muted hover:text-forest-dark hover:bg-surface-white" id="tab-alumni" onclick="selectRole('alumni')" type="button">
+                  Alumni
+                </button>
+<button class="py-2 px-2 text-center rounded-lg font-label-sm text-label-sm transition-all text-text-muted hover:text-forest-dark hover:bg-surface-white" id="tab-faculty" onclick="selectRole('faculty')" type="button">
+                  Faculty
+                </button>
+<button class="py-2 px-2 text-center rounded-lg font-label-sm text-label-sm transition-all text-text-muted hover:text-forest-dark hover:bg-surface-white" id="tab-applicant" onclick="selectRole('applicant')" type="button">
+                  Applicant
+                </button>
+</div>
+</div>
+<!-- Authentication Form -->
+<form class="space-y-space-md" id="portal-login-form" onsubmit="handleAuthSubmit(event)">
+<!-- Session Dropdown -->
+<div class="space-y-1">
+<label class="font-label-md text-label-md text-forest-dark block" for="academic-session">Academic Session</label>
+<div class="relative">
+<select class="w-full h-11 px-3 bg-surface-canvas text-forest-dark font-body-sm text-body-sm rounded-lg appearance-none cursor-pointer focus:bg-surface-white focus:outline-none focus:ring-2 focus:ring-forest-medium" id="academic-session">
+<option selected="" value="2025/2026">2025/2026 Academic Session (Current)</option>
+<option value="2024/2025">2024/2025 Academic Session</option>
+<option value="2023/2024">2023/2024 Academic Session</option>
+<option value="alumni-records">Historical / Archive Registry</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-3 text-[20px] text-text-muted pointer-events-none">unfold_more</span>
+</div>
+</div>
+<!-- Identifier Input (Dynamic by Role) -->
+<div class="space-y-1">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-forest-dark block" for="matric-id" id="matric-label">
+                    Matriculation / NMCN Index Number
+                  </label>
+<span class="font-label-sm text-label-sm text-forest-medium" id="matric-helper-badge">Verified Format</span>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-[20px] text-text-muted">badge</span>
+<input class="w-full h-11 pl-10 pr-3 bg-surface-canvas text-forest-dark font-body-sm text-body-sm rounded-lg focus:bg-surface-white focus:outline-none focus:ring-2 focus:ring-forest-medium placeholder:text-text-muted/60" id="matric-id" placeholder="e.g. CHEP/NUR/2025/0842" required="" type="text"/>
+</div>
+</div>
+<!-- Password Input -->
+<div class="space-y-1">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-forest-dark block" for="user-password">Portal Password</label>
+<a class="font-label-sm text-label-sm text-orange-action hover:text-tertiary-container transition-colors" href="#" onclick="openForgotModal(event)">Forgot Password?</a>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-[20px] text-text-muted">key</span>
+<input class="w-full h-11 pl-10 pr-10 bg-surface-canvas text-forest-dark font-body-sm text-body-sm rounded-lg focus:bg-surface-white focus:outline-none focus:ring-2 focus:ring-forest-medium placeholder:text-text-muted/60" id="user-password" placeholder="••••••••••••" required="" type="password"/>
+<button aria-label="Toggle password view" class="absolute right-3 top-2.5 text-text-muted hover:text-forest-dark" onclick="togglePasswordVisibility()" type="button">
+<span class="material-symbols-outlined text-[20px]" id="eye-icon">visibility</span>
+</button>
+</div>
+</div>
+<!-- Checkbox & Security notice -->
+<div class="flex items-center justify-between pt-space-xs">
+<label class="flex items-center gap-2 cursor-pointer select-none">
+<input class="w-4 h-4 rounded text-forest-base accent-forest-base cursor-pointer" id="remember-device" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-text-muted">Remember this workstation</span>
+</label>
+<span class="font-label-sm text-label-sm text-forest-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">shield</span>
+                  2FA Active
+                </span>
+</div>
+<!-- Primary Action CTA -->
+<div class="pt-space-xs">
+<button class="w-full h-12 bg-orange-action hover:bg-tertiary-container text-on-primary font-label-lg text-label-lg rounded-lg shadow-md transition-all flex items-center justify-center gap-space-xs group" id="auth-btn" type="submit">
+<span>Sign In to CHEP Portal</span>
+<span class="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform">login</span>
+</button>
+</div>
+<!-- Live Submission Toast (Hidden State) -->
+<div class="hidden p-3 rounded-lg bg-emerald-light text-forest-dark font-body-sm text-body-sm flex items-center gap-2" id="login-feedback">
+<span class="material-symbols-outlined text-forest-base text-[20px] animate-spin">progress_activity</span>
+<span>Authenticating with Central Registry &amp; NMCN Index...</span>
+</div>
+</form>
+<!-- NMCN Index Verification Alert -->
+<div class="mt-space-lg p-space-md rounded-xl bg-surface-canvas space-y-space-xs">
+<div class="flex items-center gap-2 text-forest-dark font-label-md text-label-md">
+<span class="material-symbols-outlined text-[18px] text-forest-base">verified</span>
+<span>NMCN Index Status Notice</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-muted leading-relaxed">
+                First-year matriculated nurses awaiting Nursing Council index verification can authenticate using their provisional admission voucher number.
+              </p>
+</div>
+<!-- ICT Support Contacts -->
+<div class="mt-space-md pt-space-md flex flex-col space-y-space-xs" id="helpdesk-section">
+<span class="font-label-sm text-label-sm text-forest-dark font-bold uppercase tracking-wider">ICT Directorate Helpdesk</span>
+<div class="flex flex-col sm:flex-row sm:items-center justify-between text-body-sm font-body-sm text-text-muted gap-1">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-forest-medium">call</span>
+                  +234 916 635 674
+                </span>
+<a class="text-forest-base hover:underline flex items-center gap-1" href="mailto:it-support@chepnursingcollege.org">
+<span class="material-symbols-outlined text-[16px]">mail</span>
+                  it-support@chepnursingcollege.org
+                </a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Quick Portal Services Grid -->
+<section class="w-full py-space-2xl bg-surface-white">
+<div class="max-w-7xl mx-auto px-margin">
+<!-- Section Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-space-xl gap-space-md">
+<div class="space-y-space-xs max-w-2xl">
+<div class="inline-flex items-center gap-1 font-label-sm text-label-sm text-forest-medium font-bold uppercase tracking-wider">
+<span class="material-symbols-outlined text-[16px]">apps</span>
+            Express Self-Service Links
+          </div>
+<h2 class="font-headline-lg text-headline-lg text-forest-dark">Direct Portal Academic Services</h2>
+<p class="font-body-md text-body-md text-text-muted">
+            Frequently utilized administrative modules. Direct access requires valid active session credentials.
+          </p>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-label-md text-label-md text-text-muted">Server Status:</span>
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-light text-forest-dark font-label-sm text-label-sm font-bold">
+<span class="w-2 h-2 rounded-full bg-forest-base animate-ping"></span>
+            All Clusters Operational
+          </span>
+</div>
+</div>
+<!-- 4 Quick Service Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-lg">
+<!-- Service Card 1 -->
+<div class="p-space-xl rounded-xl bg-surface-canvas hover:bg-surface-tint/10 transition-all duration-300 shadow-sm hover:shadow-md flex flex-col justify-between group">
+<div class="space-y-space-md">
+<div class="w-14 h-14 rounded-xl bg-emerald-light text-forest-base flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[32px]">edit_calendar</span>
+</div>
+<div class="space-y-space-xs">
+<span class="font-label-sm text-label-sm text-forest-medium uppercase tracking-wider font-bold">Bedside Module</span>
+<h3 class="font-headline-sm text-headline-sm text-forest-dark group-hover:text-forest-base transition-colors">Clinical Logbook Submission</h3>
+<p class="font-body-sm text-body-sm text-text-muted leading-relaxed">
+                Log validated maternity, ICU, community health, and surgical nursing shifts with instant preceptor countersignature.
+              </p>
+</div>
+</div>
+<div class="pt-space-lg">
+<a class="inline-flex items-center gap-space-xs font-label-md text-label-md text-forest-base group-hover:text-forest-dark transition-colors font-bold" href="#" onclick="promptRoleFocus()">
+<span>Access Logbook</span>
+<span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Service Card 2 -->
+<div class="p-space-xl rounded-xl bg-surface-canvas hover:bg-surface-tint/10 transition-all duration-300 shadow-sm hover:shadow-md flex flex-col justify-between group">
+<div class="space-y-space-md">
+<div class="w-14 h-14 rounded-xl bg-surface-container text-forest-dark flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[32px]">app_registration</span>
+</div>
+<div class="space-y-space-xs">
+<span class="font-label-sm text-label-sm text-forest-medium uppercase tracking-wider font-bold">Academic Modules</span>
+<h3 class="font-headline-sm text-headline-sm text-forest-dark group-hover:text-forest-base transition-colors">Course Registration</h3>
+<p class="font-body-sm text-body-sm text-text-muted leading-relaxed">
+                Enrol in accredited core units, pharmacology electives, and clinical simulations for the upcoming semester.
+              </p>
+</div>
+</div>
+<div class="pt-space-lg">
+<a class="inline-flex items-center gap-space-xs font-label-md text-label-md text-forest-base group-hover:text-forest-dark transition-colors font-bold" href="#" onclick="promptRoleFocus()">
+<span>Register Units</span>
+<span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Service Card 3 -->
+<div class="p-space-xl rounded-xl bg-surface-canvas hover:bg-surface-tint/10 transition-all duration-300 shadow-sm hover:shadow-md flex flex-col justify-between group">
+<div class="space-y-space-md">
+<div class="w-14 h-14 rounded-xl bg-tertiary-fixed text-on-tertiary-fixed-variant flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[32px]">print</span>
+</div>
+<div class="space-y-space-xs">
+<span class="font-label-sm text-label-sm text-orange-action uppercase tracking-wider font-bold">Exam Clearance</span>
+<h3 class="font-headline-sm text-headline-sm text-forest-dark group-hover:text-forest-base transition-colors">Exam &amp; CBT Slip Printing</h3>
+<p class="font-body-sm text-body-sm text-text-muted leading-relaxed">
+                Generate and print cryptographically signed Computer-Based Testing docket slips for mid-semester and professional exams.
+              </p>
+</div>
+</div>
+<div class="pt-space-lg">
+<a class="inline-flex items-center gap-space-xs font-label-md text-label-md text-forest-base group-hover:text-forest-dark transition-colors font-bold" href="#" onclick="promptRoleFocus()">
+<span>Print Hall Permit</span>
+<span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Service Card 4 -->
+<div class="p-space-xl rounded-xl bg-surface-canvas hover:bg-surface-tint/10 transition-all duration-300 shadow-sm hover:shadow-md flex flex-col justify-between group">
+<div class="space-y-space-md">
+<div class="w-14 h-14 rounded-xl bg-emerald-light text-emerald-accent flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[32px]">receipt_long</span>
+</div>
+<div class="space-y-space-xs">
+<span class="font-label-sm text-label-sm text-forest-medium uppercase tracking-wider font-bold">Bursary Desk</span>
+<h3 class="font-headline-sm text-headline-sm text-forest-dark group-hover:text-forest-base transition-colors">Remita RRR Verification</h3>
+<p class="font-body-sm text-body-sm text-text-muted leading-relaxed">
+                Input your 12-digit Remita Retrieval Reference (RRR) to validate bursary payments and update account ledger.
+              </p>
+</div>
+</div>
+<div class="pt-space-lg">
+<a class="inline-flex items-center gap-space-xs font-label-md text-label-md text-forest-base group-hover:text-forest-dark transition-colors font-bold" href="#" onclick="promptRoleFocus()">
+<span>Confirm Invoice</span>
+<span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Live Academic Metrics & Verification Showcase -->
+<section class="w-full py-space-2xl bg-forest-dark text-on-primary">
+<div class="max-w-7xl mx-auto px-margin">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-center">
+<!-- Left: Interactive Data Graphic -->
+<div class="lg:col-span-5 p-space-xl rounded-xl bg-surface-white/5 space-y-space-lg">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-primary-fixed uppercase tracking-wider">Clinical Cohort Analytics</span>
+<span class="material-symbols-outlined text-primary-fixed text-[20px]">insights</span>
+</div>
+<!-- Inline Minimal Data Visualizer SVG -->
+<div class="space-y-space-md">
+<div>
+<div class="flex justify-between font-label-sm text-label-sm text-surface-variant mb-1">
+<span>Clinical Rotation Compliance</span>
+<span class="text-primary-fixed">94.8%</span>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-white/10 overflow-hidden">
+<div class="h-full bg-primary-fixed rounded-full" style="width: 94.8%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between font-label-sm text-label-sm text-surface-variant mb-1">
+<span>NMCN Index Clearance Rate</span>
+<span class="text-primary-fixed">99.2%</span>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-white/10 overflow-hidden">
+<div class="h-full bg-emerald-accent rounded-full" style="width: 99.2%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between font-label-sm text-label-sm text-surface-variant mb-1">
+<span>Remita Real-Time Reconciliation</span>
+<span class="text-primary-fixed">100%</span>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-white/10 overflow-hidden">
+<div class="h-full bg-secondary-container rounded-full" style="width: 100%"></div>
+</div>
+</div>
+</div>
+<!-- Trust Badges -->
+<div class="pt-space-md grid grid-cols-2 gap-space-sm text-surface-variant font-body-sm text-body-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-fixed text-[20px]">lock_clock</span>
+<span>Encrypted Session Tokens</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-fixed text-[20px]">fingerprint</span>
+<span>Biometric CBT Clearance</span>
+</div>
+</div>
+</div>
+<!-- Right: Provost & Accreditation Assurance -->
+<div class="lg:col-span-7 space-y-space-md lg:pl-space-lg">
+<div class="inline-flex items-center gap-space-xs px-3 py-1 rounded-full bg-primary-fixed/20 text-primary-fixed font-label-sm text-label-sm uppercase tracking-wider">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+            Institutional Regulatory Compliance
+          </div>
+<h2 class="font-headline-xl text-headline-xl text-surface-white">
+            Designed for Strict Professional Clinical Compliance
+          </h2>
+<p class="font-body-lg text-body-lg text-surface-variant/90 leading-relaxed">
+            The CHEP Network replaces disjointed legacy portals with a monolithic, highly secure academic environment. Directly integrated with the Nursing &amp; Midwifery Council of Nigeria standards, student clinical logbooks maintain legal tamper-evident logs for seamless graduation licensure.
+          </p>
+<div class="pt-space-sm flex flex-wrap items-center gap-space-md">
+<div class="flex items-center gap-space-sm p-space-sm rounded-lg bg-surface-white/10">
+<span class="material-symbols-outlined text-primary-fixed text-[28px]">domain_verification</span>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-surface-white leading-tight">100%</span>
+<span class="font-label-sm text-label-sm text-surface-variant">NMCN Full Accreditation</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm p-space-sm rounded-lg bg-surface-white/10">
+<span class="material-symbols-outlined text-primary-fixed text-[28px]">local_hospital</span>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-surface-white leading-tight">6+</span>
+<span class="font-label-sm text-label-sm text-surface-variant">Affiliated Tertiary Teaching Hospitals</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm p-space-sm rounded-lg bg-surface-white/10">
+<span class="material-symbols-outlined text-primary-fixed text-[28px]">speed</span>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-surface-white leading-tight">99.98%</span>
+<span class="font-label-sm text-label-sm text-surface-variant">Portal SLA Uptime</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Interactive JavaScript for Role Switching & Portal Utilities -->
+<script>
+    function selectRole(role) {
+      const tabs = ['student', 'alumni', 'faculty', 'applicant'];
+      tabs.forEach(t => {
+        const btn = document.getElementById('tab-' + t);
+        if (t === role) {
+          btn.className = 'py-2 px-2 text-center rounded-lg font-label-sm text-label-sm transition-all bg-forest-base text-on-primary shadow-sm';
+        } else {
+          btn.className = 'py-2 px-2 text-center rounded-lg font-label-sm text-label-sm transition-all text-text-muted hover:text-forest-dark hover:bg-surface-white';
+        }
+      });
+
+      const label = document.getElementById('matric-label');
+      const input = document.getElementById('matric-id');
+      const helper = document.getElementById('matric-helper-badge');
+
+      if (role === 'student') {
+        label.innerText = 'Matriculation / NMCN Index Number';
+        input.placeholder = 'e.g. CHEP/NUR/2025/0842';
+        helper.innerText = 'Student Nurse ID';
+      } else if (role === 'alumni') {
+        label.innerText = 'Graduation Registration / Diploma ID';
+        input.placeholder = 'e.g. ALUM/CHEP/2022/0119';
+        helper.innerText = 'Alumni Registry';
+      } else if (role === 'faculty') {
+        label.innerText = 'Faculty Staff ID / Preceptor Code';
+        input.placeholder = 'e.g. FAC/NUR/0045';
+        helper.innerText = 'Faculty & Staff';
+      } else if (role === 'applicant') {
+        label.innerText = 'Application Voucher / UTME Reg No';
+        input.placeholder = 'e.g. 2026/CHEP/APP/9012';
+        helper.innerText = 'Prospective Student';
+      }
+    }
+
+    function togglePasswordVisibility() {
+      const pwInput = document.getElementById('user-password');
+      const eyeIcon = document.getElementById('eye-icon');
+      if (pwInput.type === 'password') {
+        pwInput.type = 'text';
+        eyeIcon.innerText = 'visibility_off';
+      } else {
+        pwInput.type = 'password';
+        eyeIcon.innerText = 'visibility';
+      }
+    }
+
+    function handleAuthSubmit(e) {
+      e.preventDefault();
+      const feedback = document.getElementById('login-feedback');
+      const submitBtn = document.getElementById('auth-btn');
+      feedback.classList.remove('hidden');
+      submitBtn.disabled = true;
+      submitBtn.classList.add('opacity-75');
+
+      setTimeout(() => {
+        feedback.innerHTML = '<span class="material-symbols-outlined text-error text-[20px]">error</span><span class="text-error">Sample demonstration frame: User session initiated. In production, redirects to verified student dashboard.</span>';
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-75');
+      }, 1500);
+    }
+
+    function promptRoleFocus() {
+      const matricInput = document.getElementById('matric-id');
+      matricInput.focus();
+      matricInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function openForgotModal(e) {
+      e.preventDefault();
+      alert('Password Recovery Notice:\\nPlease send your Full Name, Matric Number, and a copy of your valid CHEP ID Card to it-support@chepnursingcollege.org or call +234 916 635 674 for an immediate credential reset token.');
+    }
+  </script>
+</div></main><footer class="w-full bg-forest-dark text-surface-white"><div class="max-w-7xl mx-auto px-margin pt-space-2xl pb-space-xl"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-xl"><div class="space-y-space-md"><div class="flex items-center gap-space-sm"><div class="w-10 h-10 rounded-lg bg-surface-white/10 flex items-center justify-center"><span class="material-symbols-outlined text-emerald-light text-[24px]">local_hospital</span></div><div><span class="font-headline-sm text-headline-sm text-surface-white block leading-tight">CHEP College</span><span class="font-label-sm text-label-sm text-primary-fixed uppercase tracking-wider">Nursing Sciences</span></div></div><p class="font-body-sm text-body-sm text-surface-variant/90 leading-relaxed">Fostering clinical distinction, empathetic patient-centered care, and rigorous academic excellence in nursing and healthcare sciences.</p><div class="pt-space-sm space-y-space-xs font-body-sm text-body-sm text-surface-variant/90"><div class="flex items-start gap-space-xs"><span class="material-symbols-outlined text-primary-fixed text-[18px] mt-0.5">location_on</span><span>No. 18, Agbebi Estate Road, Honda Bus-Stop, Agbebi Central CDA, Ota 102213, Ogun State.</span></div><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary-fixed text-[18px]">call</span><span>+234 916 635 674, +234 813 540 6714</span></div><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary-fixed text-[18px]">mail</span><span>enquiries@chepnursingcollege.org</span></div></div></div><div class="space-y-space-md"><h3 class="font-headline-sm text-headline-sm text-surface-white tracking-wide border-b border-surface-white/10 pb-space-xs">Quick Links</h3><ul class="space-y-space-sm font-body-sm text-body-sm"><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="home" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>Home</a></li><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="about-us" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>About Us</a></li><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="admission" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>Admission</a></li><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="board-of-trustees" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>Board of Trustees</a></li><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="management-team" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>Management Team</a></li><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="portal-login" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>Student Portal</a></li></ul></div><div class="space-y-space-md"><h3 class="font-headline-sm text-headline-sm text-surface-white tracking-wide border-b border-surface-white/10 pb-space-xs">Virtual Library</h3><ul class="space-y-space-sm font-body-sm text-body-sm"><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="virtual-library" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>CHEP Library Home</a></li><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="library-services" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>Library Services</a></li><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="library-ebooks" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>Clinical eBooks</a></li><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="library-ejournals" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>Peer-Reviewed eJournals</a></li><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="library-opac" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>OPAC Catalog</a></li><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="library-databases" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>Research Databases</a></li></ul></div><div class="space-y-space-md"><h3 class="font-headline-sm text-headline-sm text-surface-white tracking-wide border-b border-surface-white/10 pb-space-xs">Recent News</h3><div class="space-y-space-sm"><article class="group"><a class="block" data-path="news" href="#"><span class="font-label-sm text-label-sm text-primary-fixed block">Admissions 2026/2027</span><p class="font-body-sm text-body-sm text-surface-variant/90 group-hover:text-surface-white transition-colors">Nursing Council announces entrance screening schedule.</p></a></article><article class="group"><a class="block" data-path="news" href="#"><span class="font-label-sm text-label-sm text-primary-fixed block">Clinical Outreach</span><p class="font-body-sm text-body-sm text-surface-variant/90 group-hover:text-surface-white transition-colors">CHEP student cohort conducts geriatric health assessments.</p></a></article><article class="group"><a class="block" data-path="news" href="#"><span class="font-label-sm text-label-sm text-primary-fixed block">Facility Update</span><p class="font-body-sm text-body-sm text-surface-variant/90 group-hover:text-surface-white transition-colors">High-fidelity anatomy simulation laboratory officially commissioned.</p></a></article></div></div></div><div class="mt-space-xl pt-space-md border-t border-surface-white/10 flex flex-col md:flex-row items-center justify-between text-body-sm text-surface-variant/80 gap-space-sm"><p>Copyright © 2026 CHEP College of Nursing Sciences. Modern Next.js application frame.</p><div class="flex items-center gap-space-lg"><a class="hover:text-primary-fixed transition-colors" data-path="home" href="#">Privacy Policy</a><a class="hover:text-primary-fixed transition-colors" data-path="home" href="#">Terms of Admission</a><a class="hover:text-primary-fixed transition-colors" data-path="contact-us" href="#">Accreditation Credentials</a></div></div></div></footer></body></html>

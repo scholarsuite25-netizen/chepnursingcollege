@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}.group:hover .dropdown-menu{display:block;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "tertiary-fixed": "#ffdbce",
+          "background": "#faf8ff",
+          "inverse-primary": "#8cd799",
+          "on-primary-fixed-variant": "#005324",
+          "surface-bright": "#faf8ff",
+          "on-background": "#131b2e",
+          "on-tertiary-fixed-variant": "#7f2b00",
+          "tertiary": "#631f00",
+          "on-secondary-fixed-variant": "#005323",
+          "amber-vibrant": "#f97316",
+          "outline": "#707a6f",
+          "on-tertiary-fixed": "#370e00",
+          "emerald-light": "#dcfce7",
+          "outline-variant": "#bfc9bd",
+          "tertiary-fixed-dim": "#ffb599",
+          "primary-fixed": "#a8f4b3",
+          "error": "#ba1a1a",
+          "secondary-container": "#92f5a4",
+          "primary-container": "#055928",
+          "forest-medium": "#0e7039",
+          "on-primary": "#ffffff",
+          "secondary-fixed-dim": "#79db8d",
+          "surface-white": "#ffffff",
+          "on-error-container": "#93000a",
+          "surface-container-low": "#f2f3ff",
+          "on-error": "#ffffff",
+          "on-tertiary-container": "#ffa886",
+          "on-surface": "#131b2e",
+          "inverse-on-surface": "#eef0ff",
+          "surface-dim": "#d2d9f4",
+          "on-surface-variant": "#404940",
+          "on-secondary-container": "#007233",
+          "on-primary-fixed": "#00210a",
+          "surface-container": "#eaedff",
+          "surface-canvas": "#f8fafc",
+          "surface-container-highest": "#dae2fd",
+          "error-container": "#ffdad6",
+          "border-subtle": "#e2e8f0",
+          "surface-tint": "#f0fdf4",
+          "secondary-fixed": "#95f8a7",
+          "surface-container-high": "#e2e7ff",
+          "on-primary-container": "#84ce90",
+          "on-secondary-fixed": "#00210a",
+          "text-muted": "#64748b",
+          "primary": "#003f1a",
+          "forest-dark": "#033b1a",
+          "emerald-accent": "#15803d",
+          "on-tertiary": "#ffffff",
+          "surface": "#faf8ff",
+          "forest-base": "#055928",
+          "on-secondary": "#ffffff",
+          "surface-variant": "#dae2fd",
+          "inverse-surface": "#283044",
+          "tertiary-container": "#892e00",
+          "secondary": "#006d30",
+          "primary-fixed-dim": "#8cd799",
+          "surface-container-lowest": "#ffffff",
+          "orange-action": "#ea580c"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "gutter-mobile": "1rem",
+          "space-lg": "1.5rem",
+          "space-xl": "2.5rem",
+          "space-md": "1rem",
+          "space-xs": "0.25rem",
+          "space-sm": "0.5rem",
+          "margin": "2rem",
+          "margin-mobile": "1rem",
+          "space-2xl": "4rem",
+          "gutter": "1.5rem",
+          "space-3xl": "6rem"
+        },
+        "fontFamily": {
+          "headline-md": [
+            "Plus Jakarta Sans"
+          ],
+          "label-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "display-lg-mobile": [
+            "Plus Jakarta Sans"
+          ],
+          "body-sm": [
+            "Inter"
+          ],
+          "label-md": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-xl": [
+            "Plus Jakarta Sans"
+          ],
+          "body-lg": [
+            "Inter"
+          ],
+          "headline-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "label-sm": [
+            "Plus Jakarta Sans"
+          ],
+          "body-md": [
+            "Inter"
+          ],
+          "headline-xl-mobile": [
+            "Plus Jakarta Sans"
+          ],
+          "display-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-sm": [
+            "Plus Jakarta Sans"
+          ]
+        },
+        "fontSize": {
+          "headline-md": [
+            "1.5rem",
+            {
+              "lineHeight": "2rem",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "600"
+            }
+          ],
+          "label-lg": [
+            "0.9375rem",
+            {
+              "lineHeight": "1.25rem",
+              "letterSpacing": "0.01em",
+              "fontWeight": "600"
+            }
+          ],
+          "display-lg-mobile": [
+            "2.25rem",
+            {
+              "lineHeight": "2.75rem",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "800"
+            }
+          ],
+          "body-sm": [
+            "0.875rem",
+            {
+              "lineHeight": "1.4rem",
+              "fontWeight": "400"
+            }
+          ],
+          "label-md": [
+            "0.8125rem",
+            {
+              "lineHeight": "1rem",
+              "letterSpacing": "0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-xl": [
+            "2.5rem",
+            {
+              "lineHeight": "3rem",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "700"
+            }
+          ],
+          "body-lg": [
+            "1.125rem",
+            {
+              "lineHeight": "1.75rem",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-lg": [
+            "2rem",
+            {
+              "lineHeight": "2.5rem",
+              "letterSpacing": "-0.015em",
+              "fontWeight": "700"
+            }
+          ],
+          "label-sm": [
+            "0.6875rem",
+            {
+              "lineHeight": "0.875rem",
+              "letterSpacing": "0.05em",
+              "fontWeight": "700"
+            }
+          ],
+          "body-md": [
+            "1rem",
+            {
+              "lineHeight": "1.6rem",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-xl-mobile": [
+            "1.875rem",
+            {
+              "lineHeight": "2.35rem",
+              "letterSpacing": "-0.015em",
+              "fontWeight": "700"
+            }
+          ],
+          "display-lg": [
+            "3.5rem",
+            {
+              "lineHeight": "4.25rem",
+              "letterSpacing": "-0.025em",
+              "fontWeight": "800"
+            }
+          ],
+          "headline-sm": [
+            "1.25rem",
+            {
+              "lineHeight": "1.75rem",
+              "fontWeight": "600"
+            }
+          ]
+        }
+      },
+    },
+  }</script></head><body class="bg-surface-canvas font-body-md text-on-surface antialiased"><header class="fixed top-0 left-0 right-0 z-50 bg-surface-white/95 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="bg-forest-dark text-on-primary py-1 px-margin"><div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between text-body-sm"><div class="flex items-center gap-space-lg"><span class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[16px] text-primary-fixed">call</span>+234 916 635 674</span><span class="hidden md:flex items-center gap-space-xs"><span class="material-symbols-outlined text-[16px] text-primary-fixed">mail</span>enquiries@chepnursingcollege.org</span></div><div class="flex items-center gap-space-md"><span class="hidden lg:inline text-label-sm uppercase tracking-wider text-emerald-light">Nursing &amp; Midwifery Council of Nigeria Accredited</span><a class="inline-flex items-center gap-space-xs font-label-md text-label-md text-primary-fixed hover:text-on-primary transition-colors" data-path="portal-login" href="#"><span class="material-symbols-outlined text-[16px]">lock</span>Portal Login</a></div></div></div><div class="h-20 max-w-7xl mx-auto px-margin flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-sm"><img alt="CHEP College Crest" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UKSDRoYiyQKsVN9-S3n7EfmOpw6-6iaO7rYrxwuhyRoJVMl91GnctonG5Zuz7e0WZEQC21oHkmbtNi-gjIMSCT8p2KDNssugWjMCbiC0fwxlpCVNnGW3aqTwhIlIl51lfuaKeNA90yJEWy7gycSDKo5LnbN_jTpaxSrRvegZaoOyXVoCmUx57MbRhR4xFkVFTH_hfBQw5OPm_AtTD2E99TXZms8JGKnbJz2tLyz4W54Ag3DVlWL7qoRoY"/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-forest-dark leading-none tracking-tight">CHEP College</span><span class="font-label-sm text-label-sm uppercase tracking-wider text-forest-medium mt-space-xs">of Nursing Sciences</span></div></div><nav class="hidden xl:flex items-center gap-space-md" data-active-classes="text-forest-base font-bold"><a class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-tint hover:text-forest-base transition-colors" data-path="home" href="#">Home</a><div class="relative group"><button class="font-label-md text-label-md text-on-surface-variant hover:text-forest-base transition-colors py-2 flex items-center gap-1">About<span class="material-symbols-outlined text-[16px]">expand_more</span></button><div class="dropdown-menu absolute left-0 top-full hidden w-56 bg-surface-white rounded-lg shadow-lg py-2 mt-1 border border-border-subtle"><a class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-tint hover:text-forest-base transition-colors" data-path="about-us" href="#">About Us</a><a class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-tint hover:text-forest-base transition-colors" data-path="board-of-trustees" href="#">Board of Trustees</a><a class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-tint hover:text-forest-base transition-colors" data-path="management-team" href="#">Management Team</a></div></div><a class="font-label-md text-label-md text-on-surface-variant hover:text-forest-base transition-colors py-2" data-path="admission" href="#">Admission</a><div class="relative group"><button class="font-label-md text-label-md text-on-surface-variant hover:text-forest-base transition-colors py-2 flex items-center gap-1">Virtual Library<span class="material-symbols-outlined text-[16px]">expand_more</span></button><div class="dropdown-menu absolute left-0 top-full hidden w-60 bg-surface-white rounded-lg shadow-lg py-2 mt-1 border border-border-subtle"><a class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-tint hover:text-forest-base transition-colors" data-path="virtual-library" href="#">Chep Library</a><a class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-tint hover:text-forest-base transition-colors" data-path="library-services" href="#">Services</a><a class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-tint hover:text-forest-base transition-colors" data-path="library-ebooks" href="#">eBooks</a><a class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-tint hover:text-forest-base transition-colors" data-path="library-ejournals" href="#">eJournals</a><a class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-tint hover:text-forest-base transition-colors" data-path="library-opac" href="#">OPAC Catalog</a><a class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-tint hover:text-forest-base transition-colors" data-path="library-databases" href="#">Databases</a></div></div><a class="font-label-md text-label-md text-on-surface-variant hover:text-forest-base transition-colors py-2" data-path="chep-network" href="#">CHEP Network</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-forest-base transition-colors py-2" data-path="gallery" href="#">Gallery</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-forest-base transition-colors py-2" data-path="news" href="#">News</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-forest-base transition-colors py-2" data-path="contact-us" href="#">Contact Us</a></nav><div class="flex items-center gap-space-sm"><a class="bg-orange-action hover:bg-tertiary-container text-on-primary font-label-lg text-label-lg px-space-lg py-2.5 rounded-lg shadow-sm transition-colors text-center" data-path="admission" href="#">Enrol Now</a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-20 bg-surface-canvas"><div class="flex flex-col w-full">
+<!-- Internal Administrative Shell Sub-Bar (Next.js Backoffice Frame) -->
+<section class="w-full bg-forest-dark text-on-primary py-space-sm shadow-md">
+<div class="max-w-7xl mx-auto px-margin flex flex-col lg:flex-row items-center justify-between gap-space-md">
+<!-- Left: Title & Academic Session Pill -->
+<div class="flex flex-wrap items-center gap-space-md">
+<div class="flex items-center gap-space-xs bg-forest-base/60 px-3 py-1 rounded-full">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary-container animate-pulse"></span>
+<span class="font-label-sm text-label-sm tracking-wide uppercase text-primary-fixed">Session 2025/2026 • Term 2 Active</span>
+</div>
+<div class="flex items-center gap-space-xs text-body-sm text-primary-fixed-dim">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+<span>NMCN Accreditation Validated (Node Ogun-OTA-041)</span>
+</div>
+</div>
+<!-- Right: Search, Global Actions & SuperAdmin Profile -->
+<div class="flex items-center gap-space-md w-full lg:w-auto justify-end">
+<!-- Global Search Bar -->
+<div class="relative flex-1 lg:w-72">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-[18px] text-text-muted">search</span>
+<input class="w-full pl-9 pr-3 py-1.5 rounded-lg bg-surface-white text-on-surface font-body-sm text-body-sm placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary-fixed shadow-inner" placeholder="Search candidate RRR, matric, faculty..." type="text"/>
+</div>
+<!-- Quick Notifications -->
+<div class="relative">
+<button class="relative p-2 rounded-lg bg-forest-base/50 text-surface-white hover:bg-forest-base transition-colors" title="Notifications">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-amber-vibrant"></span>
+</button>
+</div>
+<!-- Admin Identity Pill -->
+<div class="flex items-center gap-space-xs bg-surface-white/10 pl-2 pr-3 py-1 rounded-full">
+<div class="w-7 h-7 rounded-full bg-orange-action text-on-primary font-headline-sm text-headline-sm flex items-center justify-center text-[12px]">
+            SA
+          </div>
+<div class="hidden sm:flex flex-col text-left">
+<span class="font-label-md text-label-md text-surface-white leading-tight">Stella O. Ayowole</span>
+<span class="font-label-sm text-label-sm text-primary-fixed uppercase tracking-wider text-[10px]">ICT SuperAdmin</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Main Administrative Grid Layout (Bespoke 2-Panel Backoffice) -->
+<div class="max-w-7xl mx-auto w-full px-margin py-space-xl">
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-lg items-start">
+<!-- ================= LEFT SIDEBAR NAVIGATION ================= -->
+<aside class="xl:col-span-3 bg-surface-white rounded-xl shadow-md p-space-md space-y-space-md">
+<!-- Console Brand Identity -->
+<div class="pb-space-sm border-b-0">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-forest-medium">Institutional Backoffice</span>
+<h2 class="font-headline-sm text-headline-sm text-forest-dark font-bold">Registrar &amp; CMS Hub</h2>
+</div>
+<!-- Main Navigation Links -->
+<nav class="space-y-1">
+<!-- Item: Dashboard (Active) -->
+<a class="flex items-center justify-between px-3 py-2.5 rounded-lg bg-surface-tint text-on-primary font-label-md text-label-md shadow-sm" href="#">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span>Overview</span>
+</div>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</a>
+<!-- Item: Admissions -->
+<a class="flex items-center justify-between px-3 py-2.5 rounded-lg text-on-surface hover:bg-surface-container transition-colors font-label-md text-label-md" href="#">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[20px] text-forest-medium">how_to_reg</span>
+<span>Admissions</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="bg-amber-100 text-amber-vibrant px-2 py-0.5 rounded-full font-label-sm text-label-sm text-[11px] font-bold">142</span>
+</div>
+</a>
+<!-- Item: Student Registry -->
+<a class="flex items-center justify-between px-3 py-2.5 rounded-lg text-on-surface hover:bg-surface-container transition-colors font-label-md text-label-md" href="#">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[20px] text-forest-medium">school</span>
+<span>Matriculation</span>
+</div>
+<span class="bg-surface-container-high text-forest-dark px-2 py-0.5 rounded-full font-label-sm text-label-sm text-[11px]">228</span>
+</a>
+<!-- Item: Clinical Postings -->
+<a class="flex items-center justify-between px-3 py-2.5 rounded-lg text-on-surface hover:bg-surface-container transition-colors font-label-md text-label-md" href="#">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[20px] text-forest-medium">stethoscope</span>
+<span>Clinical Postings</span>
+</div>
+<span class="w-2 h-2 rounded-full bg-emerald-accent"></span>
+</a>
+<!-- Item: Virtual Library OPAC -->
+<a class="flex items-center justify-between px-3 py-2.5 rounded-lg text-on-surface hover:bg-surface-container transition-colors font-label-md text-label-md" href="#">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[20px] text-forest-medium">local_library</span>
+<span>Virtual Library CMS</span>
+</div>
+</a>
+<!-- Item: Web CMS Publishing -->
+<a class="flex items-center justify-between px-3 py-2.5 rounded-lg text-on-surface hover:bg-surface-container transition-colors font-label-md text-label-md" href="#">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[20px] text-forest-medium">edit_note</span>
+<span>Publishing Hub</span>
+</div>
+<span class="bg-surface-container-high text-text-muted px-2 py-0.5 rounded-full font-label-sm text-label-sm text-[10px]">v3.2</span>
+</a>
+<!-- Item: Geriatric Outreach -->
+<a class="flex items-center justify-between px-3 py-2.5 rounded-lg text-on-surface hover:bg-surface-container transition-colors font-label-md text-label-md" href="#">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[20px] text-forest-medium">volunteer_activism</span>
+<span>Geriatric Care 24/7</span>
+</div>
+</a>
+<!-- Item: Remita Finance -->
+<a class="flex items-center justify-between px-3 py-2.5 rounded-lg text-on-surface hover:bg-surface-container transition-colors font-label-md text-label-md" href="#">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[20px] text-forest-medium">payments</span>
+<span>Remita Finance</span>
+</div>
+<span class="text-emerald-accent font-label-sm text-label-sm font-bold">94%</span>
+</a>
+<!-- Item: NMCN Compliance -->
+<a class="flex items-center justify-between px-3 py-2.5 rounded-lg text-on-surface hover:bg-surface-container transition-colors font-label-md text-label-md" href="#">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[20px] text-forest-medium">verified</span>
+<span>NMCN Standards</span>
+</div>
+</a>
+</nav>
+<!-- Secondary Card: Quick Registrar Hotline Assist -->
+<div class="bg-surface-container p-space-md rounded-xl space-y-space-xs shadow-sm">
+<div class="flex items-center gap-space-xs text-forest-base">
+<span class="material-symbols-outlined text-[20px]">support_agent</span>
+<span class="font-label-md text-label-md font-bold">ICT Helpdesk Live</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Server uptime 99.98%. Automated Remita webhooks operational.</p>
+<button class="w-full mt-2 py-1.5 px-3 rounded-lg bg-surface-white text-forest-base font-label-sm text-label-sm font-bold hover:bg-forest-base hover:text-on-primary transition-colors text-center shadow-sm">
+            Check Logs
+          </button>
+</div>
+<!-- Provost Official Directive Callout -->
+<div class="bg-forest-dark text-on-primary p-space-md rounded-xl space-y-space-xs">
+<div class="flex items-center gap-space-xs text-primary-fixed">
+<span class="material-symbols-outlined text-[18px]">campaign</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Provost Notice</span>
+</div>
+<p class="font-body-sm text-body-sm text-surface-variant/90 leading-tight">
+            Final matriculation clearance deadline for 2025/2026 cohort closes Friday 18:00 WAT.
+          </p>
+</div>
+</aside>
+<!-- ================= MAIN ADMINISTRATIVE WORKSPACE ================= -->
+<main class="xl:col-span-9 space-y-space-lg">
+<!-- SECTION 1: KEY METRICS STAT CARDS (4-Up Bento Grid) -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
+<!-- Card 1: Total Applications -->
+<div class="bg-surface-white p-space-md rounded-xl shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-text-muted">Applications 2026/27</span>
+<div class="w-8 h-8 rounded-lg bg-orange-50 text-orange-action flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">assignment_ind</span>
+</div>
+</div>
+<div class="my-space-sm">
+<span class="font-headline-xl text-headline-xl text-on-surface font-extrabold leading-none">328</span>
+<div class="flex items-center gap-1 mt-1 text-emerald-accent font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+<span>+24.6% vs 2024 session</span>
+</div>
+</div>
+<!-- Micro Progress visualization -->
+<div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+<div class="bg-orange-action h-1.5 rounded-full" style="width: 72%;"></div>
+</div>
+<span class="mt-2 font-body-sm text-body-sm text-text-muted text-[11px]">142 awaiting document review</span>
+</div>
+<!-- Card 2: Enrolled Student Nurses -->
+<div class="bg-surface-white p-space-md rounded-xl shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-text-muted">Active Students</span>
+<div class="w-8 h-8 rounded-lg bg-emerald-50 text-forest-base flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">clinical_notes</span>
+</div>
+</div>
+<div class="my-space-sm">
+<span class="font-headline-xl text-headline-xl text-forest-dark font-extrabold leading-none">228</span>
+<div class="flex items-center gap-1 mt-1 text-forest-medium font-label-sm text-label-sm">
+<span>Cohorts A, B &amp; Post-Basic</span>
+</div>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+<div class="bg-forest-base h-1.5 rounded-full" style="width: 88%;"></div>
+</div>
+<span class="mt-2 font-body-sm text-body-sm text-text-muted text-[11px]">Capacity: 250 NMCN Approved quota</span>
+</div>
+<!-- Card 3: Clinical Hours Logged -->
+<div class="bg-surface-white p-space-md rounded-xl shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-text-muted">Clinical Hours</span>
+<div class="w-8 h-8 rounded-lg bg-blue-50 text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">timelapse</span>
+</div>
+</div>
+<div class="my-space-sm">
+<span class="font-headline-xl text-headline-xl text-on-surface font-extrabold leading-none">42,650</span>
+<div class="flex items-center gap-1 mt-1 text-emerald-accent font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+<span>On-track (1,800hr/student cap)</span>
+</div>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+<div class="bg-secondary h-1.5 rounded-full" style="width: 79%;"></div>
+</div>
+<span class="mt-2 font-body-sm text-body-sm text-text-muted text-[11px]">Hospital rotations: State Hospital Ota</span>
+</div>
+<!-- Card 4: Fee Reconciliation Rate -->
+<div class="bg-surface-white p-space-md rounded-xl shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-text-muted">Remita Revenue</span>
+<div class="w-8 h-8 rounded-lg bg-green-50 text-emerald-accent flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+</div>
+</div>
+<div class="my-space-sm">
+<span class="font-headline-xl text-headline-xl text-on-surface font-extrabold leading-none">94.2%</span>
+<div class="flex items-center gap-1 mt-1 text-emerald-accent font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+<span>310 RRR Batches Settled</span>
+</div>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+<div class="bg-emerald-accent h-1.5 rounded-full" style="width: 94%;"></div>
+</div>
+<span class="mt-2 font-body-sm text-body-sm text-text-muted text-[11px]">₦41.2M reconciled this quarter</span>
+</div>
+</section>
+<!-- SECTION 2: ADMISSION ENQUIRIES & APPLICATIONS TABLE -->
+<section class="bg-surface-white rounded-xl shadow-sm overflow-hidden">
+<!-- Table Header Strip -->
+<div class="p-space-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-sm bg-surface-white">
+<div>
+<div class="flex items-center gap-space-xs">
+<h3 class="font-headline-sm text-headline-sm text-forest-dark font-bold">2026/2027 Admissions Queue</h3>
+<span class="bg-orange-100 text-orange-action font-label-sm text-label-sm px-2 py-0.5 rounded-full">142 Pending</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-muted">Candidates with verified CBT scores and Remita clearance.</p>
+</div>
+<!-- Filter Controls -->
+<div class="flex items-center gap-space-xs w-full sm:w-auto">
+<select class="bg-surface-canvas text-on-surface font-body-sm text-body-sm px-3 py-1.5 rounded-lg focus:outline-none">
+<option>All Programmes</option>
+<option>Basic Nursing (General)</option>
+<option>Post-Basic Midwifery</option>
+<option>Public Health Nursing</option>
+</select>
+<button class="bg-surface-tint hover:bg-forest-base text-on-primary font-label-md text-label-md px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[16px]">file_download</span>
+<span>Export CSV</span>
+</button>
+</div>
+</div>
+<!-- Responsive Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-3 px-4">Candidate &amp; ID</th>
+<th class="py-3 px-4">Programme</th>
+<th class="py-3 px-4">WAEC O'Level</th>
+<th class="py-3 px-4">Remita RRR Status</th>
+<th class="py-3 px-4">Exam Batch</th>
+<th class="py-3 px-4 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y-0 font-body-sm text-body-sm">
+<!-- Candidate Row 1 -->
+<tr class="hover:bg-surface-canvas/60 transition-colors">
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-space-xs">
+<div class="w-9 h-9 rounded-full bg-forest-base/10 text-forest-base font-bold flex items-center justify-center text-label-md">
+                        AO
+                      </div>
+<div>
+<span class="font-label-md text-label-md text-on-surface block font-bold">Adebayo Oluwaseun</span>
+<span class="font-body-sm text-body-sm text-text-muted text-[12px]">CHEP/ADM/2026/089</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="font-label-md text-label-md text-forest-dark block">Basic Nursing</span>
+<span class="text-[12px] text-text-muted">3-Year ND/HND</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1 bg-emerald-light text-emerald-accent px-2 py-0.5 rounded-full font-label-sm text-label-sm text-[11px] font-bold">
+<span class="material-symbols-outlined text-[14px]">check</span> Verified (5 Credits)
+                    </span>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface font-mono">RRR: 2901-4412-8819</span>
+<span class="text-emerald-accent font-label-sm text-label-sm font-semibold text-[11px]">₦15,000 Paid</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="bg-surface-container px-2.5 py-1 rounded-md text-on-surface-variant font-label-sm text-label-sm">Batch A-04</span>
+</td>
+<td class="py-3.5 px-4 text-right">
+<div class="flex items-center justify-end gap-1.5">
+<button class="bg-forest-base hover:bg-forest-medium text-on-primary font-label-sm text-label-sm px-2.5 py-1 rounded transition-colors" title="Admit Candidate">
+                        Admit
+                      </button>
+<button class="bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm px-2 py-1 rounded transition-colors" title="View Dossier">
+                        Dossier
+                      </button>
+<button class="text-error hover:bg-error-container/40 p-1 rounded transition-colors" title="Reject">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Candidate Row 2 -->
+<tr class="hover:bg-surface-canvas/60 transition-colors bg-surface-canvas/20">
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-space-xs">
+<div class="w-9 h-9 rounded-full bg-orange-action/10 text-orange-action font-bold flex items-center justify-center text-label-md">
+                        CE
+                      </div>
+<div>
+<span class="font-label-md text-label-md text-on-surface block font-bold">Chukwuemeka Blessing</span>
+<span class="font-body-sm text-body-sm text-text-muted text-[12px]">CHEP/ADM/2026/092</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="font-label-md text-label-md text-forest-dark block">Post-Basic Midwifery</span>
+<span class="text-[12px] text-text-muted">18-Month Accelerated</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1 bg-emerald-light text-emerald-accent px-2 py-0.5 rounded-full font-label-sm text-label-sm text-[11px] font-bold">
+<span class="material-symbols-outlined text-[14px]">check</span> Verified (RN Certified)
+                    </span>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface font-mono">RRR: 1109-8762-3401</span>
+<span class="text-emerald-accent font-label-sm text-label-sm font-semibold text-[11px]">₦20,000 Paid</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="bg-surface-container px-2.5 py-1 rounded-md text-on-surface-variant font-label-sm text-label-sm">Batch B-01</span>
+</td>
+<td class="py-3.5 px-4 text-right">
+<div class="flex items-center justify-end gap-1.5">
+<button class="bg-forest-base hover:bg-forest-medium text-on-primary font-label-sm text-label-sm px-2.5 py-1 rounded transition-colors">
+                        Admit
+                      </button>
+<button class="bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm px-2 py-1 rounded transition-colors">
+                        Dossier
+                      </button>
+<button class="text-error hover:bg-error-container/40 p-1 rounded transition-colors">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Candidate Row 3 -->
+<tr class="hover:bg-surface-canvas/60 transition-colors">
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-space-xs">
+<div class="w-9 h-9 rounded-full bg-blue-100 text-secondary font-bold flex items-center justify-center text-label-md">
+                        FB
+                      </div>
+<div>
+<span class="font-label-md text-label-md text-on-surface block font-bold">Fatima Balarabe Umar</span>
+<span class="font-body-sm text-body-sm text-text-muted text-[12px]">CHEP/ADM/2026/104</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="font-label-md text-label-md text-forest-dark block">Basic Nursing</span>
+<span class="text-[12px] text-text-muted">3-Year ND/HND</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1 bg-amber-100 text-amber-vibrant px-2 py-0.5 rounded-full font-label-sm text-label-sm text-[11px] font-bold">
+<span class="material-symbols-outlined text-[14px]">pending</span> Pending Physics Attestation
+                    </span>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface font-mono">RRR: 7721-3940-5110</span>
+<span class="text-emerald-accent font-label-sm text-label-sm font-semibold text-[11px]">₦15,000 Paid</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="bg-surface-container px-2.5 py-1 rounded-md text-on-surface-variant font-label-sm text-label-sm">Batch A-05</span>
+</td>
+<td class="py-3.5 px-4 text-right">
+<div class="flex items-center justify-end gap-1.5">
+<button class="bg-surface-container text-text-muted font-label-sm text-label-sm px-2.5 py-1 rounded cursor-not-allowed opacity-60">
+                        Hold
+                      </button>
+<button class="bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm px-2 py-1 rounded transition-colors">
+                        Dossier
+                      </button>
+<button class="text-error hover:bg-error-container/40 p-1 rounded transition-colors">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Candidate Row 4 -->
+<tr class="hover:bg-surface-canvas/60 transition-colors bg-surface-canvas/20">
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-space-xs">
+<div class="w-9 h-9 rounded-full bg-forest-base/10 text-forest-base font-bold flex items-center justify-center text-label-md">
+                        ID
+                      </div>
+<div>
+<span class="font-label-md text-label-md text-on-surface block font-bold">Ibrahim Daniel Olawale</span>
+<span class="font-body-sm text-body-sm text-text-muted text-[12px]">CHEP/ADM/2026/118</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="font-label-md text-label-md text-forest-dark block">Public Health Nursing</span>
+<span class="text-[12px] text-text-muted">Direct Entry Specialization</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1 bg-emerald-light text-emerald-accent px-2 py-0.5 rounded-full font-label-sm text-label-sm text-[11px] font-bold">
+<span class="material-symbols-outlined text-[14px]">check</span> Verified (NABTEB/WAEC)
+                    </span>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-error font-mono">RRR: 8812-9901-0021</span>
+<span class="text-error font-label-sm text-label-sm font-semibold text-[11px]">Unconfirmed / Timeout</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="bg-surface-container px-2.5 py-1 rounded-md text-on-surface-variant font-label-sm text-label-sm">Batch C-01</span>
+</td>
+<td class="py-3.5 px-4 text-right">
+<div class="flex items-center justify-end gap-1.5">
+<button class="bg-orange-action hover:bg-tertiary-container text-on-primary font-label-sm text-label-sm px-2.5 py-1 rounded transition-colors">
+                        Re-query
+                      </button>
+<button class="bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm px-2 py-1 rounded transition-colors">
+                        Dossier
+                      </button>
+<button class="text-error hover:bg-error-container/40 p-1 rounded transition-colors">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer Pagination -->
+<div class="p-space-md bg-surface-canvas/40 flex flex-col sm:flex-row items-center justify-between gap-space-xs text-body-sm text-text-muted">
+<span>Showing 4 of 142 Pending Admissions</span>
+<div class="flex items-center gap-1">
+<button class="px-3 py-1 rounded bg-surface-white text-on-surface hover:bg-surface-container font-label-sm text-label-sm shadow-sm">Previous</button>
+<button class="px-3 py-1 rounded bg-forest-base text-on-primary font-label-sm text-label-sm shadow-sm">1</button>
+<button class="px-3 py-1 rounded bg-surface-white text-on-surface hover:bg-surface-container font-label-sm text-label-sm shadow-sm">2</button>
+<button class="px-3 py-1 rounded bg-surface-white text-on-surface hover:bg-surface-container font-label-sm text-label-sm shadow-sm">3</button>
+<button class="px-3 py-1 rounded bg-surface-white text-on-surface hover:bg-surface-container font-label-sm text-label-sm shadow-sm">Next</button>
+</div>
+</div>
+</section>
+<!-- SECTION 3: 2-COLUMN LOWER SUITE: QUICK CMS PUBLISHER + NMCN COMPLIANCE TRACKER -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- Column A: Quick CMS Publishing Desk (7 Cols) -->
+<div class="lg:col-span-7 bg-surface-white rounded-xl shadow-sm p-space-md space-y-space-md">
+<div class="flex items-center justify-between pb-space-xs">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-forest-medium">Web Publishing Console</span>
+<h3 class="font-headline-sm text-headline-sm text-forest-dark font-bold">Portal Article &amp; Clinical Dispatch</h3>
+</div>
+<span class="bg-surface-container text-forest-dark font-label-sm text-label-sm px-2.5 py-1 rounded-full font-bold">Fast-Publish</span>
+</div>
+<!-- Tab Buttons -->
+<div class="flex items-center gap-space-xs bg-surface-container p-1 rounded-lg text-label-md">
+<button class="flex-1 py-1.5 px-3 rounded-md bg-surface-white text-forest-base font-bold shadow-sm transition-all text-center" id="tab-announcement">
+                News Flash
+              </button>
+<button class="flex-1 py-1.5 px-3 rounded-md text-on-surface-variant hover:text-forest-base transition-all text-center" id="tab-gallery">
+                Media Gallery
+              </button>
+<button class="flex-1 py-1.5 px-3 rounded-md text-on-surface-variant hover:text-forest-base transition-all text-center" id="tab-roster">
+                Geriatric On-Call
+              </button>
+</div>
+<!-- Publish Form Form Controls -->
+<form class="space-y-space-sm" onsubmit="event.preventDefault(); alert('Announcement dispatched to CHEP Public Portal.');">
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1">Headline / Bulletin Title</label>
+<input class="w-full px-3 py-2 rounded-lg bg-surface-canvas text-on-surface font-body-sm text-body-sm focus:outline-none focus:ring-2 focus:ring-forest-base" type="text" value="NMCN Accreditation Team Commends High-Fidelity Maternal Simulation Suite"/>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-sm">
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1">Portal Category</label>
+<select class="w-full px-3 py-2 rounded-lg bg-surface-canvas text-on-surface font-body-sm text-body-sm focus:outline-none">
+<option>Institutional Announcement</option>
+<option>Clinical Outreach Dispatch</option>
+<option>Examination &amp; Matriculation</option>
+<option>Virtual Library New Additions</option>
+</select>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1">Target Display Audience</label>
+<select class="w-full px-3 py-2 rounded-lg bg-surface-canvas text-on-surface font-body-sm text-body-sm focus:outline-none">
+<option>Public Website + Student Portal</option>
+<option>Public Website Only</option>
+<option>Enrolled Nurses Intranet Only</option>
+<option>Academic Board Only</option>
+</select>
+</div>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1">Article Body / Excerpt</label>
+<textarea class="w-full px-3 py-2 rounded-lg bg-surface-canvas text-on-surface font-body-sm text-body-sm focus:outline-none focus:ring-2 focus:ring-forest-base" rows="3">The Nursing and Midwifery Council of Nigeria conducted an unannounced periodic inspection of our Agbebi Estate campus laboratories, awarding optimal marks to our 24-bed clinical OSCE ward.</textarea>
+</div>
+<!-- Media Upload Visual Strip -->
+<div class="p-space-sm bg-surface-canvas rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center text-forest-base">
+<span class="material-symbols-outlined text-[24px]">add_photo_alternate</span>
+</div>
+<div>
+<span class="font-label-md text-label-md text-on-surface block">Attach Laboratory Imagery</span>
+<span class="font-body-sm text-body-sm text-text-muted text-[12px]">JPEG, WEBP or PNG up to 10MB</span>
+</div>
+</div>
+<button class="px-3 py-1.5 rounded-lg bg-surface-white text-forest-base font-label-sm text-label-sm font-bold shadow-sm hover:bg-surface-tint hover:text-on-primary transition-colors" type="button">
+                  Browse Files
+                </button>
+</div>
+<!-- Actions Strip -->
+<div class="flex items-center justify-between pt-2">
+<div class="flex items-center gap-2">
+<input checked="" class="rounded text-forest-base focus:ring-forest-base" id="send-sms" type="checkbox"/>
+<label class="font-body-sm text-body-sm text-on-surface-variant text-[13px]" for="send-sms">Broadcast SMS alert to student roster</label>
+</div>
+<button class="px-4 py-2 rounded-lg bg-orange-action hover:bg-tertiary-container text-on-primary font-label-lg text-label-lg shadow-sm transition-colors flex items-center gap-1.5" type="submit">
+<span class="material-symbols-outlined text-[18px]">publish</span>
+<span>Instant Publish</span>
+</button>
+</div>
+</form>
+</div>
+<!-- Column B: NMCN Compliance & Regulatory Readiness Tracker (5 Cols) -->
+<div class="lg:col-span-5 space-y-space-md">
+<!-- Compliance Main Panel -->
+<div class="bg-forest-dark text-on-primary rounded-xl shadow-sm p-space-md space-y-space-md">
+<div class="flex items-center justify-between">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-primary-fixed">Regulatory Audit 2026</span>
+<h4 class="font-headline-sm text-headline-sm text-surface-white font-bold">NMCN Standard Index</h4>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-emerald-accent text-on-primary font-label-sm text-label-sm font-bold">98.4% Compliant</span>
+</div>
+<!-- Inline Circular SVG Metric Chart -->
+<div class="bg-surface-white/5 p-space-sm rounded-xl flex items-center gap-space-md">
+<div class="relative w-20 h-20 flex-shrink-0 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90" viewbox="0 0 36 36">
+<path class="text-surface-white/10" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
+<path class="text-primary-fixed" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="98, 100" stroke-linecap="round" stroke-width="3.5"></path>
+</svg>
+<span class="absolute font-headline-sm text-headline-sm text-surface-white font-bold">98%</span>
+</div>
+<div class="space-y-1">
+<span class="font-label-md text-label-md text-primary-fixed block font-bold">Preceptor Ratio: 1:6</span>
+<p class="font-body-sm text-body-sm text-surface-variant/80 text-[12px] leading-tight">Exceeds national minimum threshold (1:10 mandated by Council).</p>
+</div>
+</div>
+<!-- Checklist Progress Rows -->
+<div class="space-y-space-sm text-body-sm">
+<!-- Row 1 -->
+<div>
+<div class="flex justify-between font-label-sm text-label-sm mb-1 text-surface-white">
+<span>Simulation Lab High-Fidelity Mannequins</span>
+<span class="text-primary-fixed">12 / 12 Operational</span>
+</div>
+<div class="w-full bg-surface-white/10 rounded-full h-2">
+<div class="bg-secondary-container h-2 rounded-full" style="width: 100%;"></div>
+</div>
+</div>
+<!-- Row 2 -->
+<div>
+<div class="flex justify-between font-label-sm text-label-sm mb-1 text-surface-white">
+<span>Clinical Rotations Hospital MOUs</span>
+<span class="text-primary-fixed">4 Active Affiliates</span>
+</div>
+<div class="w-full bg-surface-white/10 rounded-full h-2">
+<div class="bg-secondary-container h-2 rounded-full" style="width: 100%;"></div>
+</div>
+</div>
+<!-- Row 3 -->
+<div>
+<div class="flex justify-between font-label-sm text-label-sm mb-1 text-surface-white">
+<span>OPAC Virtual Library Clinical Database Licenses</span>
+<span class="text-amber-vibrant">94% Renewed (ProQuest Due)</span>
+</div>
+<div class="w-full bg-surface-white/10 rounded-full h-2">
+<div class="bg-amber-vibrant h-2 rounded-full" style="width: 94%;"></div>
+</div>
+</div>
+</div>
+<div class="pt-2">
+<button class="w-full py-2 px-3 rounded-lg bg-surface-white/10 hover:bg-surface-white/20 text-surface-white font-label-md text-label-md transition-colors flex items-center justify-center gap-1.5">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+<span>Generate NMCN Annual Audit Dossier</span>
+</button>
+</div>
+</div>
+<!-- Geriatric Outreach On-Call Clinician Card -->
+<div class="bg-surface-white rounded-xl shadow-sm p-space-md space-y-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<div class="w-3 h-3 rounded-full bg-emerald-accent animate-ping"></div>
+<h4 class="font-headline-sm text-headline-sm text-forest-dark font-bold text-[18px]">Geriatric 24/7 Field Shift</h4>
+</div>
+<span class="font-label-sm text-label-sm text-text-muted">Live Roster</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-[13px]">
+                Active outreach van stationed at Agbebi Central CDA community health post.
+              </p>
+<div class="bg-surface-container-low p-space-sm rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<div class="w-8 h-8 rounded-full bg-forest-base text-on-primary flex items-center justify-center font-bold text-label-sm">
+                    NS
+                  </div>
+<div>
+<span class="font-label-md text-label-md text-on-surface font-bold block">Nurse Supervisor E. Adeolu</span>
+<span class="text-forest-medium font-body-sm text-body-sm text-[12px]">On-Duty: +234 813 540 6714</span>
+</div>
+</div>
+<span class="bg-emerald-light text-forest-base font-label-sm text-label-sm px-2 py-0.5 rounded-full font-bold">Patrolling</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</div></main><footer class="w-full bg-forest-dark text-surface-white"><div class="max-w-7xl mx-auto px-margin pt-space-2xl pb-space-xl"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-xl"><div class="space-y-space-md"><div class="flex items-center gap-space-sm"><div class="w-10 h-10 rounded-lg bg-surface-white/10 flex items-center justify-center"><span class="material-symbols-outlined text-emerald-light text-[24px]">local_hospital</span></div><div><span class="font-headline-sm text-headline-sm text-surface-white block leading-tight">CHEP College</span><span class="font-label-sm text-label-sm text-primary-fixed uppercase tracking-wider">Nursing Sciences</span></div></div><p class="font-body-sm text-body-sm text-surface-variant/90 leading-relaxed">Fostering clinical distinction, empathetic patient-centered care, and rigorous academic excellence in nursing and healthcare sciences.</p><div class="pt-space-sm space-y-space-xs font-body-sm text-body-sm text-surface-variant/90"><div class="flex items-start gap-space-xs"><span class="material-symbols-outlined text-primary-fixed text-[18px] mt-0.5">location_on</span><span>No. 18, Agbebi Estate Road, Honda Bus-Stop, Agbebi Central CDA, Ota 102213, Ogun State.</span></div><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary-fixed text-[18px]">call</span><span>+234 916 635 674, +234 813 540 6714</span></div><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary-fixed text-[18px]">mail</span><span>enquiries@chepnursingcollege.org</span></div></div></div><div class="space-y-space-md"><h3 class="font-headline-sm text-headline-sm text-surface-white tracking-wide border-b border-surface-white/10 pb-space-xs">Quick Links</h3><ul class="space-y-space-sm font-body-sm text-body-sm"><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="home" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>Home</a></li><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="about-us" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>About Us</a></li><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="admission" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>Admission</a></li><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="board-of-trustees" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>Board of Trustees</a></li><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="management-team" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>Management Team</a></li><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="portal-login" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>Student Portal</a></li></ul></div><div class="space-y-space-md"><h3 class="font-headline-sm text-headline-sm text-surface-white tracking-wide border-b border-surface-white/10 pb-space-xs">Virtual Library</h3><ul class="space-y-space-sm font-body-sm text-body-sm"><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="virtual-library" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>CHEP Library Home</a></li><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="library-services" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>Library Services</a></li><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="library-ebooks" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>Clinical eBooks</a></li><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="library-ejournals" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>Peer-Reviewed eJournals</a></li><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="library-opac" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>OPAC Catalog</a></li><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="library-databases" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>Research Databases</a></li></ul></div><div class="space-y-space-md"><h3 class="font-headline-sm text-headline-sm text-surface-white tracking-wide border-b border-surface-white/10 pb-space-xs">Recent News</h3><div class="space-y-space-sm"><article class="group"><a class="block" data-path="news" href="#"><span class="font-label-sm text-label-sm text-primary-fixed block">Admissions 2026/2027</span><p class="font-body-sm text-body-sm text-surface-variant/90 group-hover:text-surface-white transition-colors">Nursing Council announces entrance screening schedule.</p></a></article><article class="group"><a class="block" data-path="news" href="#"><span class="font-label-sm text-label-sm text-primary-fixed block">Clinical Outreach</span><p class="font-body-sm text-body-sm text-surface-variant/90 group-hover:text-surface-white transition-colors">CHEP student cohort conducts geriatric health assessments.</p></a></article><article class="group"><a class="block" data-path="news" href="#"><span class="font-label-sm text-label-sm text-primary-fixed block">Facility Update</span><p class="font-body-sm text-body-sm text-surface-variant/90 group-hover:text-surface-white transition-colors">High-fidelity anatomy simulation laboratory officially commissioned.</p></a></article></div></div></div><div class="mt-space-xl pt-space-md border-t border-surface-white/10 flex flex-col md:flex-row items-center justify-between text-body-sm text-surface-variant/80 gap-space-sm"><p>Copyright © 2026 CHEP College of Nursing Sciences. Modern Next.js application frame.</p><div class="flex items-center gap-space-lg"><a class="hover:text-primary-fixed transition-colors" data-path="home" href="#">Privacy Policy</a><a class="hover:text-primary-fixed transition-colors" data-path="home" href="#">Terms of Admission</a><a class="hover:text-primary-fixed transition-colors" data-path="contact-us" href="#">Accreditation Credentials</a></div></div></div></footer></body></html>

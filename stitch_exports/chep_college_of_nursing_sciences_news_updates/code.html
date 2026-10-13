@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}.group:hover .dropdown-menu{display:block;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "tertiary-fixed": "#ffdbce",
+          "background": "#faf8ff",
+          "inverse-primary": "#8cd799",
+          "on-primary-fixed-variant": "#005324",
+          "surface-bright": "#faf8ff",
+          "on-background": "#131b2e",
+          "on-tertiary-fixed-variant": "#7f2b00",
+          "tertiary": "#631f00",
+          "on-secondary-fixed-variant": "#005323",
+          "amber-vibrant": "#f97316",
+          "outline": "#707a6f",
+          "on-tertiary-fixed": "#370e00",
+          "emerald-light": "#dcfce7",
+          "outline-variant": "#bfc9bd",
+          "tertiary-fixed-dim": "#ffb599",
+          "primary-fixed": "#a8f4b3",
+          "error": "#ba1a1a",
+          "secondary-container": "#92f5a4",
+          "primary-container": "#055928",
+          "forest-medium": "#0e7039",
+          "on-primary": "#ffffff",
+          "secondary-fixed-dim": "#79db8d",
+          "surface-white": "#ffffff",
+          "on-error-container": "#93000a",
+          "surface-container-low": "#f2f3ff",
+          "on-error": "#ffffff",
+          "on-tertiary-container": "#ffa886",
+          "on-surface": "#131b2e",
+          "inverse-on-surface": "#eef0ff",
+          "surface-dim": "#d2d9f4",
+          "on-surface-variant": "#404940",
+          "on-secondary-container": "#007233",
+          "on-primary-fixed": "#00210a",
+          "surface-container": "#eaedff",
+          "surface-canvas": "#f8fafc",
+          "surface-container-highest": "#dae2fd",
+          "error-container": "#ffdad6",
+          "border-subtle": "#e2e8f0",
+          "surface-tint": "#f0fdf4",
+          "secondary-fixed": "#95f8a7",
+          "surface-container-high": "#e2e7ff",
+          "on-primary-container": "#84ce90",
+          "on-secondary-fixed": "#00210a",
+          "text-muted": "#64748b",
+          "primary": "#003f1a",
+          "forest-dark": "#033b1a",
+          "emerald-accent": "#15803d",
+          "on-tertiary": "#ffffff",
+          "surface": "#faf8ff",
+          "forest-base": "#055928",
+          "on-secondary": "#ffffff",
+          "surface-variant": "#dae2fd",
+          "inverse-surface": "#283044",
+          "tertiary-container": "#892e00",
+          "secondary": "#006d30",
+          "primary-fixed-dim": "#8cd799",
+          "surface-container-lowest": "#ffffff",
+          "orange-action": "#ea580c"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "gutter-mobile": "1rem",
+          "space-lg": "1.5rem",
+          "space-xl": "2.5rem",
+          "space-md": "1rem",
+          "space-xs": "0.25rem",
+          "space-sm": "0.5rem",
+          "margin": "2rem",
+          "margin-mobile": "1rem",
+          "space-2xl": "4rem",
+          "gutter": "1.5rem",
+          "space-3xl": "6rem"
+        },
+        "fontFamily": {
+          "headline-md": [
+            "Plus Jakarta Sans"
+          ],
+          "label-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "display-lg-mobile": [
+            "Plus Jakarta Sans"
+          ],
+          "body-sm": [
+            "Inter"
+          ],
+          "label-md": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-xl": [
+            "Plus Jakarta Sans"
+          ],
+          "body-lg": [
+            "Inter"
+          ],
+          "headline-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "label-sm": [
+            "Plus Jakarta Sans"
+          ],
+          "body-md": [
+            "Inter"
+          ],
+          "headline-xl-mobile": [
+            "Plus Jakarta Sans"
+          ],
+          "display-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-sm": [
+            "Plus Jakarta Sans"
+          ]
+        },
+        "fontSize": {
+          "headline-md": [
+            "1.5rem",
+            {
+              "lineHeight": "2rem",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "600"
+            }
+          ],
+          "label-lg": [
+            "0.9375rem",
+            {
+              "lineHeight": "1.25rem",
+              "letterSpacing": "0.01em",
+              "fontWeight": "600"
+            }
+          ],
+          "display-lg-mobile": [
+            "2.25rem",
+            {
+              "lineHeight": "2.75rem",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "800"
+            }
+          ],
+          "body-sm": [
+            "0.875rem",
+            {
+              "lineHeight": "1.4rem",
+              "fontWeight": "400"
+            }
+          ],
+          "label-md": [
+            "0.8125rem",
+            {
+              "lineHeight": "1rem",
+              "letterSpacing": "0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-xl": [
+            "2.5rem",
+            {
+              "lineHeight": "3rem",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "700"
+            }
+          ],
+          "body-lg": [
+            "1.125rem",
+            {
+              "lineHeight": "1.75rem",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-lg": [
+            "2rem",
+            {
+              "lineHeight": "2.5rem",
+              "letterSpacing": "-0.015em",
+              "fontWeight": "700"
+            }
+          ],
+          "label-sm": [
+            "0.6875rem",
+            {
+              "lineHeight": "0.875rem",
+              "letterSpacing": "0.05em",
+              "fontWeight": "700"
+            }
+          ],
+          "body-md": [
+            "1rem",
+            {
+              "lineHeight": "1.6rem",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-xl-mobile": [
+            "1.875rem",
+            {
+              "lineHeight": "2.35rem",
+              "letterSpacing": "-0.015em",
+              "fontWeight": "700"
+            }
+          ],
+          "display-lg": [
+            "3.5rem",
+            {
+              "lineHeight": "4.25rem",
+              "letterSpacing": "-0.025em",
+              "fontWeight": "800"
+            }
+          ],
+          "headline-sm": [
+            "1.25rem",
+            {
+              "lineHeight": "1.75rem",
+              "fontWeight": "600"
+            }
+          ]
+        }
+      },
+    },
+  }</script></head><body class="bg-surface-canvas font-body-md text-on-surface antialiased"><header class="fixed top-0 left-0 right-0 z-50 bg-surface-white/95 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="bg-forest-dark text-on-primary py-1 px-margin"><div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between text-body-sm"><div class="flex items-center gap-space-lg"><span class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[16px] text-primary-fixed">call</span>+234 916 635 674</span><span class="hidden md:flex items-center gap-space-xs"><span class="material-symbols-outlined text-[16px] text-primary-fixed">mail</span>enquiries@chepnursingcollege.org</span></div><div class="flex items-center gap-space-md"><span class="hidden lg:inline text-label-sm uppercase tracking-wider text-emerald-light">Nursing &amp; Midwifery Council of Nigeria Accredited</span><a class="inline-flex items-center gap-space-xs font-label-md text-label-md text-primary-fixed hover:text-on-primary transition-colors" data-path="portal-login" href="#"><span class="material-symbols-outlined text-[16px]">lock</span>Portal Login</a></div></div></div><div class="h-20 max-w-7xl mx-auto px-margin flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-sm"><img alt="CHEP College Crest" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UKSDRoYiyQKsVN9-S3n7EfmOpw6-6iaO7rYrxwuhyRoJVMl91GnctonG5Zuz7e0WZEQC21oHkmbtNi-gjIMSCT8p2KDNssugWjMCbiC0fwxlpCVNnGW3aqTwhIlIl51lfuaKeNA90yJEWy7gycSDKo5LnbN_jTpaxSrRvegZaoOyXVoCmUx57MbRhR4xFkVFTH_hfBQw5OPm_AtTD2E99TXZms8JGKnbJz2tLyz4W54Ag3DVlWL7qoRoY"/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-forest-dark leading-none tracking-tight">CHEP College</span><span class="font-label-sm text-label-sm uppercase tracking-wider text-forest-medium mt-space-xs">of Nursing Sciences</span></div></div><nav class="hidden xl:flex items-center gap-space-md" data-active-classes="text-forest-base font-bold"><a class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-tint hover:text-forest-base transition-colors" data-path="home" href="#">Home</a><div class="relative group"><button class="font-label-md text-label-md text-on-surface-variant hover:text-forest-base transition-colors py-2 flex items-center gap-1">About<span class="material-symbols-outlined text-[16px]">expand_more</span></button><div class="dropdown-menu absolute left-0 top-full hidden w-56 bg-surface-white rounded-lg shadow-lg py-2 mt-1 border border-border-subtle"><a class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-tint hover:text-forest-base transition-colors" data-path="about-us" href="#">About Us</a><a class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-tint hover:text-forest-base transition-colors" data-path="board-of-trustees" href="#">Board of Trustees</a><a class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-tint hover:text-forest-base transition-colors" data-path="management-team" href="#">Management Team</a></div></div><a class="font-label-md text-label-md text-on-surface-variant hover:text-forest-base transition-colors py-2" data-path="admission" href="#">Admission</a><div class="relative group"><button class="font-label-md text-label-md text-on-surface-variant hover:text-forest-base transition-colors py-2 flex items-center gap-1">Virtual Library<span class="material-symbols-outlined text-[16px]">expand_more</span></button><div class="dropdown-menu absolute left-0 top-full hidden w-60 bg-surface-white rounded-lg shadow-lg py-2 mt-1 border border-border-subtle"><a class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-tint hover:text-forest-base transition-colors" data-path="virtual-library" href="#">Chep Library</a><a class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-tint hover:text-forest-base transition-colors" data-path="library-services" href="#">Services</a><a class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-tint hover:text-forest-base transition-colors" data-path="library-ebooks" href="#">eBooks</a><a class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-tint hover:text-forest-base transition-colors" data-path="library-ejournals" href="#">eJournals</a><a class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-tint hover:text-forest-base transition-colors" data-path="library-opac" href="#">OPAC Catalog</a><a class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-tint hover:text-forest-base transition-colors" data-path="library-databases" href="#">Databases</a></div></div><a class="font-label-md text-label-md text-on-surface-variant hover:text-forest-base transition-colors py-2" data-path="chep-network" href="#">CHEP Network</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-forest-base transition-colors py-2" data-path="gallery" href="#">Gallery</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-forest-base transition-colors py-2" data-path="news" href="#">News</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-forest-base transition-colors py-2" data-path="contact-us" href="#">Contact Us</a></nav><div class="flex items-center gap-space-sm"><a class="bg-orange-action hover:bg-tertiary-container text-on-primary font-label-lg text-label-lg px-space-lg py-2.5 rounded-lg shadow-sm transition-colors text-center" data-path="admission" href="#">Enrol Now</a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-20 bg-surface-canvas"><div class="flex flex-col w-full">
+<!-- Subtle decorative ambient glow behind top section -->
+<div class="relative w-full overflow-hidden">
+<div class="absolute -top-24 right-1/4 w-96 h-96 bg-primary-fixed/20 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute top-48 -left-20 w-80 h-80 bg-tertiary-fixed/30 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Main Container -->
+<div class="relative max-w-7xl mx-auto px-margin-mobile md:px-margin pt-space-lg pb-space-3xl">
+<!-- Breadcrumbs & Institutional Authority Stamp -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm pb-space-lg">
+<nav aria-label="Breadcrumb" class="flex items-center gap-space-xs text-body-sm text-text-muted">
+<a class="hover:text-forest-base transition-colors flex items-center gap-1 font-body-sm" data-path="home" href="#">
+<span class="material-symbols-outlined text-[18px]">home</span>
+            Home
+          </a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-on-surface font-label-md text-label-md">News &amp; Publications</span>
+</nav>
+<div class="inline-flex items-center gap-space-xs px-3 py-1.5 rounded-full bg-emerald-light/60 text-emerald-accent">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Official NMCN Academic Press</span>
+</div>
+</div>
+<!-- Editorial Masthead Banner -->
+<div class="bg-forest-dark text-on-primary rounded-xl p-space-lg md:p-space-xl shadow-lg relative overflow-hidden mb-space-xl">
+<div class="absolute -right-12 -bottom-12 w-64 h-64 bg-forest-medium/30 rounded-full blur-2xl"></div>
+<div class="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+<div class="space-y-space-xs max-w-2xl">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-primary-fixed block">Institutional Dispatch • Volume XII</span>
+<h1 class="font-headline-xl text-headline-xl text-surface-white font-headline-xl tracking-tight leading-tight">
+              Clinical Insights, Academic Bulletins &amp; Research
+            </h1>
+<p class="font-body-md text-body-md text-surface-variant/90 leading-relaxed pt-1">
+              Authoritative updates from the CHEP College of Nursing Sciences faculty, NMCN regulatory notices, clinical posting schedules, and student scholarship dossiers.
+            </p>
+</div>
+<div class="flex items-center gap-space-sm self-start md:self-auto shrink-0 bg-surface-white/10 backdrop-blur-sm px-space-md py-space-sm rounded-lg">
+<span class="material-symbols-outlined text-primary-fixed text-[28px]">auto_stories</span>
+<div class="flex flex-col text-left">
+<span class="font-label-sm text-label-sm uppercase text-primary-fixed">Active Digest</span>
+<span class="font-headline-sm text-headline-sm text-surface-white">2025/2026 Cohort</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Category Filter Tabs (Horizontal Scrollable Strip) -->
+<div class="w-full mb-space-xl">
+<div class="flex items-center gap-space-xs overflow-x-auto pb-2 scrollbar-none" id="categoryNav">
+<button class="category-btn active px-4 py-2.5 rounded-full font-label-md text-label-md whitespace-nowrap bg-forest-base text-on-primary shadow-sm transition-all" data-category="all" type="button">
+            All Posts (24)
+          </button>
+<button class="category-btn px-4 py-2.5 rounded-full font-label-md text-label-md whitespace-nowrap bg-surface-white text-on-surface hover:bg-surface-container transition-all shadow-sm" data-category="community-health" type="button">
+            Community Health Nursing
+          </button>
+<button class="category-btn px-4 py-2.5 rounded-full font-label-md text-label-md whitespace-nowrap bg-surface-white text-on-surface hover:bg-surface-container transition-all shadow-sm" data-category="foundation" type="button">
+            Foundation of Nursing
+          </button>
+<button class="category-btn px-4 py-2.5 rounded-full font-label-md text-label-md whitespace-nowrap bg-surface-white text-on-surface hover:bg-surface-container transition-all shadow-sm" data-category="fundamentals" type="button">
+            Fundamentals of Nursing
+          </button>
+<button class="category-btn px-4 py-2.5 rounded-full font-label-md text-label-md whitespace-nowrap bg-surface-white text-on-surface hover:bg-surface-container transition-all shadow-sm" data-category="geriatric" type="button">
+            Geriatric Nursing
+          </button>
+<button class="category-btn px-4 py-2.5 rounded-full font-label-md text-label-md whitespace-nowrap bg-surface-white text-on-surface hover:bg-surface-container transition-all shadow-sm" data-category="library" type="button">
+            Library &amp; Research
+          </button>
+<button class="category-btn px-4 py-2.5 rounded-full font-label-md text-label-md whitespace-nowrap bg-surface-white text-on-surface hover:bg-surface-container transition-all shadow-sm" data-category="maternal" type="button">
+            Maternal and Child Nursing
+          </button>
+<button class="category-btn px-4 py-2.5 rounded-full font-label-md text-label-md whitespace-nowrap bg-surface-white text-on-surface hover:bg-surface-container transition-all shadow-sm" data-category="paediatric" type="button">
+            Paediatric Nursing
+          </button>
+<button class="category-btn px-4 py-2.5 rounded-full font-label-md text-label-md whitespace-nowrap bg-surface-white text-on-surface hover:bg-surface-container transition-all shadow-sm" data-category="total-care" type="button">
+            Total Nursing Care
+          </button>
+</div>
+</div>
+<!-- FEATURED LEAD STORY (Asymmetric Split Panel) -->
+<section class="mb-space-2xl">
+<div class="bg-surface-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl">
+<div class="grid grid-cols-1 lg:grid-cols-12 items-stretch">
+<!-- Photographic Showcase (5 Cols) -->
+<div class="relative lg:col-span-5 min-h-[320px] lg:min-h-full">
+<img class="w-full h-full object-cover" data-alt="Professional African nursing students in crisp white clinical uniforms with forest green epaulets gathered attentively in a modern amphitheater auditorium during an accreditation briefing. Bright cinematic daylight highlights professional medical notebooks, stethoscope details, and the calm authoritative presence of a senior academic provost." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-mdzFXwv39o-Thj4p0NpYrd1YSAEM-r9iSER1UhYvdbbP9DND4_N937juO2pIJVDzOo4AuV7ipoCQpkHz5d5ZjFi34tFtMUq_uA1Fwq27djtE83R87fQDtnThvalbQB_Sm2NickmquKKAZnfwgeJKT2gbgRn-NAOwt2s5R_qts0fHChG5-fCJr2X-cDvq4Izo8WjD0VOmhvtj82XbcvDgMKXFenBamsahJ8k2ur905yMeJIcq1yl2"/>
+<div class="absolute inset-0 bg-gradient-to-t from-forest-dark/70 via-transparent to-transparent lg:hidden"></div>
+<div class="absolute top-4 left-4 flex flex-wrap gap-2">
+<span class="px-3 py-1 rounded-full bg-orange-action text-on-primary font-label-sm text-label-sm uppercase tracking-wider shadow">
+                  Official Bulletin
+                </span>
+<span class="px-3 py-1 rounded-full bg-forest-dark/80 backdrop-blur-sm text-primary-fixed font-label-sm text-label-sm uppercase tracking-wider">
+                  Accreditation Notice
+                </span>
+</div>
+</div>
+<!-- Content Area (7 Cols) -->
+<div class="lg:col-span-7 p-space-lg md:p-space-xl flex flex-col justify-between space-y-space-md">
+<div class="space-y-space-sm">
+<!-- Meta strip -->
+<div class="flex flex-wrap items-center gap-space-md text-body-sm text-text-muted">
+<span class="flex items-center gap-1.5 font-label-md text-label-md text-forest-base">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+                    Academic Affairs Registry
+                  </span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+                    01/04/2025
+                  </span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+                    5 min read
+                  </span>
+</div>
+<!-- Headline -->
+<h2 class="font-headline-lg text-headline-lg text-on-surface hover:text-forest-base transition-colors leading-tight">
+<a class="inline-block" href="#">
+                    2026/2027 Professional Basic Nursing Screening Dates Announced by Nursing &amp; Midwifery Council of Nigeria (NMCN) Accredited Board
+                  </a>
+</h2>
+<!-- Summary Paragraph -->
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                  The Management of CHEP College of Nursing Sciences, in strict concurrence with the Nursing &amp; Midwifery Council of Nigeria statutory directives, hereby notifies all verified candidates of the physical computer-based screening, verification of O’Level credentials, and oral clinical aptitude assessments scheduled across three phased batches at the Ota Main Campus.
+                </p>
+<!-- Key Highlights Checklist -->
+<div class="bg-surface-canvas p-space-md rounded-lg space-y-2 mt- space-sm">
+<div class="flex items-start gap-2 text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-forest-base text-[18px] shrink-0 mt-0.5">check_circle</span>
+<span>Batch A: Candidates scoring 180+ in 2025 UTME • Verification begins April 28th</span>
+</div>
+<div class="flex items-start gap-2 text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-forest-base text-[18px] shrink-0 mt-0.5">check_circle</span>
+<span>Required: Original WAEC/NECO scratch cards, JAMB original printout &amp; Birth Certificate</span>
+</div>
+</div>
+</div>
+<!-- Author & Action Footer -->
+<div class="pt-space-md flex flex-col sm:flex-row sm:items-center justify-between gap-space-md">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-full bg-forest-medium flex items-center justify-center text-surface-white font-headline-sm text-headline-sm">
+                    DR
+                  </div>
+<div>
+<span class="font-label-lg text-label-lg text-on-surface block leading-tight">Dr. R. A. Adeyemi</span>
+<span class="font-body-sm text-body-sm text-text-muted">Registrar &amp; Secretary to the Academic Board</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<a class="inline-flex items-center gap-2 bg-orange-action hover:bg-tertiary-container text-on-primary font-label-lg text-label-lg px-space-lg py-3 rounded-lg shadow transition-all duration-200" href="#">
+<span>Read Full Article</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- TWO-COLUMN MAIN CONTENT: GRID (8 COLS) + SIDEBAR (4 COLS) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
+<!-- ARTICLES GRID & PAGINATION (8 COLS) -->
+<main class="lg:col-span-8 flex flex-col gap-space-lg">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-6 bg-forest-base rounded-full"></span>
+<h3 class="font-headline-md text-headline-md text-on-surface font-semibold">Latest Academic Dispatches</h3>
+</div>
+<span class="font-body-sm text-body-sm text-text-muted">Showing 1-6 of 24 posts</span>
+</div>
+<!-- The Articles 6-Card Grid (2-columns on tablet/desktop) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-lg" id="articlesGrid">
+<!-- Card 1: Community Health Nursing -->
+<article class="bg-surface-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 flex flex-col overflow-hidden group">
+<div class="relative h-48 w-full overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Nigerian community health nursing students in forest green clinical smocks performing blood pressure checks and health diagnostics during an outdoor village medical outreach under a shade canopy in Ogun State. Warm golden tropical lighting, genuine empathy, and community engagement." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIYP2UCKE9P99_2k-2msBf0hUdHjC4aiXTLpHVnELiI7EZ9ib7Lrzlk1HoegHjGaVWzPrhJmrLxenyLD-HbJEXZxLWLQQ-OwSsBkLD9A5vBXYWBKBjl74xhaS-lGh6aDeVWrQYsLqpOFMMAMZLO9mV-5a7Wnt8V6lOvfcZr9mmMLw-VQSGW_VicMt8QL8KPIQndVnkQJEDspoj-9f1vPSEBLHjtUG5BOA2YNQj5rseue-8EzY4yr_8"/>
+<div class="absolute top-3 left-3">
+<span class="px-2.5 py-1 rounded-full bg-emerald-light text-emerald-accent font-label-sm text-label-sm uppercase tracking-wide">
+                    Community Health
+                  </span>
+</div>
+</div>
+<div class="p-space-md flex-1 flex flex-col justify-between space-y-space-sm">
+<div class="space-y-2">
+<div class="flex items-center gap-3 text-body-sm text-text-muted">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">calendar_month</span>
+                      01/04/2025
+                    </span>
+<span>•</span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">chat_bubble_outline</span>
+                      0 Comments
+                    </span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-forest-base transition-colors leading-snug">
+<a href="#">Community Health Nursing: Bridging the Gap Between Healthcare and Society</a>
+</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3 leading-relaxed">
+                    Preventative epidemiology and primary health posts form Nigeria's frontline defense. An analysis of CHEP's rural immersion cohorts in Agbebi Central and surrounding semi-urban settlements.
+                  </p>
+</div>
+<div class="pt-space-sm flex items-center justify-between border-t border-surface-container-high/40">
+<span class="font-label-sm text-label-sm text-forest-medium">Nurse T. K. Balogun</span>
+<a class="font-label-md text-label-md text-orange-action hover:text-tertiary-container flex items-center gap-1" href="#">
+                    Read Article <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</a>
+</div>
+</div>
+</article>
+<!-- Card 2: Total Nursing Care -->
+<article class="bg-surface-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 flex flex-col overflow-hidden group">
+<div class="relative h-48 w-full overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A dedicated female nurse gently checking the IV line and monitoring vitals on an elderly patient in a sunlit modern clinical ward. Medical monitors glowing gently, sterile white sheets, forest green nursing uniform details with high empathetic bedside manner." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWRWMMFmPKnwErqjXLmvM4ZcnGCfnT53phZ1YUdju4jEoFa_2fs1luQmV9BM-v4Gd6VAIV_EbRq6hdZjI0jjElRIL3fdiZrHsHRf-hJ-6X-mEmpF7ySEN2ZgzP0ruZyST5DMUkafpoJC0pAXX0mDC5GAkN2E6RVMtrCge-3QOIbatQ_402Dxl8qCRM_F65wRJtUZdY1vvBzk_vUIvGFHsnUKovKO5lSmUViwEM-c-DqmvMGoGTlhgV"/>
+<div class="absolute top-3 left-3">
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high text-forest-dark font-label-sm text-label-sm uppercase tracking-wide">
+                    Total Nursing Care
+                  </span>
+</div>
+</div>
+<div class="p-space-md flex-1 flex flex-col justify-between space-y-space-sm">
+<div class="space-y-2">
+<div class="flex items-center gap-3 text-body-sm text-text-muted">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">calendar_month</span>
+                      01/04/2025
+                    </span>
+<span>•</span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">chat_bubble_outline</span>
+                      3 Comments
+                    </span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-forest-base transition-colors leading-snug">
+<a href="#">Total Nursing Care: A Holistic Approach to Patient Well-being</a>
+</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3 leading-relaxed">
+                    Transitioning from task-oriented nursing to comprehensive biopsychosocial assessment. Why continuous patient-assigned care drastically reduces post-surgical re-admission metrics.
+                  </p>
+</div>
+<div class="pt-space-sm flex items-center justify-between border-t border-surface-container-high/40">
+<span class="font-label-sm text-label-sm text-forest-medium">Matron E. Okafor (FWACN)</span>
+<a class="font-label-md text-label-md text-orange-action hover:text-tertiary-container flex items-center gap-1" href="#">
+                    Read Article <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</a>
+</div>
+</div>
+</article>
+<!-- Card 3: Foundation vs Fundamentals of Nursing -->
+<article class="bg-surface-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 flex flex-col overflow-hidden group">
+<div class="relative h-48 w-full overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Medical student textbooks including Gray's Anatomy and Nursing Process manuals arranged neatly on a polished wooden library study table with a pair of reading glasses, a notebook, and a stethoscope bathed in warm library study lamp light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-BqT_OXMrxYjuHydx5dZT-luFiV_SgZPLr69VBDbOl3xnPt8N1PLd2J63hZhuJcgQ0EK-IZp5aZLr4UA-xwrSa9CZ_s7iJdJROaw3ofJgRZGhYkeyh91bpkEEXqnKD_qD3Ay43wUa5iRf5zbt34VCJ5vPR01zxP43O7jLMYYibUKWKO0d9hth7Kd4Hs2oItUTHbJPcKiqVuruPZROZ-iosDTrw6STjJQglibSLGsPo-xMM2V8nIhA"/>
+<div class="absolute top-3 left-3">
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high text-forest-dark font-label-sm text-label-sm uppercase tracking-wide">
+                    Foundation of Nursing
+                  </span>
+</div>
+</div>
+<div class="p-space-md flex-1 flex flex-col justify-between space-y-space-sm">
+<div class="space-y-2">
+<div class="flex items-center gap-3 text-body-sm text-text-muted">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">calendar_month</span>
+                      01/04/2025
+                    </span>
+<span>•</span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">chat_bubble_outline</span>
+                      5 Comments
+                    </span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-forest-base transition-colors leading-snug">
+<a href="#">Foundation vs. Fundamentals of Nursing: Understanding the Key Differences</a>
+</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3 leading-relaxed">
+                    Demystifying academic nomenclature: how theoretical epistemologies (Foundation) diverge from hands-on clinical psychomotor proficiencies (Fundamentals) in Year 1 curriculum.
+                  </p>
+</div>
+<div class="pt-space-sm flex items-center justify-between border-t border-surface-container-high/40">
+<span class="font-label-sm text-label-sm text-forest-medium">Dean S. O. Ogundipe</span>
+<a class="font-label-md text-label-md text-orange-action hover:text-tertiary-container flex items-center gap-1" href="#">
+                    Read Article <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</a>
+</div>
+</div>
+</article>
+<!-- Card 4: Geriatric Nursing Advances -->
+<article class="bg-surface-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 flex flex-col overflow-hidden group">
+<div class="relative h-48 w-full overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A caring nursing practitioner holding hands with a smiling Nigerian elderly grandmother in a clean bright community clinic setting. Emotional support, gentle healthcare demeanor, sunlight reflecting soft green tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBe6fcUcE735TtXDkjb958L2vqXmncS_LCCJACjS3vhDfV0ZkT2RPl8OCBMXOHNr-ZPWBRhsNVK-JfCz_lmbUK-JdUolC8NXHv2MswgfYZROiGDL95Z-OV6HXvhUh_6binVcJsrX2qfby7uADPLllEVDkOqgxJGVYG-S7QJ1VimEdI5dNGA04W8UybwrxbWB8uvznXYJtxegB_hqCi8SUXe0t0UlZlc4-x5_JP4PshTcgg3HDnnPw5j"/>
+<div class="absolute top-3 left-3">
+<span class="px-2.5 py-1 rounded-full bg-emerald-light text-emerald-accent font-label-sm text-label-sm uppercase tracking-wide">
+                    Geriatric Nursing
+                  </span>
+</div>
+</div>
+<div class="p-space-md flex-1 flex flex-col justify-between space-y-space-sm">
+<div class="space-y-2">
+<div class="flex items-center gap-3 text-body-sm text-text-muted">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">calendar_month</span>
+                      28/03/2025
+                    </span>
+<span>•</span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">chat_bubble_outline</span>
+                      2 Comments
+                    </span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-forest-base transition-colors leading-snug">
+<a href="#">Geriatric Nursing Advances: Managing Multi-Morbidity in Community Healthcare</a>
+</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3 leading-relaxed">
+                    With demographic shifts across southwest Nigeria, polypharmacy management and cognitive impairment monitoring become mandatory competencies for the modern registered nurse.
+                  </p>
+</div>
+<div class="pt-space-sm flex items-center justify-between border-t border-surface-container-high/40">
+<span class="font-label-sm text-label-sm text-forest-medium">Dr. (Mrs.) F. A. Adeleke</span>
+<a class="font-label-md text-label-md text-orange-action hover:text-tertiary-container flex items-center gap-1" href="#">
+                    Read Article <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</a>
+</div>
+</div>
+</article>
+<!-- Card 5: Clinical Rotation Protocols -->
+<article class="bg-surface-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 flex flex-col overflow-hidden group">
+<div class="relative h-48 w-full overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Modern exterior facade of a tertiary teaching hospital with an ambulance parked near the emergency wing, palm trees against a blue sky, clinical signage and busy medical personnel moving through automatic double glass doors." src="https://lh3.googleusercontent.com/aida-public/AB6AXuALoeTtXRF6OAXkcO6kHxrOw9riTnygKtOsJI49JjGvfpI58Vy0MbDTH-30h94ZXpHZFZvJSmgBr81i-wKs0HX0p-fdubuPFArK0vRPLgxfk83Wpw40T_bQQ7UpPU4huar7AlTCN-HgSK6DVpex2zM3nBGwsYg8S5ENyc_ZCjd4H0_FBFnmohksWGiPXAf5W1Yd6cHHC77s3nT6XtcJOp2PbJbZ07fBLPpv3eqnEV21hC9ec9w4qALY"/>
+<div class="absolute top-3 left-3">
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high text-forest-dark font-label-sm text-label-sm uppercase tracking-wide">
+                    Clinical Training
+                  </span>
+</div>
+</div>
+<div class="p-space-md flex-1 flex flex-col justify-between space-y-space-sm">
+<div class="space-y-2">
+<div class="flex items-center gap-3 text-body-sm text-text-muted">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">calendar_month</span>
+                      24/03/2025
+                    </span>
+<span>•</span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">chat_bubble_outline</span>
+                      8 Comments
+                    </span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-forest-base transition-colors leading-snug">
+<a href="#">Clinical Rotation Protocols: State Hospital Ota &amp; OOUTH Sagamu Postings Guide</a>
+</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3 leading-relaxed">
+                    Mandatory briefing guidelines, ward scrub dress codes, shift documentation logbooks, and preceptor evaluation indices for the 300-level clinical placement semester.
+                  </p>
+</div>
+<div class="pt-space-sm flex items-center justify-between border-t border-surface-container-high/40">
+<span class="font-label-sm text-label-sm text-forest-medium">Clinical Preceptor Office</span>
+<a class="font-label-md text-label-md text-orange-action hover:text-tertiary-container flex items-center gap-1" href="#">
+                    Read Article <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</a>
+</div>
+</div>
+</article>
+<!-- Card 6: High-Fidelity Anatomy Sim Lab -->
+<article class="bg-surface-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 flex flex-col overflow-hidden group">
+<div class="relative h-48 w-full overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="State-of-the-art medical simulation laboratory with high-fidelity life-size clinical manikin on a hospital bed, surrounded by vital signs telemetry monitors, surgical lights, crash cart, and students wearing protective clinical gear taking notes." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPuJ6WTpGh11OMakbKeTo3NGJ2I72IKYE9d3iWIRj3IiFaXLK586oS6xwQ8BlMdteTUSiEr7TPY6R83qVpb9MZ-VfYWFaigwl4P-XOGcJ9S2a0pIhlqiryqaniwZiFSfPM7Lz49x2TD1PtEZAeuF-oLJ7FC_CCeLgOweMvoWJ7SAbK4_kmmECg4Vy2jpnAeSoQ1RhUfvv4tkLxUVSmyBWQCCci1yvJtVF395rQUt4tJXN6sfaSxK2S"/>
+<div class="absolute top-3 left-3">
+<span class="px-2.5 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm text-label-sm uppercase tracking-wide">
+                    Campus News
+                  </span>
+</div>
+</div>
+<div class="p-space-md flex-1 flex flex-col justify-between space-y-space-sm">
+<div class="space-y-2">
+<div class="flex items-center gap-3 text-body-sm text-text-muted">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">calendar_month</span>
+                      19/03/2025
+                    </span>
+<span>•</span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">chat_bubble_outline</span>
+                      12 Comments
+                    </span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-forest-base transition-colors leading-snug">
+<a href="#">High-Fidelity Anatomy Simulation Laboratory Commissioning at Ota Campus</a>
+</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3 leading-relaxed">
+                    Featuring wireless programmable emergency manikins, maternal birthing simulators, and neonatal resuscitation modules to provide risk-free procedural repetition.
+                  </p>
+</div>
+<div class="pt-space-sm flex items-center justify-between border-t border-surface-container-high/40">
+<span class="font-label-sm text-label-sm text-forest-medium">Provost Communication Bureau</span>
+<a class="font-label-md text-label-md text-orange-action hover:text-tertiary-container flex items-center gap-1" href="#">
+                    Read Article <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</a>
+</div>
+</div>
+</article>
+</div>
+<!-- Institutional In-Content Infographic: Publication Statistics -->
+<div class="bg-forest-dark text-on-primary rounded-xl p-space-lg shadow-sm mt-space-md">
+<div class="flex flex-col md:flex-row items-center justify-between gap-space-md">
+<div class="space-y-1 text-center md:text-left">
+<span class="font-label-sm text-label-sm uppercase text-primary-fixed tracking-wider">Research Output Metrics</span>
+<h4 class="font-headline-sm text-headline-sm text-surface-white">Academic Faculty Publications Year-to-Date</h4>
+<p class="font-body-sm text-body-sm text-surface-variant/80">Peer-reviewed clinical papers published by CHEP faculty and nursing residents.</p>
+</div>
+<!-- SVG Progress Visualization (Compact < 2KB) -->
+<div class="flex items-center gap-space-lg">
+<div class="flex items-center gap-3">
+<div class="relative w-16 h-16 shrink-0">
+<svg class="w-full h-full transform -rotate-90" viewbox="0 0 36 36">
+<path class="text-surface-white/20" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
+<path class="text-primary-fixed" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="88, 100" stroke-linecap="round" stroke-width="3.5"></path>
+</svg>
+<span class="absolute inset-0 flex items-center justify-center font-label-md text-label-md text-surface-white font-bold">88%</span>
+</div>
+<div class="text-left">
+<span class="font-headline-sm text-headline-sm text-surface-white block leading-none">38/42</span>
+<span class="font-label-sm text-label-sm text-primary-fixed">Target Achieved</span>
+</div>
+</div>
+<div class="hidden sm:flex flex-col text-left border-l border-surface-white/10 pl-space-md">
+<span class="font-label-sm text-label-sm text-surface-variant/80 uppercase">Index Rating</span>
+<span class="font-headline-sm text-headline-sm text-amber-vibrant">NMCN Tier-A</span>
+<span class="font-body-sm text-body-sm text-surface-white/80">Ogun State Zone</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Institutional Pagination Controls -->
+<div class="flex items-center justify-between pt-space-lg">
+<button class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-surface-white text-text-muted hover:text-on-surface shadow-sm font-label-md text-label-md disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+              Previous
+            </button>
+<div class="flex items-center gap-1">
+<button class="w-10 h-10 rounded-lg bg-forest-base text-on-primary font-label-md text-label-md shadow-sm">1</button>
+<button class="w-10 h-10 rounded-lg bg-surface-white text-on-surface hover:bg-surface-container font-label-md text-label-md shadow-sm">2</button>
+<button class="w-10 h-10 rounded-lg bg-surface-white text-on-surface hover:bg-surface-container font-label-md text-label-md shadow-sm">3</button>
+<span class="px-2 text-text-muted">…</span>
+<button class="w-10 h-10 rounded-lg bg-surface-white text-on-surface hover:bg-surface-container font-label-md text-label-md shadow-sm">8</button>
+</div>
+<button class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-surface-white text-forest-base hover:bg-surface-tint shadow-sm font-label-md text-label-md">
+              Next
+              <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</main>
+<!-- SIDEBAR UTILITY WIDGETS (4 COLS) -->
+<aside class="lg:col-span-4 flex flex-col gap-space-lg w-full">
+<!-- Widget 1: Search Articles -->
+<div class="bg-surface-white rounded-xl p-space-md shadow-sm">
+<h4 class="font-label-lg text-label-lg text-forest-dark uppercase tracking-wider mb-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-forest-base text-[20px]">search</span>
+              Search Publications
+            </h4>
+<div class="relative">
+<input class="w-full h-11 pl-4 pr-11 bg-surface-canvas rounded-lg text-body-sm text-on-surface placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-forest-medium/40 transition-all" id="articleSearchInput" placeholder="Keywords, course codes, NMCN..." type="text"/>
+<button aria-label="Search" class="absolute right-2 top-2 h-7 w-7 bg-forest-base text-on-primary rounded-md flex items-center justify-center hover:bg-forest-medium transition-colors">
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+<div class="flex flex-wrap gap-1.5 mt-3">
+<span class="font-label-sm text-label-sm text-text-muted self-center">Popular:</span>
+<a class="px-2 py-0.5 rounded bg-surface-canvas text-forest-dark font-label-sm text-label-sm hover:bg-surface-container transition-colors" href="#">Screening</a>
+<a class="px-2 py-0.5 rounded bg-surface-canvas text-forest-dark font-label-sm text-label-sm hover:bg-surface-container transition-colors" href="#">JAMB Cutoff</a>
+<a class="px-2 py-0.5 rounded bg-surface-canvas text-forest-dark font-label-sm text-label-sm hover:bg-surface-container transition-colors" href="#">OOUTH</a>
+</div>
+</div>
+<!-- Widget 2: Recent Announcements Ticker -->
+<div class="bg-surface-white rounded-xl p-space-md shadow-sm space-y-space-md">
+<div class="flex items-center justify-between border-b border-surface-container-high/60 pb-3">
+<h4 class="font-label-lg text-label-lg text-forest-dark uppercase tracking-wider flex items-center gap-2">
+<span class="material-symbols-outlined text-amber-vibrant text-[20px]">campaign</span>
+                Urgent Notices
+              </h4>
+<span class="inline-flex w-2.5 h-2.5 rounded-full bg-amber-vibrant animate-pulse"></span>
+</div>
+<div class="space-y-space-sm divide-y divide-surface-container/60">
+<div class="pt-2 first:pt-0 space-y-1">
+<div class="flex items-center justify-between text-label-sm text-label-sm">
+<span class="text-amber-vibrant font-semibold">Immediate Action</span>
+<span class="text-text-muted">Today, 09:30 AM</span>
+</div>
+<a class="font-headline-sm text-body-md text-on-surface hover:text-forest-base font-semibold block transition-colors leading-snug" href="#">
+                  CBT Screening Centre Allocation Slip Download Portal Now Live
+                </a>
+<p class="font-body-sm text-body-sm text-text-muted line-clamp-2">
+                  All applicants must log into their applicant dashboard to print colored biometric screening slips.
+                </p>
+</div>
+<div class="pt-3 space-y-1">
+<div class="flex items-center justify-between text-label-sm text-label-sm">
+<span class="text-forest-medium font-semibold">Clinical Posting</span>
+<span class="text-text-muted">31/03/2025</span>
+</div>
+<a class="font-headline-sm text-body-md text-on-surface hover:text-forest-base font-semibold block transition-colors leading-snug" href="#">
+                  Submissions of BLS &amp; ACLS Pre-requisite Certifications Due
+                </a>
+<p class="font-body-sm text-body-sm text-text-muted line-clamp-2">
+                  Year 2 Semester 2 cohorts assigned to State Hospital Ota must certify by Friday 4:00 PM.
+                </p>
+</div>
+<div class="pt-3 space-y-1">
+<div class="flex items-center justify-between text-label-sm text-label-sm">
+<span class="text-text-muted font-semibold">Virtual Library</span>
+<span class="text-text-muted">27/03/2025</span>
+</div>
+<a class="font-headline-sm text-body-md text-on-surface hover:text-forest-base font-semibold block transition-colors leading-snug" href="#">
+                  UpToDate Clinical Decision Software Remote Access Activated
+                </a>
+<p class="font-body-sm text-body-sm text-text-muted line-clamp-2">
+                  Institutional institutional login now grants offline mobile database access.
+                </p>
+</div>
+</div>
+</div>
+<!-- Widget 3: Download Academic Bulletin PDF -->
+<div class="bg-gradient-to-br from-forest-base to-forest-dark text-on-primary rounded-xl p-space-md shadow-md relative overflow-hidden">
+<div class="absolute -right-6 -bottom-6 w-32 h-32 bg-primary-fixed/10 rounded-full blur-xl"></div>
+<div class="relative z-10 space-y-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-white/10 flex items-center justify-center text-primary-fixed">
+<span class="material-symbols-outlined text-[24px]">picture_as_pdf</span>
+</div>
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-emerald-light">Official Document</span>
+<h4 class="font-headline-sm text-headline-sm text-surface-white mt-1">2025/2026 Academic Bulletin &amp; Clinical Guide</h4>
+</div>
+<p class="font-body-sm text-body-sm text-surface-variant/90 leading-relaxed">
+                Comprehensive 64-page gazette containing NMCN syllabus benchmarks, grading rubrics, clinical posting regulations, and academic calendar.
+              </p>
+<div class="pt-2">
+<a class="w-full inline-flex items-center justify-center gap-2 bg-surface-white hover:bg-surface-tint text-forest-dark font-label-md text-label-md px-4 py-2.5 rounded-lg shadow-sm transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                  Download Gazette (4.2 MB)
+                </a>
+</div>
+</div>
+</div>
+<!-- Widget 4: Filter by Academic Session -->
+<div class="bg-surface-white rounded-xl p-space-md shadow-sm space-y-space-sm">
+<h4 class="font-label-lg text-label-lg text-forest-dark uppercase tracking-wider flex items-center gap-2">
+<span class="material-symbols-outlined text-forest-base text-[20px]">history_edu</span>
+              Academic Session Archives
+            </h4>
+<div class="space-y-2">
+<label class="block font-label-sm text-label-sm text-text-muted uppercase">Select Archive Year</label>
+<div class="relative">
+<select class="w-full h-11 px-3 bg-surface-canvas rounded-lg text-body-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-forest-medium/40 appearance-none transition-all cursor-pointer">
+<option selected="">2025/2026 Academic Year (Current)</option>
+<option>2024/2025 Academic Year</option>
+<option>2023/2024 Academic Year</option>
+<option>2022/2023 Foundation Inception</option>
+</select>
+<span class="material-symbols-outlined text-[20px] text-text-muted absolute right-3 top-3 pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Session Breakdown Tags -->
+<div class="pt-2 grid grid-cols-2 gap-2 text-center font-label-sm text-label-sm">
+<div class="bg-surface-canvas p-2 rounded text-forest-dark">
+<span class="block font-bold text-headline-sm">14</span>
+<span class="text-text-muted">First Semester</span>
+</div>
+<div class="bg-surface-canvas p-2 rounded text-forest-dark">
+<span class="block font-bold text-headline-sm">10</span>
+<span class="text-text-muted">Second Semester</span>
+</div>
+</div>
+</div>
+<!-- Widget 5: Subscribe to College Newsletter -->
+<div class="bg-surface-white rounded-xl p-space-md shadow-sm space-y-space-sm">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed">
+<span class="material-symbols-outlined text-[18px]">mark_email_unread</span>
+</div>
+<div>
+<h4 class="font-label-lg text-label-lg text-on-surface">CHEP College Dispatch</h4>
+<span class="font-body-sm text-body-sm text-text-muted">Weekly summaries direct to inbox</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              Never miss nursing council application deadlines, clinical symposium dates, and community scholarship alerts.
+            </p>
+<form class="space-y-2" onsubmit="event.preventDefault(); document.getElementById('newsletterSuccess').classList.remove('hidden');">
+<input class="w-full h-11 px-4 bg-surface-canvas rounded-lg text-body-sm text-on-surface placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-forest-medium/40 transition-all" placeholder="nurse.scholar@example.com" required="" type="email"/>
+<button class="w-full h-11 bg-orange-action hover:bg-tertiary-container text-on-primary rounded-lg font-label-md text-label-md shadow-sm transition-colors flex items-center justify-center gap-2" type="submit">
+<span>Subscribe to Dispatch</span>
+<span class="material-symbols-outlined text-[18px]">send</span>
+</button>
+</form>
+<div class="hidden p-2 rounded bg-emerald-light text-emerald-accent font-body-sm text-body-sm text-center" id="newsletterSuccess">
+              Registration successful! Verification link dispatched.
+            </div>
+<p class="font-label-sm text-label-sm text-text-muted text-center">Zero spam. Official CHEP institutional policy.</p>
+</div>
+<!-- Affiliation Seal Box -->
+<div class="p-space-md rounded-xl bg-surface-container/50 space-y-2">
+<div class="flex items-center gap-2 text-forest-medium">
+<span class="material-symbols-outlined text-[20px]">local_police</span>
+<span class="font-label-sm text-label-sm uppercase font-bold tracking-wider">Accreditation Verification</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-muted">
+              CHEP College of Nursing Sciences operates under the full regulatory oversight of the Nursing and Midwifery Council of Nigeria (NMCN) Act CAP N143, Laws of the Federation of Nigeria.
+            </p>
+</div>
+</aside>
+</div>
+</div>
+</div>
+<!-- Inline Micro-Interactions Script -->
+<script>
+    // Tab switching interactivity
+    const buttons = document.querySelectorAll('.category-btn');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        buttons.forEach(b => {
+          b.classList.remove('bg-forest-base', 'text-on-primary', 'shadow-sm');
+          b.classList.add('bg-surface-white', 'text-on-surface');
+        });
+        btn.classList.remove('bg-surface-white', 'text-on-surface');
+        btn.classList.add('bg-forest-base', 'text-on-primary', 'shadow-sm');
+      });
+    });
+
+    // Realtime search filtering simulation
+    const searchInput = document.getElementById('articleSearchInput');
+    const articlesGrid = document.getElementById('articlesGrid');
+    if (searchInput && articlesGrid) {
+      searchInput.addEventListener('input', (e) => {
+        const val = e.target.value.toLowerCase();
+        const cards = articlesGrid.querySelectorAll('article');
+        cards.forEach(card => {
+          const text = card.textContent.toLowerCase();
+          card.style.display = text.includes(val) ? 'flex' : 'none';
+        });
+      });
+    }
+  </script>
+</div></main><footer class="w-full bg-forest-dark text-surface-white"><div class="max-w-7xl mx-auto px-margin pt-space-2xl pb-space-xl"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-xl"><div class="space-y-space-md"><div class="flex items-center gap-space-sm"><div class="w-10 h-10 rounded-lg bg-surface-white/10 flex items-center justify-center"><span class="material-symbols-outlined text-emerald-light text-[24px]">local_hospital</span></div><div><span class="font-headline-sm text-headline-sm text-surface-white block leading-tight">CHEP College</span><span class="font-label-sm text-label-sm text-primary-fixed uppercase tracking-wider">Nursing Sciences</span></div></div><p class="font-body-sm text-body-sm text-surface-variant/90 leading-relaxed">Fostering clinical distinction, empathetic patient-centered care, and rigorous academic excellence in nursing and healthcare sciences.</p><div class="pt-space-sm space-y-space-xs font-body-sm text-body-sm text-surface-variant/90"><div class="flex items-start gap-space-xs"><span class="material-symbols-outlined text-primary-fixed text-[18px] mt-0.5">location_on</span><span>No. 18, Agbebi Estate Road, Honda Bus-Stop, Agbebi Central CDA, Ota 102213, Ogun State.</span></div><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary-fixed text-[18px]">call</span><span>+234 916 635 674, +234 813 540 6714</span></div><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary-fixed text-[18px]">mail</span><span>enquiries@chepnursingcollege.org</span></div></div></div><div class="space-y-space-md"><h3 class="font-headline-sm text-headline-sm text-surface-white tracking-wide border-b border-surface-white/10 pb-space-xs">Quick Links</h3><ul class="space-y-space-sm font-body-sm text-body-sm"><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="home" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>Home</a></li><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="about-us" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>About Us</a></li><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="admission" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>Admission</a></li><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="board-of-trustees" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>Board of Trustees</a></li><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="management-team" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>Management Team</a></li><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="portal-login" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>Student Portal</a></li></ul></div><div class="space-y-space-md"><h3 class="font-headline-sm text-headline-sm text-surface-white tracking-wide border-b border-surface-white/10 pb-space-xs">Virtual Library</h3><ul class="space-y-space-sm font-body-sm text-body-sm"><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="virtual-library" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>CHEP Library Home</a></li><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="library-services" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>Library Services</a></li><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="library-ebooks" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>Clinical eBooks</a></li><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="library-ejournals" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>Peer-Reviewed eJournals</a></li><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="library-opac" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>OPAC Catalog</a></li><li><a class="text-surface-variant/90 hover:text-primary-fixed transition-colors flex items-center gap-space-xs" data-path="library-databases" href="#"><span class="material-symbols-outlined text-[16px]">chevron_right</span>Research Databases</a></li></ul></div><div class="space-y-space-md"><h3 class="font-headline-sm text-headline-sm text-surface-white tracking-wide border-b border-surface-white/10 pb-space-xs">Recent News</h3><div class="space-y-space-sm"><article class="group"><a class="block" data-path="news" href="#"><span class="font-label-sm text-label-sm text-primary-fixed block">Admissions 2026/2027</span><p class="font-body-sm text-body-sm text-surface-variant/90 group-hover:text-surface-white transition-colors">Nursing Council announces entrance screening schedule.</p></a></article><article class="group"><a class="block" data-path="news" href="#"><span class="font-label-sm text-label-sm text-primary-fixed block">Clinical Outreach</span><p class="font-body-sm text-body-sm text-surface-variant/90 group-hover:text-surface-white transition-colors">CHEP student cohort conducts geriatric health assessments.</p></a></article><article class="group"><a class="block" data-path="news" href="#"><span class="font-label-sm text-label-sm text-primary-fixed block">Facility Update</span><p class="font-body-sm text-body-sm text-surface-variant/90 group-hover:text-surface-white transition-colors">High-fidelity anatomy simulation laboratory officially commissioned.</p></a></article></div></div></div><div class="mt-space-xl pt-space-md border-t border-surface-white/10 flex flex-col md:flex-row items-center justify-between text-body-sm text-surface-variant/80 gap-space-sm"><p>Copyright © 2026 CHEP College of Nursing Sciences. Modern Next.js application frame.</p><div class="flex items-center gap-space-lg"><a class="hover:text-primary-fixed transition-colors" data-path="home" href="#">Privacy Policy</a><a class="hover:text-primary-fixed transition-colors" data-path="home" href="#">Terms of Admission</a><a class="hover:text-primary-fixed transition-colors" data-path="contact-us" href="#">Accreditation Credentials</a></div></div></div></footer></body></html>
