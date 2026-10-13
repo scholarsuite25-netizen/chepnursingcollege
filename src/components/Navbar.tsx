@@ -331,7 +331,7 @@ export default function Navbar() {
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <Link
             href="/admission"
-            className="bg-orange-action hover:bg-orange-700 text-white font-bold text-xs sm:text-sm px-4 sm:px-5 py-2.5 rounded-xl shadow-sm transition-all hover:shadow-md flex items-center gap-1.5 shrink-0"
+            className="hidden lg:flex bg-orange-action hover:bg-orange-700 text-white font-bold text-xs sm:text-sm px-4 sm:px-5 py-2.5 rounded-xl shadow-sm transition-all hover:shadow-md items-center gap-1.5 shrink-0"
           >
             <span>Enrol Now</span>
             <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
