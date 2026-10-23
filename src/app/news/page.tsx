@@ -53,11 +53,11 @@ export default function NewsPage() {
       category: "community-health",
       categoryLabel: "Community Health",
       title: "Community Health Nursing: Bridging the Gap Between Healthcare and Society",
-      desc: "Preventative epidemiology and primary health posts form Nigeria's frontline defense. An analysis of CHEP's rural immersion cohorts in Agbebi Central.",
+      desc: "Preventative epidemiology and emergency trauma drills form Nigeria's frontline defense. An analysis of CHEP's rural immersion cohorts in Agbebi Central.",
       author: "Nurse T. K. Balogun",
       date: "01/04/2025",
       readTime: "4 min read",
-      image: "/images/chep/blog_community_health.jpg",
+      image: "/images/chep/disaster_week.jpg",
     },
     {
       id: "2",
@@ -68,7 +68,7 @@ export default function NewsPage() {
       author: "Matron V. Adediran",
       date: "28/03/2025",
       readTime: "6 min read",
-      image: "/images/chep/blog_total_care.jpg",
+      image: "/images/chep/nurses_week_1.jpg",
     },
     {
       id: "3",
@@ -79,18 +79,18 @@ export default function NewsPage() {
       author: "Dr. Ifeanyi Chukwuma",
       date: "20/03/2025",
       readTime: "5 min read",
-      image: "/images/chep/blog_geriatric.jpg",
+      image: "/images/chep/chep_geriatrics_3.jpg",
     },
     {
       id: "4",
       category: "library",
-      categoryLabel: "Library & Research",
-      title: "CHEP Digital Repository: Seamless Integration with Librarika and PubMed",
-      desc: "Student nurses now have instantaneous terminal access to over 15,000 peer-reviewed healthcare publications and surgical video catalogs.",
-      author: "Librarian A. Olatunbosun",
+      categoryLabel: "CBT & Academic Integrity",
+      title: "NMCN Standardized CBT Examinations & Academic Probity Protocols",
+      desc: "Student nurses now have instantaneous terminal access to over 15,000 peer-reviewed healthcare publications and standardized computerized examination halls.",
+      author: "Academic Affairs Registry",
       date: "14/03/2025",
       readTime: "3 min read",
-      image: "/images/chep/library_banner.png",
+      image: "/images/chep/examination_hall.jpg",
     },
     {
       id: "5",
@@ -101,7 +101,7 @@ export default function NewsPage() {
       author: "Mrs. O. D. Kuti",
       date: "05/03/2025",
       readTime: "7 min read",
-      image: "/images/chep/blog_maternal.jpg",
+      image: "/images/chep/chep_matric_3.jpg",
     },
     {
       id: "6",
@@ -112,7 +112,7 @@ export default function NewsPage() {
       author: "Rev. Sister Mary Theresa",
       date: "26/02/2025",
       readTime: "5 min read",
-      image: "/images/chep/blog_fundamentals.jpg",
+      image: "/images/chep/students_green_scrubs.jpg",
     },
   ];
 
@@ -120,6 +120,20 @@ export default function NewsPage() {
     ...liveArticles,
     ...articles.filter((a) => !liveArticles.some((l) => l.title === a.title)),
   ];
+
+  // Auto-open article if ?id= query param is provided
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const articleId = params.get("id");
+      if (articleId) {
+        const found = combinedArticles.find((a) => a.id === articleId);
+        if (found) {
+          setSelectedArticle(found);
+        }
+      }
+    }
+  }, [liveArticles]);
 
   const filteredArticles = activeCategory === "all"
     ? combinedArticles
@@ -195,7 +209,7 @@ export default function NewsPage() {
             <div className="grid grid-cols-1 lg:grid-cols-12">
               <div className="relative lg:col-span-5 min-h-[280px] lg:min-h-full">
                 <img
-                  src="/images/chep/safety_exercise.png"
+                  src="/images/chep/chep_matric_1.jpg"
                   alt="Accreditation Briefing"
                   className="w-full h-full object-cover"
                 />
