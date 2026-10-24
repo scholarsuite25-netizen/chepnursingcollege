@@ -14,7 +14,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/gallery",
     "/payment",
     "/contact",
-    "/verify",
     "/portal",
     "/portal/student",
     "/portal/faculty",

@@ -112,7 +112,7 @@ export default function NewsPage() {
       author: "Rev. Sister Mary Theresa",
       date: "26/02/2025",
       readTime: "5 min read",
-      image: "/images/chep/students_green_scrubs.jpg",
+      image: "/images/chep/chep_matric_2.jpg",
     },
   ];
 
@@ -332,27 +332,6 @@ export default function NewsPage() {
 
             {/* Sidebar */}
             <aside className="lg:col-span-4 space-y-6">
-              {/* Official Academic Calendar */}
-              <div className="bg-white p-6 rounded-2xl shadow-xs border border-border-subtle">
-                <h4 className="text-base font-bold text-forest-dark border-b border-gray-100 pb-3 mb-4 flex items-center gap-2">
-                  <span className="material-symbols-outlined text-forest-base text-[20px]">calendar_month</span>
-                  Academic Calendar Dates
-                </h4>
-                <div className="space-y-3 text-xs">
-                  <div className="p-3 rounded-lg bg-surface-canvas border border-gray-100">
-                    <span className="font-bold text-forest-dark block">April 28, 2026</span>
-                    <span className="text-text-muted">Batch A Aptitude &amp; O&apos;Level Document Screening</span>
-                  </div>
-                  <div className="p-3 rounded-lg bg-surface-canvas border border-gray-100">
-                    <span className="font-bold text-forest-dark block">May 15, 2026</span>
-                    <span className="text-text-muted">Matriculation Ceremony for Class of 2029</span>
-                  </div>
-                  <div className="p-3 rounded-lg bg-surface-canvas border border-gray-100">
-                    <span className="font-bold text-forest-dark block">June 02, 2026</span>
-                    <span className="text-text-muted">Commencement of OOUTH Sagamu Clinical Rotations</span>
-                  </div>
-                </div>
-              </div>
 
               {/* Newsletter Subscription */}
               <div className="bg-forest-base text-white p-6 rounded-2xl shadow-md">

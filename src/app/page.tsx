@@ -78,18 +78,18 @@ export default function Home() {
 
   const facilities = [
     {
-      title: "Advanced Anatomy & Science Labs",
-      subtitle: "Scientific Hub",
-      badge: "Microbiology & Anatomy",
-      desc: "Cutting-edge technology, high-precision microscopes, and anatomical models for biochemistry, pathology, and anatomy.",
-      image: "/images/chep/laboratory.jpg",
+      title: "Clinical Simulation & Disaster Management Lab",
+      subtitle: "Emergency & Trauma Hub",
+      badge: "Disaster Preparedness & Simulation",
+      desc: "Specialized emergency response, triage simulations, and high-fidelity trauma drill facilities preparing scholars for frontline healthcare crisis management.",
+      image: "/images/chep/disaster_week_3.jpg",
     },
     {
       title: "ICT Center & Virtual Library",
       subtitle: "Virtual Integration",
       badge: "Librarika OPAC & eJournals",
       desc: "Dedicated fiber broadband workstations providing instant access to OPAC catalogs, clinical eBooks, and PubMed journal databases.",
-      image: "/images/chep/ict_center.jpg",
+      image: "/images/chep/ict_computers_empty.jpg",
     },
     {
       title: "Clinical Demonstration & Safety Annex",

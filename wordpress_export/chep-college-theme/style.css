@@ -1,0 +1,17 @@
+/*
+Theme Name: CHEP College of Nursing Sciences
+Theme URI: https://chepnursingcollege.vercel.app
+Author: CHEP Academic Registry & Antigravity
+Author URI: https://chepnursingcollege.org
+Description: High-performance, institutional healthcare and nursing collegiate portal theme with full native academic workflows, interactive landscape sliders, authentic photo gallery, admissions RRR slip generation, and credential verification engine.
+Version: 1.0.0
+Requires at least: 5.8
+Tested up to: 6.7
+Requires PHP: 7.4
+License: GNU General Public License v2 or later
+Text Domain: chep-nursing
+Tags: education, nursing, college, healthcare, portal, admissions, verification
+*/
+
+/* Core Theme Styles are imported from assets/css/main.css */
+@import url('assets/css/main.css');

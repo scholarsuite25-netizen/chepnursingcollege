@@ -1157,12 +1157,12 @@ export default function AdminPage() {
                 <span className="font-mono text-[9px] bg-white/10 px-1 rounded">reflections.chep</span>
               </Link>
               <Link
-                href="/verify"
+                href="/about"
                 target="_blank"
                 className="flex items-center justify-between px-3 py-1 hover:bg-[#2271b1] hover:text-white transition-colors text-[11px]"
               >
-                <span>Verify Credentials</span>
-                <span className="font-mono text-[9px] bg-white/10 px-1 rounded">verify.chep</span>
+                <span>About Us &amp; Governance</span>
+                <span className="font-mono text-[9px] bg-white/10 px-1 rounded">about.chep</span>
               </Link>
               <Link
                 href="/portal"
@@ -1645,7 +1645,7 @@ export default function AdminPage() {
                     <div className="flex flex-wrap gap-1 text-[10px] font-mono">
                       <span className="px-1.5 py-0.5 rounded bg-gray-100 border text-gray-700">exams.chep</span>
                       <span className="px-1.5 py-0.5 rounded bg-gray-100 border text-gray-700">library.chep</span>
-                      <span className="px-1.5 py-0.5 rounded bg-gray-100 border text-gray-700">verify.chep</span>
+                      <span className="px-1.5 py-0.5 rounded bg-gray-100 border text-gray-700">about.chep</span>
                       <span className="px-1.5 py-0.5 rounded bg-gray-100 border text-gray-700">portal.chep</span>
                       <span className="px-1.5 py-0.5 rounded bg-gray-100 border text-gray-700">reflections.chep</span>
                     </div>
@@ -2722,8 +2722,8 @@ export default function AdminPage() {
                         <td className="py-2 px-3 text-emerald-700 font-bold">Active DNS</td>
                       </tr>
                       <tr>
-                        <td className="py-2 px-3 font-mono font-bold text-[#2271b1]">verify.chep</td>
-                        <td className="py-2 px-3">Credential &amp; License Verification</td>
+                        <td className="py-2 px-3 font-mono font-bold text-[#2271b1]">about.chep</td>
+                        <td className="py-2 px-3">Institutional Heritage &amp; Governance</td>
                         <td className="py-2 px-3 text-emerald-700 font-bold">Active DNS</td>
                       </tr>
                       <tr>

@@ -198,9 +198,9 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/verify" className="text-gray-300 hover:text-primary-fixed transition-colors flex items-center gap-1.5">
+                <Link href="/contact" className="text-gray-300 hover:text-primary-fixed transition-colors flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-[16px]">chevron_right</span>
-                  NMCN Credential Verification
+                  Campus Contact &amp; Directions
                 </Link>
               </li>
               <li>

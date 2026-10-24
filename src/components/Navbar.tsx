@@ -27,6 +27,42 @@ export default function Navbar() {
   const navCategories: NavCategory[] = [
     { label: "Home", href: "/" },
     {
+      label: "About Us",
+      href: "/about",
+      dropdown: [
+        {
+          label: "College Heritage & Vision",
+          href: "/about",
+          desc: "NMCN approval, institutional trajectory & founding mandate",
+          icon: "history_edu",
+        },
+        {
+          label: "Office of the Provost",
+          href: "/about#provost",
+          desc: "Prof. Stella O. Ayowole — Executive leadership & vision",
+          icon: "military_tech",
+        },
+        {
+          label: "Academic Faculty & Lecturers",
+          href: "/about#faculty",
+          desc: "Registered Nurse educators, clinicians & coordinators",
+          icon: "groups",
+        },
+        {
+          label: "Board of Trustees & Senate",
+          href: "/about#trustees",
+          desc: "Chief (Dr.) Olusegun Agbebi & Governing Council",
+          icon: "account_balance",
+        },
+        {
+          label: "Affiliated Hospital Networks",
+          href: "/about#affiliations",
+          desc: "OOUTH Sagamu, State Hospital Ota & clinical partners",
+          icon: "local_hospital",
+        },
+      ],
+    },
+    {
       label: "Academics",
       href: "/admission",
       dropdown: [
@@ -43,17 +79,10 @@ export default function Navbar() {
           icon: "payments",
         },
         {
-          label: "Verify Credentials",
-          href: "/verify",
-          desc: "Real-time graduate & transcript verification",
-          subdomain: "verify.chep",
-          icon: "verified_user",
-        },
-        {
-          label: "Leadership & Senate",
-          href: "/about",
-          desc: "Board of Trustees, Provost & Academic Council",
-          icon: "account_balance",
+          label: "Academic Programs & Curriculum",
+          href: "/admission#programs",
+          desc: "General Nursing, Basic Midwifery & Public Health Nursing",
+          icon: "menu_book",
         },
       ],
     },
