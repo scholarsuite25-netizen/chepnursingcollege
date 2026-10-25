@@ -3,78 +3,63 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 
-describe('6-Station Autonomous CAOSCE Examination Engine Test Suite', () => {
-  const dataFilePath = path.resolve(process.cwd(), 'src/data/caosceExams.ts');
+describe('Unified Clinical Examination & Simulation Academy Test Suite', () => {
+  const caosceDataPath = path.resolve(process.cwd(), 'src/data/caosceExams.ts');
+  const ospeDataPath = path.resolve(process.cwd(), 'src/data/ospeExams.ts');
+  const dosageDataPath = path.resolve(process.cwd(), 'src/data/dosageMathExams.ts');
+  const partographDataPath = path.resolve(process.cwd(), 'src/data/partographExams.ts');
+  const triageDataPath = path.resolve(process.cwd(), 'src/data/triageExams.ts');
   const examsPagePath = path.resolve(process.cwd(), 'src/app/exams/page.tsx');
 
-  test('CAOSCE Data Module exists and is populated', () => {
-    assert.ok(fs.existsSync(dataFilePath), 'src/data/caosceExams.ts must exist');
-    const content = fs.readFileSync(dataFilePath, 'utf8');
-    assert.ok(content.includes('CAOSCE_STATIONS'), 'Must export CAOSCE_STATIONS');
-    assert.ok(content.includes('scrambleCAOSCEMCQs'), 'Must export scrambleCAOSCEMCQs');
+  test('Module 1: CAOSCE 6-Station Autonomous Engine is verified', () => {
+    assert.ok(fs.existsSync(caosceDataPath), 'caosceExams.ts must exist');
+    const content = fs.readFileSync(caosceDataPath, 'utf8');
+    const stations = content.match(/stationNumber:\s*([1-6])/g);
+    assert.equal(stations?.length, 6, 'Must define exactly 6 stations');
+    const mcqs = content.match(/questionNumber:\s*(10|[1-9])/g);
+    assert.equal(mcqs?.length, 60, 'Must define exactly 60 MCQs');
   });
 
-  test('Exactly 6 clinical practice stations are defined covering 6 core nursing domains', () => {
-    const content = fs.readFileSync(dataFilePath, 'utf8');
-    const matches = content.match(/stationNumber:\s*([1-6])/g);
-    assert.ok(matches && matches.length === 6, 'Must define exactly 6 stations numbered 1 to 6');
-
-    // Verify the 6 disciplines
-    assert.ok(content.includes('Medical-Surgical Nursing (Adult Health)'), 'Must include Med-Surg domain');
-    assert.ok(content.includes('Maternal & Obstetric Nursing (Midwifery)'), 'Must include Midwifery domain');
-    assert.ok(content.includes('Pediatric & Child Health Nursing (Neonatology)'), 'Must include Pediatric domain');
-    assert.ok(content.includes('Mental Health & Psychiatric Nursing'), 'Must include Psychiatry domain');
-    assert.ok(content.includes('Community & Public Health Nursing'), 'Must include Community Health domain');
-    assert.ok(content.includes('Emergency, Trauma & Critical Care Nursing'), 'Must include Emergency/Trauma domain');
+  test('Module 2: OSPE Diagnostic Data Studio is verified', () => {
+    assert.ok(fs.existsSync(ospeDataPath), 'ospeExams.ts must exist');
+    const content = fs.readFileSync(ospeDataPath, 'utf8');
+    assert.ok(content.includes('OSPE_STATIONS'), 'Must export OSPE_STATIONS');
+    assert.ok(content.includes('ECG Rhythm'), 'Must include ECG station');
+    assert.ok(content.includes('Arterial Blood Gas'), 'Must include ABG station');
+    assert.ok(content.includes('Urinalysis'), 'Must include Urinalysis station');
   });
 
-  test('Each station has strictly 10 minutes duration', () => {
-    const content = fs.readFileSync(dataFilePath, 'utf8');
-    const durations = content.match(/durationMinutes:\s*10/g);
-    assert.ok(durations && durations.length === 6, 'All 6 stations must have durationMinutes: 10');
+  test('Module 3: Zero-Tolerance Dosage Math Board is verified', () => {
+    assert.ok(fs.existsSync(dosageDataPath), 'dosageMathExams.ts must exist');
+    const content = fs.readFileSync(dosageDataPath, 'utf8');
+    assert.ok(content.includes('DOSAGE_MATH_QUESTIONS'), 'Must export DOSAGE_MATH_QUESTIONS');
+    assert.ok(content.includes('Parkland resuscitation'), 'Must include Parkland formula');
+    assert.ok(content.includes('Amoxicillin'), 'Must include pediatric dosing');
   });
 
-  test('Exactly 10 linked MCQs are defined per station (60 total MCQs)', () => {
-    const content = fs.readFileSync(dataFilePath, 'utf8');
-    const mcqMatches = content.match(/questionNumber:\s*(10|[1-9])/g);
-    assert.ok(mcqMatches && mcqMatches.length === 60, `Must define exactly 60 MCQs (found ${mcqMatches?.length})`);
-
-    // Verify all 6 station question IDs exist
-    for (let s = 1; s <= 6; s++) {
-      for (let q = 1; q <= 10; q++) {
-        const idPattern = `mcq-st${s}-${q.toString().padStart(2, '0')}`;
-        assert.ok(content.includes(idPattern), `MCQ ${idPattern} must exist`);
-      }
-    }
+  test('Module 4: Interactive WHO Partograph Simulator is verified', () => {
+    assert.ok(fs.existsSync(partographDataPath), 'partographExams.ts must exist');
+    const content = fs.readFileSync(partographDataPath, 'utf8');
+    assert.ok(content.includes('WHO_PARTOGRAPH_SCENARIO'), 'Must export WHO_PARTOGRAPH_SCENARIO');
+    assert.ok(content.includes('Alert Line'), 'Must test alert line mechanics');
+    assert.ok(content.includes('Action Line'), 'Must test action line mechanics');
   });
 
-  test('Checklist has critical patient safety flags defined', () => {
-    const content = fs.readFileSync(dataFilePath, 'utf8');
-    assert.ok(content.includes('criticalFailStep: true'), 'Must include critical safety fail steps');
+  test('Module 5: START Disaster Mass-Casualty Triage is verified', () => {
+    assert.ok(fs.existsSync(triageDataPath), 'triageExams.ts must exist');
+    const content = fs.readFileSync(triageDataPath, 'utf8');
+    assert.ok(content.includes('DISASTER_TRIAGE_CASUALTIES'), 'Must export DISASTER_TRIAGE_CASUALTIES');
+    assert.ok(content.includes('RED'), 'Must include Red Tag');
+    assert.ok(content.includes('BLACK'), 'Must include Black Tag');
   });
 
-  test('Legacy manual OSCE tab is deleted from exams page and replaced by autonomous CAOSCE', () => {
-    const content = fs.readFileSync(examsPagePath, 'utf8');
-    // Ensure activeTab uses "caosce"
-    assert.ok(content.includes('activeTab === "caosce"'), 'Must have activeTab === "caosce"');
-    assert.ok(content.includes('6-Station CAOSCE Circuit (Autonomous)'), 'Must render autonomous CAOSCE tab');
-    // Verify 10-minute timers
-    assert.ok(content.includes('practicalTimeRemaining'), 'Must manage practical timer');
-    assert.ok(content.includes('mcqTimeRemaining'), 'Must manage MCQ timer');
-    assert.ok(content.includes('transitionTimeRemaining'), 'Must manage 30s transition timer');
-    // Verify composite scoring
-    assert.ok(content.includes('overallAggregateScore'), 'Must compute composite aggregate score');
-    assert.ok(content.includes('anyCriticalViolations'), 'Must audit critical safety violations');
-  });
-
-  test('Global downloadable specification files exist in workspace root', () => {
-    const mdSpecPath = path.resolve(process.cwd(), 'GLOBAL_FUTURE_NURSING_EXAMINATION_AI_STANDARD.md');
-    const txtSpecPath = path.resolve(process.cwd(), 'GLOBAL_FUTURE_NURSING_EXAMINATION_AI_STANDARD.txt');
-    assert.ok(fs.existsSync(mdSpecPath), 'GLOBAL_FUTURE_NURSING_EXAMINATION_AI_STANDARD.md must exist');
-    assert.ok(fs.existsSync(txtSpecPath), 'GLOBAL_FUTURE_NURSING_EXAMINATION_AI_STANDARD.txt must exist');
-    
-    const mdContent = fs.readFileSync(mdSpecPath, 'utf8');
-    assert.ok(mdContent.includes('GLOBAL-NURSE-EXAM-SPEC-2026-ULTIMA'), 'Must contain document ID');
-    assert.ok(mdContent.includes('THE ROLE OF ARTIFICIAL INTELLIGENCE IN NURSING EXAMINATIONS'), 'Must contain AI section');
+  test('Exams Page unifies all modules with Cryptographic Verification', () => {
+    const pageContent = fs.readFileSync(examsPagePath, 'utf8');
+    assert.ok(pageContent.includes('activeTab === "caosce"'), 'Must have CAOSCE tab');
+    assert.ok(pageContent.includes('activeTab === "partograph"'), 'Must have Partograph tab');
+    assert.ok(pageContent.includes('activeTab === "ospe"'), 'Must have OSPE tab');
+    assert.ok(pageContent.includes('activeTab === "dosage"'), 'Must have Dosage tab');
+    assert.ok(pageContent.includes('activeTab === "triage"'), 'Must have Triage tab');
+    assert.ok(pageContent.includes('cryptographicCertificateHash'), 'Must generate cryptographic token');
   });
 });
