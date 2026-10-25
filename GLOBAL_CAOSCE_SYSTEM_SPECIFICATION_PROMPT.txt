@@ -1,0 +1,159 @@
+================================================================================
+GLOBAL MASTER SPECIFICATION & IMPLEMENTATION PROMPT
+6-STATION AUTONOMOUS COMPUTER-ASSISTED OBJECTIVE STRUCTURED CLINICAL EXAMINATION (CAOSCE)
+Standard: NMCN / NCLEX / WHO / Global Health Sciences Accreditation
+Execution Model: 100% Fully Online & Autonomous (Zero Human Intervention Required)
+================================================================================
+
+--------------------------------------------------------------------------------
+1. SYSTEM ARCHITECTURE OVERVIEW
+--------------------------------------------------------------------------------
+You are tasked with building or integrating a 100% Autonomous, Zero-Human-Intervention
+6-Station CAOSCE (Computer-Assisted Objective Structured Clinical Examination) Engine.
+
+In a traditional medical/nursing OSCE, human examiners sit at physical stations with
+clipboards grading students. In this CAOSCE, the web application itself serves as the
+automated proctor, timer, patient simulator, examiner, and psychometric evaluator.
+The candidate navigates the examination autonomously from start to finish guided
+exclusively by clear on-screen prompts, clinical dossiers, interactive procedure
+controls, and automated station bells.
+
+--------------------------------------------------------------------------------
+2. TIMING MATRIX & SEQUENTIAL CIRCUIT
+--------------------------------------------------------------------------------
+The entire examination is structured into 6 Sequential Clinical Stations covering
+the six foundational pillars of nursing practice. Each station is composed of two
+contiguous, synchronized phases:
+
+Phase A: Practical Clinical Procedure (Strictly 10 Minutes)
+- 10-minute digital countdown bell timer.
+- Interactive clinical scenario, patient vital signs, task trainer dossier, and equipment checklist.
+- Student executes and verifies each procedural step and clinical decision in sequence.
+- Audio-visual alert at 2 minutes remaining ("2-Minute Warning Bell").
+- At 00:00 (or on manual early submission), the station practical locks automatically,
+  and the student is immediately transitioned to Phase B.
+
+Phase B: Station Multiple Choice Questions (MCQs) (Strictly 10 Minutes)
+- 10 minutes allocated for exactly 10 questions (60 seconds per question).
+- Questions evaluate the specific pathophysiology, pharmacology, rationale, and
+  emergency complications tied directly to that practical station.
+- Real-time response capture with option scrambling to prevent answer memorization.
+- At 00:00 (or on manual early submission), the MCQ section locks automatically.
+
+Phase C: Automated Station Rotation Bell (30 Seconds)
+- System chimes a station change bell and displays:
+  "Station [N] Complete. Transitioning to Station [N+1]: [Specialty Name]. Prepare your workstation."
+- Auto-advances to the next practical station.
+
+Total Examination Duration:
+- Practical Phase: 10 minutes per station
+- MCQ Phase: 10 minutes per station (10 questions)
+- Total per Station: 20 minutes
+- Complete Circuit (6 Stations): 120 Minutes (2.0 Hours)
+
+--------------------------------------------------------------------------------
+3. THE SIX CLINICAL NURSITY SPECIALTY STATIONS
+--------------------------------------------------------------------------------
+
+STATION 1: Medical-Surgical Nursing (Adult Health)
+- Clinical Title: Aseptic Surgical Wound Care, Debridement & Central Venous Line Site Management
+- Scenario: Post-op Day 4 exploratory laparotomy with purulent surgical site drainage, fever (38.6 C), and central line in situ.
+- Key Competencies: Hand hygiene (WHO 5 Moments), surgical asepsis (ANTT), Levine wound swab culture technique, 2% chlorhexidine air-drying protocol, CLABSI prevention bundle, biohazard disposal.
+- 10 Linked MCQs Focus: Levine technique vs superficial swabbing, chlorhexidine drying time, qSOFA sepsis criteria, wound healing phases, evisceration emergency management, aminoglycoside peak/trough monitoring, dressing change frequency.
+
+STATION 2: Maternal & Obstetric Nursing (Midwifery)
+- Clinical Title: Active Management of the Third Stage of Labour (AMTSL) & Postpartum Hemorrhage Prevention
+- Scenario: Immediate postpartum management of Gravida 3 Para 2 following cephalic vaginal birth of 3.4 kg infant.
+- Key Competencies: Palpation to rule out undiagnosed second twin prior to uterotonics, administration of 10 IU Oxytocin IM within 1 minute, Brandt-Andrews counter-traction maneuver during uterine contraction, delivery of placenta and membranes intact, continuous fundal massage, maternal surface cotyledon inspection.
+- 10 Linked MCQs Focus: Twin exclusion rationale, Oxytocin first-line dosage, signs of placental separation, uterine inversion etiology, 4 T's of PPH, Ergometrine contraindications in hypertension, retained cotyledon complications, WHO PPH definitions (>500 mL).
+
+STATION 3: Pediatric & Neonatal Nursing
+- Clinical Title: Neonatal Resuscitation Protocol (NRP) & Pediatric Emergency Medication Calculation
+- Scenario: Depressed term newborn delivered via emergency C-section through thick meconium; limp, cyanotic, apneic, HR 45 bpm.
+- Key Competencies: Thermal regulation under radiant warmer, airway positioning in neutral sniffing position, 'Mouth before Nose' suctioning, initiation of Bag-Valve-Mask positive pressure ventilation (PPV) at 40-60 breaths/min on room air (21%), MR. SOPA ventilation troubleshooting, 2-thumb encircling chest compressions at 3:1 ratio for persistent HR < 60 bpm, exact Epinephrine IV calculation (0.02 mg/kg of 1:10,000).
+- 10 Linked MCQs Focus: 21% O2 vs 100% O2 in term resuscitation, bulb suction sequence, PPV rate, MR. SOPA mnemonic steps, indication for chest compressions (HR < 60 bpm), 3:1 compression-to-ventilation ratio, pre-ductal SpO2 monitoring (right wrist), pediatric Epinephrine volume math.
+
+STATION 4: Mental Health & Psychiatric Nursing
+- Clinical Title: Acute Psychosis De-escalation, Mental State Examination (MSE) & Suicide Risk Assessment
+- Scenario: Acutely agitated 24-year-old student with command auditory hallucinations and expressed suicidal intent holding a broken glass.
+- Key Competencies: Environmental safety and personal exit egress, 45-degree non-threatening body positioning, therapeutic de-escalation validating emotions without reinforcing delusions, safe negotiation to surrender the sharp object, structured MSE, direct suicide risk questioning (C-SSRS), Level 1 continuous 1:1 observation assignment.
+- 10 Linked MCQs Focus: Personal safety exit rules, therapeutic responses to delusions, command hallucinations risk level, Level 1 1:1 observation indications, acute dystonia vs tardive dyskinesia, anticholinergic antidote (benztropine), neuroleptic malignant syndrome (NMS), therapeutic lithium window (0.6-1.0 mEq/L), involuntary admission criteria.
+
+STATION 5: Community & Public Health Nursing
+- Clinical Title: EPI Vaccine Cold-Chain Management, Potency Validation & Acute Epidemic Outbreak Response
+- Scenario: Primary health clinic following overnight 14-hour power failure; vaccine refrigerator temp +14 C, while 4 villagers present with severe watery 'rice-water' diarrhea.
+- Key Competencies: Refrigerator door seal preservation, cold-chain temperature logging, systematic Vaccine Vial Monitor (VVM) inspection (discarding Stages 3 & 4), identifying freeze-sensitive vs heat-sensitive vaccines, execution of the Shake Test, IMCI cholera dehydration triage (Severe vs Some vs None), WHO Plan C IV Ringer's Lactate rehydration, standard 1-liter ORS preparation, 0.5% vs 0.05% chlorine disinfection, IDSR 24-hour outbreak notification.
+- 10 Linked MCQs Focus: +2 C to +8 C standard storage range, VVM discard visual signs, freeze-damage vulnerability of aluminium-adsorbed vaccines (pentavalent), Shake Test principle, WHO severe dehydration clinical criteria, Ringer's Lactate rationale, ORS 1-liter mixing volume, ORS 24-hour expiration, 0.5% chlorine for excreta, IDSR reporting timeline.
+
+STATION 6: Emergency, Trauma & Critical Care Nursing
+- Clinical Title: ABCDE Primary Trauma Survey, Needle Thoracostomy & Mass-Casualty Disaster Triage
+- Scenario: Unrestrained motor vehicle collision driver with tracheal deviation to the left, absent right breath sounds, distended neck veins, and BP 72/40 mmHg.
+- Key Competencies: Immediate in-line cervical spine immobilization, modified jaw-thrust without head-tilt, clinical recognition of tension pneumothorax without waiting for X-ray, emergency needle thoracostomy insertion in 2nd intercostal space mid-clavicular line over superior rib margin, high-flow non-rebreather oxygen, dual 14G/16G large-bore IV access with warmed crystalloids, Glasgow Coma Scale (GCS) calculation, START triage red tag assignment.
+- 10 Linked MCQs Focus: Jaw-thrust vs head-tilt in trauma, tension pneumothorax triad, contraindication to delaying decompression for X-ray, 2nd ICS superior rib needle insertion anatomy, trauma lethal triad (hypothermia, acidosis, coagulopathy), GCS scoring math, START Red Tag criteria, Poiseuille's law in IV cannula gauge selection, Beck's triad in cardiac tamponade, 5 H's and 5 T's in cardiac arrest.
+
+--------------------------------------------------------------------------------
+4. 100% ONLINE AUTONOMOUS EXECUTION ENGINE
+--------------------------------------------------------------------------------
+
+1. Zero Human Intervention Architecture:
+   - The application eliminates all external examiner dependency.
+   - Student-Driven Guided Protocol: The candidate acts as the registered nurse/midwife,
+     reading the patient dossier and executing decisions interactively.
+   - Automated Proctoring & State Machine:
+     * phase: "lobby" | "practical" | "mcq" | "transition" | "results"
+     * currentStationIndex: 0 to 5
+     * practicalTimeRemaining: 600 seconds (counts down, auto-transitions at 0)
+     * mcqTimeRemaining: 600 seconds (counts down, auto-submits at 0)
+     * completedPracticalSteps: Record<string, boolean>
+     * mcqSelections: Record<string, number>
+
+2. Lockstep Progression Rules:
+   - No Forward Skipping: A student cannot preview Station 2 before finishing Station 1.
+   - No Backward Modification: Once a practical station or MCQ block is submitted, it is locked.
+   - Auto-Advance on Expiry: If time elapses, current selections are frozen and the student is pushed to the next phase.
+
+3. Automated Psychometric Grading Engine:
+   - Practical Score = (Earned Checklist Points / Max Station Points) * 100
+   - MCQ Score = (Correct Answers / 10) * 100
+   - Station Composite = (0.50 * Practical Score) + (0.50 * MCQ Score)
+   - Final Board Grade = Average of all 6 Station Composites
+
+   NMCN Board Classification:
+   - >= 75%: Distinction
+   - 60% - 74%: Credit
+   - 50% - 59%: Pass
+   - < 50%: Referred / Fail
+
+   Critical Safety Failure Check:
+   - If a candidate misses a step designated as criticalFailStep (e.g. failing to check for a twin in Station 2, or performing head-tilt in trauma), the system logs a Critical Safety Alert on their result slip.
+
+--------------------------------------------------------------------------------
+5. CODE IMPLEMENTATION PROMPT FOR DEVELOPERS / AI AGENTS
+--------------------------------------------------------------------------------
+"Build a 100% Autonomous 6-Station CAOSCE (Computer-Assisted Objective Structured Clinical Examination) web module with zero human intervention.
+
+Key Requirements:
+1. Delete any legacy manual or unguided OSCE components from the application.
+2. Create 6 clinical practical stations covering:
+   - Station 1: Medical-Surgical Nursing (Aseptic Wound Care & Central Line Management)
+   - Station 2: Maternal & Obstetric Nursing (Active Management of 3rd Stage of Labour - AMTSL)
+   - Station 3: Pediatric & Neonatal Nursing (Neonatal Resuscitation Protocol - NRP)
+   - Station 4: Mental Health & Psychiatric Nursing (Acute Psychosis De-escalation & MSE)
+   - Station 5: Community & Public Health Nursing (EPI Cold-Chain & Cholera Outbreak Triage)
+   - Station 6: Emergency, Trauma & Critical Care (ABCDE Primary Survey & Needle Thoracostomy)
+3. Timers:
+   - Exactly 10 minutes for the Practical Exam phase at each station.
+   - Exactly 10 minutes for the linked 10 MCQs at each station.
+   - Total time: 20 minutes per station, 120 minutes (2 hours) total exam circuit.
+   - Auto-advance on timer expiry with audio/visual bell alerts.
+4. Workflow:
+   - Station 1 Practical (10m) -> Station 1 MCQs (10 Qs, 10m) -> 30s Transition ->
+   - Station 2 Practical (10m) -> Station 2 MCQs (10 Qs, 10m) -> 30s Transition ->
+   ... strictly in sequence through Station 6.
+5. Interface & Autonomous Controls:
+   - Pre-exam candidate verification lobby (Name, Index Number, Instructions).
+   - Practical view: Patient vital signs, scenario brief, trolley equipment list, interactive procedure step checklist, countdown timer with warning bells.
+   - MCQ view: 10 scenario-specific questions with 4 options each, real-time option selection, question tracker (1 to 10), timer.
+   - Post-exam result slip: Station-by-station mastery breakdown, practical vs MCQ score bars, critical safety failure audit, answer key with full clinical rationales, and print/download transcript button.
+6. Responsive, high-contrast, professional medical UI (dark-slate/emerald green aesthetic) suitable for high-stakes nursing college accreditation."
+================================================================================
