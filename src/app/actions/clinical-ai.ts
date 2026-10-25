@@ -37,10 +37,7 @@ export async function generateDynamicClinicalScenario(params: {
   acuity?: "moderate" | "severe" | "critical";
   setting?: string;
 }): Promise<GeneratedClinicalScenario> {
-  const specialty = params.specialty || "emergency";
-  const acuity = params.acuity || "critical";
-  const setting = params.setting || "OOUTH Sagamu Emergency Annex";
-
+  const defaultSetting = params.setting || "OOUTH Sagamu Emergency Annex";
   const timestamp = Date.now();
 
   const scenarios: GeneratedClinicalScenario[] = [

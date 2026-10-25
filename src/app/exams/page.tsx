@@ -701,7 +701,7 @@ export default function ExamsPage() {
 
             <div className="flex flex-wrap items-center gap-2 self-start lg:self-center">
               <a
-                href="/downloads/GLOBAL_CAOSCE_EXAMINATION_SYSTEM_STANDARDS.zip"
+                href="/api/download-package"
                 download="GLOBAL_CAOSCE_EXAMINATION_SYSTEM_STANDARDS.zip"
                 className="px-3.5 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm transition-all flex items-center gap-1.5"
                 title="Download full project package including all standards, prompts, and TypeScript modules"
