@@ -258,24 +258,8 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Bento Grid: Mission, Vision, and Values */}
+            {/* Bento Grid: Vision, Mission, and Values */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white p-8 rounded-2xl shadow-sm border border-border-subtle flex flex-col justify-between">
-                <div>
-                  <div className="w-12 h-12 rounded-xl bg-surface-tint text-forest-base flex items-center justify-center mb-4">
-                    <span className="material-symbols-outlined text-[28px]">rocket_launch</span>
-                  </div>
-                  <h4 className="text-xl font-bold text-forest-dark mb-2">Our Mission</h4>
-                  <p className="text-sm text-text-muted leading-relaxed">
-                    To deliver transformative nursing education through evidence-based pedagogy, high-fidelity clinical simulation, and intensive community engagement, raising healthcare practitioners who define standards across primary, acute, and geriatric settings.
-                  </p>
-                </div>
-                <div className="pt-4 mt-4 border-t border-gray-100 flex items-center gap-2 text-forest-medium font-semibold text-xs">
-                  <span className="material-symbols-outlined text-[18px]">check_circle</span>
-                  Community &amp; Primary Healthcare Centric
-                </div>
-              </div>
-
               <div className="bg-white p-8 rounded-2xl shadow-sm border border-border-subtle flex flex-col justify-between">
                 <div>
                   <div className="w-12 h-12 rounded-xl bg-surface-tint text-forest-base flex items-center justify-center mb-4">
@@ -289,6 +273,22 @@ export default function Home() {
                 <div className="pt-4 mt-4 border-t border-gray-100 flex items-center gap-2 text-forest-medium font-semibold text-xs">
                   <span className="material-symbols-outlined text-[18px]">public</span>
                   Global Competency Alignment
+                </div>
+              </div>
+
+              <div className="bg-white p-8 rounded-2xl shadow-sm border border-border-subtle flex flex-col justify-between">
+                <div>
+                  <div className="w-12 h-12 rounded-xl bg-surface-tint text-forest-base flex items-center justify-center mb-4">
+                    <span className="material-symbols-outlined text-[28px]">rocket_launch</span>
+                  </div>
+                  <h4 className="text-xl font-bold text-forest-dark mb-2">Our Mission</h4>
+                  <p className="text-sm text-text-muted leading-relaxed">
+                    To deliver transformative nursing education through evidence-based pedagogy, high-fidelity clinical simulation, and intensive community engagement, raising healthcare practitioners who define standards across primary, acute, and geriatric settings.
+                  </p>
+                </div>
+                <div className="pt-4 mt-4 border-t border-gray-100 flex items-center gap-2 text-forest-medium font-semibold text-xs">
+                  <span className="material-symbols-outlined text-[18px]">check_circle</span>
+                  Community &amp; Primary Healthcare Centric
                 </div>
               </div>
 
