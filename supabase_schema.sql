@@ -16,7 +16,7 @@ create table if not exists public.applications (
   jamb_score text,
   status text not null default 'pending', -- 'pending', 'screened', 'admitted', 'rejected'
   rrr_number text default concat('RRR-', floor(random() * 9000000000 + 1000000000)::text),
-  payment_status text not null default 'paid', -- 'unpaid', 'paid'
+  payment_status text not null default 'unpaid', -- 'unpaid', 'paid'
   batch text default 'Batch A-01'
 );
 
@@ -74,18 +74,18 @@ create policy "Allow public admission application" on public.applications
 create policy "Allow public to read news" on public.news_dispatches
   for select using (published = true);
 
--- Allow service role / admin full access to everything
-create policy "Admin full access applications" on public.applications
-  for all using (true) with check (true);
+-- Strictly restrict administrative access to service_role (backend server actions)
+create policy "Service role full access applications" on public.applications
+  to service_role using (true) with check (true);
 
-create policy "Admin full access news" on public.news_dispatches
-  for all using (true) with check (true);
+create policy "Service role full access news" on public.news_dispatches
+  to service_role using (true) with check (true);
 
-create policy "Admin full access students" on public.students
-  for all using (true) with check (true);
+create policy "Service role full access students" on public.students
+  to service_role using (true) with check (true);
 
-create policy "Admin full access clinical" on public.clinical_logs
-  for all using (true) with check (true);
+create policy "Service role full access clinical" on public.clinical_logs
+  to service_role using (true) with check (true);
 
 -- Seed initial default news dispatch
 insert into public.news_dispatches (title, category, summary, content, author, read_time, image_url)
@@ -129,14 +129,14 @@ alter table public.site_users enable row level security;
 alter table public.media_gallery enable row level security;
 alter table public.site_settings enable row level security;
 
-create policy "Admin full access site_users" on public.site_users
-  for all using (true) with check (true);
+create policy "Service role full access site_users" on public.site_users
+  to service_role using (true) with check (true);
 
-create policy "Admin full access media_gallery" on public.media_gallery
-  for all using (true) with check (true);
+create policy "Service role full access media_gallery" on public.media_gallery
+  to service_role using (true) with check (true);
 
-create policy "Admin full access site_settings" on public.site_settings
-  for all using (true) with check (true);
+create policy "Service role full access site_settings" on public.site_settings
+  to service_role using (true) with check (true);
 
 create policy "Public read media_gallery" on public.media_gallery
   for select using (true);

@@ -1,9 +1,15 @@
 "use server";
 
 import { createAdminClient } from "@/lib/supabase/admin";
+import { verifyStaffSession } from "@/lib/auth-guard";
 
 export async function getApplications() {
   try {
+    const auth = await verifyStaffSession();
+    if (!auth.authorized) {
+      return { success: false, data: [], error: auth.error };
+    }
+
     const supabase = createAdminClient();
     const { data, error } = await supabase
       .from("applications")
@@ -16,13 +22,19 @@ export async function getApplications() {
     }
 
     return { success: true, data: data || [] };
-  } catch (err: any) {
+  } catch (err: unknown) {
+    console.error("Unexpected error fetching applications:", err);
     return { success: false, data: [] };
   }
 }
 
 export async function updateApplicationStatus(id: string, status: string) {
   try {
+    const auth = await verifyStaffSession();
+    if (!auth.authorized) {
+      return { success: false, error: auth.error || "Unauthorized access." };
+    }
+
     const supabase = createAdminClient();
     const { data, error } = await supabase
       .from("applications")
@@ -36,8 +48,9 @@ export async function updateApplicationStatus(id: string, status: string) {
     }
 
     return { success: true, data };
-  } catch (err: any) {
-    return { success: false, error: err.message };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to update application status";
+    return { success: false, error: message };
   }
 }
 
@@ -49,6 +62,11 @@ export async function publishDispatch(data: {
   author?: string;
 }) {
   try {
+    const auth = await verifyStaffSession();
+    if (!auth.authorized) {
+      return { success: false, error: auth.error || "Unauthorized access." };
+    }
+
     const supabase = createAdminClient();
     const { data: result, error } = await supabase
       .from("news_dispatches")
@@ -68,8 +86,9 @@ export async function publishDispatch(data: {
     }
 
     return { success: true, result };
-  } catch (err: any) {
-    return { success: false, error: err.message };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to publish dispatch";
+    return { success: false, error: message };
   }
 }
 
@@ -86,7 +105,8 @@ export async function getNewsDispatches() {
     }
 
     return { success: true, data: data || [] };
-  } catch (err: any) {
+  } catch (err: unknown) {
+    console.error("Error fetching news dispatches:", err);
     return { success: false, data: [] };
   }
 }
@@ -101,6 +121,11 @@ export async function updateDispatch(id: string, data: Partial<{
   published: boolean;
 }>) {
   try {
+    const auth = await verifyStaffSession();
+    if (!auth.authorized) {
+      return { success: false, error: auth.error || "Unauthorized access." };
+    }
+
     const supabase = createAdminClient();
     const { data: result, error } = await supabase
       .from("news_dispatches")
@@ -113,13 +138,19 @@ export async function updateDispatch(id: string, data: Partial<{
       return { success: false, error: error.message };
     }
     return { success: true, result };
-  } catch (err: any) {
-    return { success: false, error: err.message };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to update dispatch";
+    return { success: false, error: message };
   }
 }
 
 export async function deleteDispatch(id: string) {
   try {
+    const auth = await verifyStaffSession();
+    if (!auth.authorized) {
+      return { success: false, error: auth.error || "Unauthorized access." };
+    }
+
     const supabase = createAdminClient();
     const { error } = await supabase
       .from("news_dispatches")
@@ -130,8 +161,9 @@ export async function deleteDispatch(id: string) {
       return { success: false, error: error.message };
     }
     return { success: true };
-  } catch (err: any) {
-    return { success: false, error: err.message };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to delete dispatch";
+    return { success: false, error: message };
   }
 }
 
@@ -140,6 +172,11 @@ export async function deleteDispatch(id: string) {
 // ----------------------------------------------------
 export async function getSiteUsers() {
   try {
+    const auth = await verifyStaffSession();
+    if (!auth.authorized) {
+      return { success: false, data: [], error: auth.error };
+    }
+
     const supabase = createAdminClient();
     const { data, error } = await supabase
       .from("site_users")
@@ -150,7 +187,8 @@ export async function getSiteUsers() {
       return { success: false, data: [] };
     }
     return { success: true, data: data || [] };
-  } catch (err: any) {
+  } catch (err: unknown) {
+    console.error("Error fetching site users:", err);
     return { success: false, data: [] };
   }
 }
@@ -164,6 +202,11 @@ export async function createSiteUser(user: {
   avatar_url?: string | null;
 }) {
   try {
+    const auth = await verifyStaffSession(["Super Admin"]);
+    if (!auth.authorized) {
+      return { success: false, error: auth.error || "Super Admin privileges required." };
+    }
+
     const supabase = createAdminClient();
     const { data, error } = await supabase
       .from("site_users")
@@ -182,8 +225,9 @@ export async function createSiteUser(user: {
       return { success: false, error: error.message };
     }
     return { success: true, data };
-  } catch (err: any) {
-    return { success: false, error: err.message };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to create site user";
+    return { success: false, error: message };
   }
 }
 
@@ -195,6 +239,11 @@ export async function updateSiteUser(id: string, updates: Partial<{
   status: string;
 }>) {
   try {
+    const auth = await verifyStaffSession(["Super Admin"]);
+    if (!auth.authorized) {
+      return { success: false, error: auth.error || "Super Admin privileges required." };
+    }
+
     const supabase = createAdminClient();
     const { data, error } = await supabase
       .from("site_users")
@@ -207,13 +256,19 @@ export async function updateSiteUser(id: string, updates: Partial<{
       return { success: false, error: error.message };
     }
     return { success: true, data };
-  } catch (err: any) {
-    return { success: false, error: err.message };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to update site user";
+    return { success: false, error: message };
   }
 }
 
 export async function deleteSiteUser(id: string) {
   try {
+    const auth = await verifyStaffSession(["Super Admin"]);
+    if (!auth.authorized) {
+      return { success: false, error: auth.error || "Super Admin privileges required." };
+    }
+
     const supabase = createAdminClient();
     const { error } = await supabase
       .from("site_users")
@@ -224,8 +279,9 @@ export async function deleteSiteUser(id: string) {
       return { success: false, error: error.message };
     }
     return { success: true };
-  } catch (err: any) {
-    return { success: false, error: err.message };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to delete site user";
+    return { success: false, error: message };
   }
 }
 
@@ -244,7 +300,8 @@ export async function getMediaGallery() {
       return { success: false, data: [] };
     }
     return { success: true, data: data || [] };
-  } catch (err: any) {
+  } catch (err: unknown) {
+    console.error("Error fetching media gallery:", err);
     return { success: false, data: [] };
   }
 }
@@ -257,6 +314,11 @@ export async function addMediaPhoto(item: {
   uploaded_by?: string;
 }) {
   try {
+    const auth = await verifyStaffSession();
+    if (!auth.authorized) {
+      return { success: false, error: auth.error || "Staff authorization required." };
+    }
+
     const supabase = createAdminClient();
     const { data, error } = await supabase
       .from("media_gallery")
@@ -268,13 +330,19 @@ export async function addMediaPhoto(item: {
       return { success: false, error: error.message };
     }
     return { success: true, data };
-  } catch (err: any) {
-    return { success: false, error: err.message };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to add media photo";
+    return { success: false, error: message };
   }
 }
 
 export async function deleteMediaPhoto(id: string) {
   try {
+    const auth = await verifyStaffSession();
+    if (!auth.authorized) {
+      return { success: false, error: auth.error || "Staff authorization required." };
+    }
+
     const supabase = createAdminClient();
     const { error } = await supabase
       .from("media_gallery")
@@ -285,7 +353,8 @@ export async function deleteMediaPhoto(id: string) {
       return { success: false, error: error.message };
     }
     return { success: true };
-  } catch (err: any) {
-    return { success: false, error: err.message };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to delete media photo";
+    return { success: false, error: message };
   }
 }

@@ -1,6 +1,7 @@
 "use server";
 
 import { createAdminClient } from "@/lib/supabase/admin";
+import { verifyPreceptorSession, verifyStaffSession } from "@/lib/auth-guard";
 
 export interface ClinicalLogInput {
   studentId?: string;
@@ -36,13 +37,19 @@ export async function submitClinicalLog(data: ClinicalLogInput) {
     }
 
     return { success: true, log: result };
-  } catch (err: any) {
-    return { success: false, error: err.message || "Failed to submit clinical log" };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to submit clinical log";
+    return { success: false, error: message };
   }
 }
 
 export async function getClinicalLogs() {
   try {
+    const auth = await verifyStaffSession();
+    if (!auth.authorized) {
+      return { success: false, data: [], error: auth.error };
+    }
+
     const supabase = createAdminClient();
     const { data, error } = await supabase
       .from("clinical_logs")
@@ -54,13 +61,20 @@ export async function getClinicalLogs() {
     }
 
     return { success: true, data: data || [] };
-  } catch (err: any) {
+  } catch (err: unknown) {
+    console.error("Error fetching clinical logs:", err);
     return { success: false, data: [] };
   }
 }
 
 export async function approveClinicalLog(logId: string) {
   try {
+    // SEC-004: Enforce clinical preceptor / faculty role authorization
+    const auth = await verifyPreceptorSession();
+    if (!auth.authorized) {
+      return { success: false, error: auth.error || "Clinical Preceptor authorization required to sign off ward hours." };
+    }
+
     const supabase = createAdminClient();
     const { data, error } = await supabase
       .from("clinical_logs")
@@ -74,7 +88,8 @@ export async function approveClinicalLog(logId: string) {
     }
 
     return { success: true, data };
-  } catch (err: any) {
-    return { success: false, error: err.message };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to sign clinical log";
+    return { success: false, error: message };
   }
 }

@@ -16,20 +16,27 @@ test("Security Audit: Server Actions must declare 'use server'", () => {
   }
 });
 
-test("Security Audit: Detect unprotected createAdminClient() invocations in public Server Actions", () => {
+test("Security Verification: Server Actions enforce server-side session checks (SEC-003 & SEC-004 Resolved)", () => {
   const adminActionPath = path.join(process.cwd(), "src", "app", "actions", "admin.ts");
   const content = fs.readFileSync(adminActionPath, "utf-8");
 
-  // Audit finding test: Flag that admin.ts directly invokes createAdminClient without checking caller session
-  const usesAdminClient = content.includes("createAdminClient()");
-  const checksSession = content.includes("auth.getUser") || content.includes("session") || content.includes("checkRole");
+  // Verify admin.ts has session & role validation guard
+  const checksSession = content.includes("verifyStaffSession");
+  assert.strictEqual(checksSession, true, "SEC-003 RESOLVED: admin.ts includes server-side session authorization guard");
 
-  assert.strictEqual(usesAdminClient, true, "admin.ts uses admin client");
-  // Document vulnerable pattern for security audit
-  if (!checksSession) {
-    // Finding SEC-002: admin.ts lacks server-side authorization check before executing privileged operations
-    assert.strictEqual(checksSession, false, "AUDIT FINDING (SEC-002): admin.ts lacks server-side role check");
-  }
+  const clinicalActionPath = path.join(process.cwd(), "src", "app", "actions", "clinical.ts");
+  const clinicalContent = fs.readFileSync(clinicalActionPath, "utf-8");
+  const checksPreceptor = clinicalContent.includes("verifyPreceptorSession");
+  assert.strictEqual(checksPreceptor, true, "SEC-004 RESOLVED: clinical.ts includes preceptor verification guard");
+});
+
+test("Security Verification: Admissions action defaults payment_status to unpaid and protects PII (SEC-005 & SEC-006 Resolved)", () => {
+  const admissionsPath = path.join(process.cwd(), "src", "app", "actions", "admissions.ts");
+  const content = fs.readFileSync(admissionsPath, "utf-8");
+
+  assert.ok(content.includes('payment_status: "unpaid"'), "SEC-006 RESOLVED: payment_status defaults to unpaid");
+  assert.ok(!content.includes('.select("*")'), "SEC-005 RESOLVED: checkApplicationStatus does not select wildcard columns");
+  assert.ok(content.includes("cleanTerm.length < 4"), "SEC-005 RESOLVED: Minimum 4 characters enforced to prevent wildcard enumeration");
 });
 
 test("Security Audit: Verify no private database keys are prefixed with NEXT_PUBLIC_", () => {

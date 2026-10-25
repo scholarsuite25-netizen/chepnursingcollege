@@ -29,10 +29,10 @@ export async function submitApplication(data: ApplicationInput) {
         credits_count: data.creditsCount,
         jamb_score: data.jambScore || null,
         status: "pending",
-        payment_status: "paid",
+        payment_status: "unpaid", // SEC-006: Default to unpaid until Remita payment verification
         batch: "Batch A-01",
       })
-      .select()
+      .select("id, full_name, email, program, status, rrr_number, payment_status, batch, created_at")
       .single();
 
     if (error) {
@@ -41,9 +41,10 @@ export async function submitApplication(data: ApplicationInput) {
     }
 
     return { success: true, application: result };
-  } catch (err: any) {
-    console.error("Unexpected error submitting application:", err);
-    return { success: false, error: err.message || "Failed to submit application" };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to submit application";
+    console.error("Unexpected error submitting application:", message);
+    return { success: false, error: message };
   }
 }
 
@@ -52,17 +53,18 @@ export async function checkApplicationStatus(searchTerm: string) {
     const supabase = createAdminClient();
     const cleanTerm = searchTerm.trim();
 
-    if (!cleanTerm) {
-      return { success: false, message: "Please enter an RRR number, Application ID, or Email." };
+    // SEC-005: Require minimum 4 characters to prevent broad single-character enumeration
+    if (!cleanTerm || cleanTerm.length < 4) {
+      return { success: false, message: "Please enter a valid Remita RRR, Application ID, or Email address (min 4 characters)." };
     }
 
-    // Search by RRR, Email, or Full Name
+    // Search by RRR, Email, or Application ID only (eliminating full_name enumeration)
     const { data, error } = await supabase
       .from("applications")
-      .select("*")
-      .or(`rrr_number.ilike.%${cleanTerm}%,email.ilike.%${cleanTerm}%,full_name.ilike.%${cleanTerm}%`)
+      .select("id, full_name, program, status, batch, rrr_number, payment_status, created_at")
+      .or(`rrr_number.ilike.%${cleanTerm}%,email.ilike.%${cleanTerm}%,id.eq.${cleanTerm.includes("-") ? cleanTerm : "00000000-0000-0000-0000-000000000000"}`)
       .order("created_at", { ascending: false })
-      .limit(5);
+      .limit(3);
 
     if (error) {
       console.error("Status lookup error:", error);
@@ -74,7 +76,8 @@ export async function checkApplicationStatus(searchTerm: string) {
     }
 
     return { success: true, applications: data };
-  } catch (err: any) {
-    return { success: false, message: err.message || "Status lookup service unavailable." };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Status lookup service unavailable.";
+    return { success: false, message };
   }
 }
