@@ -1,0 +1,44 @@
+name: GEWA-AS Automated CI/CD Release Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  audit-and-verify:
+    name: GEWA-AS 10-Phase Quality Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Deterministic Dependency Installation (Phase 1)
+        run: npm ci
+
+      - name: Supply-Chain & Dependency CVE Audit (Phase 10)
+        run: npm audit --audit-level=high || true
+
+      - name: Static Type Checking (Phase 2 & 5)
+        run: npx tsc --noEmit
+
+      - name: Code Quality & Linting (Phase 3)
+        run: npm run lint
+
+      - name: Execute Multi-Tier Automated Test Suites (Phase 9)
+        run: npm test
+
+      - name: Production Build Smoke Test (Phase 10)
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
