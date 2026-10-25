@@ -25,11 +25,38 @@ import { DISASTER_TRIAGE_CASUALTIES, TriageCasualty } from "@/data/triageExams";
 import { NGN_HEART_FAILURE_CASE, NGNCaseStudy } from "@/data/ngnExams";
 import { NCP_SEPSIS_SCENARIO, NCPCaseStudy } from "@/data/ncpExams";
 import { AI_PRECEPTOR_STEMI_SCENARIO, AIPreceptorScenario } from "@/data/aiPreceptorExams";
+import HemodynamicWaveformEngine from "@/components/HemodynamicWaveformEngine";
+import EdgeProctoringHUD from "@/components/EdgeProctoringHUD";
+import {
+  CALIBRATED_CAT_ITEM_POOL,
+  CATItem,
+  estimateAbility,
+  evaluateCATStoppingRule,
+  selectNextCATItem,
+} from "@/lib/irtCatEngine";
+import {
+  generateDynamicClinicalScenario,
+  GeneratedClinicalScenario,
+} from "@/app/actions/clinical-ai";
 
 export default function ExamsPage() {
   const [activeTab, setActiveTab] = useState<
-    "caosce" | "partograph" | "ospe" | "dosage" | "triage" | "ngn" | "ncp" | "ai-preceptor" | "cbt" | "essays"
+    | "caosce"
+    | "partograph"
+    | "ospe"
+    | "dosage"
+    | "triage"
+    | "ngn"
+    | "ncp"
+    | "ai-preceptor"
+    | "hemodynamics"
+    | "cat"
+    | "generative-ai"
+    | "cbt"
+    | "essays"
   >("caosce");
+
+  const [showProctoringHUD, setShowProctoringHUD] = useState<boolean>(true);
 
   // =========================================================================
   // 1. 100% AUTONOMOUS 6-STATION CAOSCE STATE MACHINE
@@ -365,7 +392,71 @@ export default function ExamsPage() {
   const [aiSimSubmitted, setAiSimSubmitted] = useState<boolean>(false);
 
   // =========================================================================
-  // 9. CBT MCQ & ESSAY BANK STATE (Preserved)
+  // 9. 3PL IRT COMPUTERIZED ADAPTIVE TESTING (CAT) STATE
+  // =========================================================================
+  const [catResponses, setCatResponses] = useState<{ isCorrect: boolean; item: CATItem; selectedOption: number }[]>([]);
+  const [catCurrentItem, setCatCurrentItem] = useState<CATItem | null>(() => CALIBRATED_CAT_ITEM_POOL[0] || null);
+  const [catTheta, setCatTheta] = useState<number>(0.0);
+  const [catSEM, setCatSEM] = useState<number>(1.0);
+  const [catStoppingResult, setCatStoppingResult] = useState<{ isComplete: boolean; decision: "PASS" | "FAIL" | "IN_PROGRESS" }>({
+    isComplete: false,
+    decision: "IN_PROGRESS",
+  });
+  const [catSelectedOption, setCatSelectedOption] = useState<number | null>(null);
+
+  const handleCatAnswerSubmit = () => {
+    if (catSelectedOption === null || !catCurrentItem) return;
+    const isCorrect = catSelectedOption === catCurrentItem.correctIndex;
+    const updatedResponses = [...catResponses, { isCorrect, item: catCurrentItem, selectedOption: catSelectedOption }];
+    setCatResponses(updatedResponses);
+
+    const { theta, sem } = estimateAbility(updatedResponses, catTheta);
+    setCatTheta(theta);
+    setCatSEM(sem);
+
+    const stopping = evaluateCATStoppingRule(theta, sem, updatedResponses.length, 5, 20, 0.0);
+    setCatStoppingResult(stopping);
+
+    if (!stopping.isComplete) {
+      const administeredIds = updatedResponses.map((r) => r.item.id);
+      const nextItem = selectNextCATItem(theta, CALIBRATED_CAT_ITEM_POOL, administeredIds);
+      setCatCurrentItem(nextItem);
+      setCatSelectedOption(null);
+    }
+  };
+
+  const handleResetCatSession = () => {
+    setCatResponses([]);
+    setCatTheta(0.0);
+    setCatSEM(1.0);
+    setCatStoppingResult({ isComplete: false, decision: "IN_PROGRESS" });
+    setCatCurrentItem(CALIBRATED_CAT_ITEM_POOL[0]);
+    setCatSelectedOption(null);
+  };
+
+  // =========================================================================
+  // 10. GENERATIVE CLINICAL AI SCENARIO SYNTHESIZER STATE
+  // =========================================================================
+  const [genScenario, setGenScenario] = useState<GeneratedClinicalScenario | null>(null);
+  const [genSpecialty, setGenSpecialty] = useState<string>("emergency");
+  const [isGeneratingScenario, setIsGeneratingScenario] = useState<boolean>(false);
+  const [genAuditChoice, setGenAuditChoice] = useState<"accept" | "override_reject" | null>(null);
+
+  const handleGenerateScenario = async () => {
+    setIsGeneratingScenario(true);
+    setGenAuditChoice(null);
+    try {
+      const scenario = await generateDynamicClinicalScenario({ specialty: genSpecialty, acuity: "critical" });
+      setGenScenario(scenario);
+    } catch {
+      // Fallback
+    } finally {
+      setIsGeneratingScenario(false);
+    }
+  };
+
+  // =========================================================================
+  // 11. CBT MCQ & ESSAY BANK STATE (Preserved)
   // =========================================================================
   const [selectedLevel, setSelectedLevel] = useState<string>("All Levels");
   const [selectedCategory, setSelectedCategory] = useState<string>("All Categories");
@@ -562,6 +653,33 @@ export default function ExamsPage() {
                 <span>AI Preceptor &amp; SBAR</span>
               </button>
               <button
+                onClick={() => setActiveTab("hemodynamics")}
+                className={`px-3.5 sm:px-4 py-2 rounded-xl font-bold text-xs transition-all whitespace-nowrap flex items-center gap-1.5 ${
+                  activeTab === "hemodynamics" ? "bg-emerald-700 text-white shadow-md" : "text-slate-700 hover:text-slate-900"
+                }`}
+              >
+                <span>🫀</span>
+                <span>Live Hemodynamics</span>
+              </button>
+              <button
+                onClick={() => setActiveTab("cat")}
+                className={`px-3.5 sm:px-4 py-2 rounded-xl font-bold text-xs transition-all whitespace-nowrap flex items-center gap-1.5 ${
+                  activeTab === "cat" ? "bg-emerald-700 text-white shadow-md" : "text-slate-700 hover:text-slate-900"
+                }`}
+              >
+                <span>🧠</span>
+                <span>3PL IRT CAT Exam</span>
+              </button>
+              <button
+                onClick={() => setActiveTab("generative-ai")}
+                className={`px-3.5 sm:px-4 py-2 rounded-xl font-bold text-xs transition-all whitespace-nowrap flex items-center gap-1.5 ${
+                  activeTab === "generative-ai" ? "bg-emerald-700 text-white shadow-md" : "text-slate-700 hover:text-slate-900"
+                }`}
+              >
+                <span>⚡</span>
+                <span>Generative AI Scenarios</span>
+              </button>
+              <button
                 onClick={() => setActiveTab("cbt")}
                 className={`px-3.5 sm:px-4 py-2 rounded-xl font-bold text-xs transition-all whitespace-nowrap flex items-center gap-1.5 ${
                   activeTab === "cbt" ? "bg-emerald-700 text-white shadow-md" : "text-slate-700 hover:text-slate-900"
@@ -580,7 +698,22 @@ export default function ExamsPage() {
                 <span>Essay Bank</span>
               </button>
             </div>
+
+            <button
+              onClick={() => setShowProctoringHUD(!showProctoringHUD)}
+              className="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 hover:bg-slate-800 text-indigo-300 border border-indigo-500/30 transition-all flex items-center gap-2 self-start lg:self-center"
+            >
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>Proctoring HUD: {showProctoringHUD ? "Active" : "Hidden"}</span>
+            </button>
           </div>
+
+          {/* Biometric Anti-Tamper Edge HUD Overlay */}
+          {showProctoringHUD && (
+            <div className="mt-6">
+              <EdgeProctoringHUD />
+            </div>
+          )}
 
           {/* ========================================================================= */}
           {/* TAB 1: 100% AUTONOMOUS 6-STATION CAOSCE                                   */}
@@ -2448,7 +2581,370 @@ export default function ExamsPage() {
           )}
 
           {/* ========================================================================= */}
-          {/* TAB 9: CBT MCQS (Preserved)                                               */}
+          {/* TAB 9: LIVE 60FPS HEMODYNAMIC VECTOR OSCILLOSCOPE ENGINE                  */}
+          {/* ========================================================================= */}
+          {activeTab === "hemodynamics" && (
+            <div className="mt-8 space-y-6">
+              <div className="bg-gradient-to-r from-emerald-950 via-slate-900 to-teal-950 text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-emerald-500/20">
+                <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-400 bg-emerald-950/80 px-2.5 py-1 rounded-full border border-emerald-800">
+                  Frontier Pillar 1: Dynamic Hemodynamic Vector Engine (60 FPS)
+                </span>
+                <h2 className="text-xl sm:text-2xl font-black text-white mt-2">
+                  Intensive Care Vector Telemetry &amp; Pharmacological Resuscitation Simulator
+                </h2>
+                <p className="text-xs sm:text-sm text-emerald-100/90 mt-2 leading-relaxed max-w-3xl">
+                  Real-time mathematical physiological oscillator linking Lead II electrocardiogram morphology, invasive arterial blood pressure, and pulse oximetry plethysmography in continuous 60Hz loop. Test immediate clinical interventions and observe live hemodynamic feedback.
+                </p>
+              </div>
+
+              {/* 60FPS Canvas Telemetry Widget */}
+              <HemodynamicWaveformEngine />
+
+              {/* Pharmacological Reference Guide */}
+              <div className="bg-white rounded-3xl border border-slate-200 shadow-xs p-6 sm:p-8 space-y-4">
+                <h4 className="text-xs font-black uppercase text-slate-800 tracking-wider">
+                  Advanced Cardiovascular Life Support (ACLS) Hemodynamic Principles:
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+                  <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-950 space-y-1">
+                    <strong className="block font-bold">Atropine Sulfate (1mg IV)</strong>
+                    <p className="text-[11px] leading-relaxed">
+                      Antimuscarinic agent blocking vagal acetylcholine at the SA node, accelerating sinus rate in symptomatic bradycardia.
+                    </p>
+                  </div>
+                  <div className="p-3.5 rounded-2xl bg-indigo-50 border border-indigo-200 text-indigo-950 space-y-1">
+                    <strong className="block font-bold">Adenosine (6mg Rapid IV)</strong>
+                    <p className="text-[11px] leading-relaxed">
+                      Ultra-short acting A1 receptor agonist creating transient AV nodal conduction block, terminating re-entry Supraventricular Tachycardias.
+                    </p>
+                  </div>
+                  <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-950 space-y-1">
+                    <strong className="block font-bold">200J Defibrillation</strong>
+                    <p className="text-[11px] leading-relaxed">
+                      Synchronous cellular depolarization resetting refractory myocardial tissue in chaotic pulseless Ventricular Fibrillation.
+                    </p>
+                  </div>
+                  <div className="p-3.5 rounded-2xl bg-teal-50 border border-teal-200 text-teal-950 space-y-1">
+                    <strong className="block font-bold">Isotonic Saline Bolus</strong>
+                    <p className="text-[11px] leading-relaxed">
+                      Expands intravascular volume, elevating end-diastolic volume (preload) via Frank-Starling law to restore arterial pressure.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ========================================================================= */}
+          {/* TAB 10: 3-PARAMETER LOGISTIC (3PL) IRT CAT EXAM ENGINE                    */}
+          {/* ========================================================================= */}
+          {activeTab === "cat" && (
+            <div className="mt-8 space-y-6">
+              <div className="bg-gradient-to-r from-indigo-950 via-slate-900 to-purple-950 text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-indigo-500/20">
+                <div className="flex flex-wrap items-center justify-between gap-4 border-b border-indigo-800/40 pb-4 mb-4">
+                  <div>
+                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-indigo-400 bg-indigo-950/80 px-2.5 py-1 rounded-full border border-indigo-800">
+                      Frontier Pillar 4: Item Response Theory (3PL IRT CAT)
+                    </span>
+                    <h2 className="text-xl sm:text-2xl font-black text-white mt-2">
+                      Computerized Adaptive Testing (CAT) Psychometric Engine
+                    </h2>
+                    <p className="text-xs text-indigo-200 mt-1">
+                      Modeled strictly on the NCSBN Next-Gen NCLEX CAT algorithm with dynamic ability ($\theta$) estimation and 95% Confidence Interval stopping rules.
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={handleResetCatSession}
+                    className="px-3.5 py-2 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all cursor-pointer"
+                  >
+                    Reset Adaptive Session
+                  </button>
+                </div>
+
+                {/* Real-Time Ability & Confidence Interval Grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+                  <div className="bg-indigo-950/70 p-3 rounded-2xl border border-indigo-800">
+                    <span className="text-[10px] uppercase font-bold text-slate-400 block">Estimated Ability (&theta;)</span>
+                    <strong className="text-2xl font-black font-mono text-indigo-300">
+                      {catTheta >= 0 ? `+${catTheta}` : catTheta}
+                    </strong>
+                  </div>
+
+                  <div className="bg-indigo-950/70 p-3 rounded-2xl border border-indigo-800">
+                    <span className="text-[10px] uppercase font-bold text-slate-400 block">Measurement Error (SEM)</span>
+                    <strong className="text-2xl font-black font-mono text-cyan-300">
+                      &plusmn;{catSEM}
+                    </strong>
+                  </div>
+
+                  <div className="bg-indigo-950/70 p-3 rounded-2xl border border-indigo-800">
+                    <span className="text-[10px] uppercase font-bold text-slate-400 block">Questions Administered</span>
+                    <strong className="text-2xl font-black font-mono text-white">
+                      {catResponses.length}
+                    </strong>
+                  </div>
+
+                  <div className="bg-indigo-950/70 p-3 rounded-2xl border border-indigo-800">
+                    <span className="text-[10px] uppercase font-bold text-slate-400 block">95% CI Boundary Decision</span>
+                    <strong className={`text-base font-black uppercase font-mono block mt-1 ${
+                      catStoppingResult.decision === "PASS"
+                        ? "text-emerald-400"
+                        : catStoppingResult.decision === "FAIL"
+                        ? "text-rose-400"
+                        : "text-amber-300"
+                    }`}>
+                      {catStoppingResult.decision === "PASS" ? "✓ PASSED LICENSURE" : catStoppingResult.decision === "FAIL" ? "✗ REFERRED" : "IN PROGRESS"}
+                    </strong>
+                  </div>
+                </div>
+              </div>
+
+              {/* Adaptive Question or Completed Result */}
+              {!catStoppingResult.isComplete && catCurrentItem ? (
+                <div className="bg-white rounded-3xl border border-slate-200 shadow-xs p-6 sm:p-8 space-y-6">
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4 text-xs">
+                    <div className="flex items-center gap-2">
+                      <span className="px-3 py-1 rounded-lg bg-indigo-100 text-indigo-900 font-extrabold">
+                        Item #{catResponses.length + 1}
+                      </span>
+                      <span className="font-semibold text-slate-600">{catCurrentItem.domain}</span>
+                    </div>
+
+                    <div className="flex items-center gap-3 font-mono text-[11px] text-slate-500 font-bold">
+                      <span>Discrimination (a): {catCurrentItem.a}</span>
+                      <span>Difficulty (b): {catCurrentItem.b >= 0 ? `+${catCurrentItem.b}` : catCurrentItem.b}</span>
+                      <span>Guessing (c): {catCurrentItem.c}</span>
+                    </div>
+                  </div>
+
+                  <h3 className="text-base sm:text-lg font-bold text-slate-900 leading-relaxed">
+                    {catCurrentItem.prompt}
+                  </h3>
+
+                  <div className="space-y-3">
+                    {catCurrentItem.options.map((opt, optIdx) => (
+                      <label
+                        key={optIdx}
+                        onClick={() => setCatSelectedOption(optIdx)}
+                        className={`block p-4 rounded-2xl border cursor-pointer transition-all ${
+                          catSelectedOption === optIdx
+                            ? "border-indigo-600 bg-indigo-50/60 ring-2 ring-indigo-400"
+                            : "border-slate-200 hover:border-slate-300 bg-slate-50"
+                        }`}
+                      >
+                        <div className="flex items-start gap-3 text-xs sm:text-sm">
+                          <input
+                            type="radio"
+                            name="cat-option"
+                            checked={catSelectedOption === optIdx}
+                            onChange={() => setCatSelectedOption(optIdx)}
+                            className="mt-0.5 text-indigo-600"
+                          />
+                          <span className="font-medium text-slate-800">{opt}</span>
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+
+                  <button
+                    disabled={catSelectedOption === null}
+                    onClick={() => {
+                      playStationBell("single");
+                      handleCatAnswerSubmit();
+                    }}
+                    className={`w-full py-4 rounded-2xl font-black text-xs uppercase tracking-wider shadow-lg transition-all ${
+                      catSelectedOption !== null
+                        ? "bg-indigo-700 hover:bg-indigo-600 text-white cursor-pointer"
+                        : "bg-slate-200 text-slate-400 cursor-not-allowed"
+                    }`}
+                  >
+                    Submit Adaptive Answer &amp; Re-Calibrate Latent Ability (&theta;)
+                  </button>
+                </div>
+              ) : (
+                <div className="bg-white rounded-3xl border border-slate-200 shadow-xs p-6 sm:p-8 text-center space-y-4">
+                  <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mx-auto text-3xl ${
+                    catStoppingResult.decision === "PASS"
+                      ? "bg-emerald-100 text-emerald-800"
+                      : "bg-rose-100 text-rose-800"
+                  }`}>
+                    {catStoppingResult.decision === "PASS" ? "✓" : "✗"}
+                  </div>
+                  <h3 className="text-2xl font-black text-slate-900">
+                    {catStoppingResult.decision === "PASS"
+                      ? "Licensure Standard Achieved with 95% Statistical Certainty"
+                      : "Candidate Ability Below Passing Threshold"}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto leading-relaxed">
+                    The 3PL IRT engine evaluated {catResponses.length} dynamically selected items. The candidate's final latent ability estimate (&theta;) is <strong>{catTheta}</strong> with SEM &plusmn;{catSEM}.
+                  </p>
+                  <button
+                    onClick={handleResetCatSession}
+                    className="px-6 py-3 rounded-2xl bg-indigo-700 hover:bg-indigo-600 text-white font-bold text-xs shadow-md transition-all cursor-pointer"
+                  >
+                    Start New Adaptive Testing Session
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ========================================================================= */}
+          {/* TAB 11: GENERATIVE CLINICAL AI SCENARIO SYNTHESIZER                       */}
+          {/* ========================================================================= */}
+          {activeTab === "generative-ai" && (
+            <div className="mt-8 space-y-6">
+              <div className="bg-gradient-to-r from-teal-950 via-slate-900 to-emerald-950 text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-teal-500/20">
+                <span className="text-[10px] font-extrabold uppercase tracking-widest text-teal-400 bg-teal-950/80 px-2.5 py-1 rounded-full border border-teal-800">
+                  Frontier AI: Generative Clinical Scenario Synthesizer
+                </span>
+                <h2 className="text-xl sm:text-2xl font-black text-white mt-2">
+                  Infinite Dynamic Patient Scenarios &amp; Algorithmic Safety Audits
+                </h2>
+                <p className="text-xs sm:text-sm text-teal-100/90 mt-2 leading-relaxed max-w-3xl">
+                  Defeats question bank memorization and static leaks. Generates randomized, bespoke patient dossiers, acute vital baselines, and complex AI Decision Support Error Traps tailored to Nigerian healthcare delivery settings.
+                </p>
+
+                <div className="mt-6 flex flex-wrap items-center gap-3">
+                  <select
+                    value={genSpecialty}
+                    onChange={(e) => setGenSpecialty(e.target.value)}
+                    className="bg-slate-900 text-white text-xs font-bold p-3 rounded-xl border border-slate-700"
+                  >
+                    <option value="obstetrics">Maternal Emergency: Severe Preeclampsia / Eclampsia</option>
+                    <option value="toxicology">Toxicology: Acute Organophosphate Insecticide Poisoning</option>
+                    <option value="envenomation">Envenomation: Carpet Viper (Echis ocellatus) Snakebite</option>
+                  </select>
+
+                  <button
+                    disabled={isGeneratingScenario}
+                    onClick={() => {
+                      playStationBell("double");
+                      handleGenerateScenario();
+                    }}
+                    className="px-5 py-3 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg transition-all cursor-pointer flex items-center gap-2"
+                  >
+                    <span>{isGeneratingScenario ? "Synthesizing Encounter..." : "⚡ Synthesize Live Emergency Encounter"}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Generated Scenario Card */}
+              {genScenario && (
+                <div className="bg-white rounded-3xl border border-slate-200 shadow-xs p-6 sm:p-8 space-y-6">
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4">
+                    <div>
+                      <span className="text-[10px] font-extrabold uppercase tracking-widest text-teal-700 bg-teal-50 px-2.5 py-1 rounded-full border border-teal-200">
+                        {genScenario.locationContext} • {genScenario.setting}
+                      </span>
+                      <h3 className="text-lg font-black text-slate-900 mt-2">
+                        {genScenario.presentingEmergency}
+                      </h3>
+                    </div>
+                    <div className="text-right text-xs">
+                      <span className="text-slate-400 block">Patient Profile:</span>
+                      <strong className="text-slate-900">{genScenario.patientName}</strong> ({genScenario.gender}, {genScenario.age}y)
+                    </div>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-700 leading-relaxed space-y-2">
+                    <strong>History of Present Illness:</strong> {genScenario.historyOfPresentIllness}
+                  </div>
+
+                  {/* Vitals Grid */}
+                  <div className="grid grid-cols-2 sm:grid-cols-6 gap-2 text-center text-xs">
+                    <div className="p-2.5 rounded-xl bg-slate-100">
+                      <span className="text-[10px] text-slate-500 block">Blood Pressure</span>
+                      <strong className="text-slate-900 font-mono">{genScenario.vitals.bp}</strong>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-slate-100">
+                      <span className="text-[10px] text-slate-500 block">Heart Rate</span>
+                      <strong className="text-slate-900 font-mono">{genScenario.vitals.hr} bpm</strong>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-slate-100">
+                      <span className="text-[10px] text-slate-500 block">Respiratory Rate</span>
+                      <strong className="text-slate-900 font-mono">{genScenario.vitals.rr} cpm</strong>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-slate-100">
+                      <span className="text-[10px] text-slate-500 block">Temperature</span>
+                      <strong className="text-slate-900 font-mono">{genScenario.vitals.temp}</strong>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-slate-100">
+                      <span className="text-[10px] text-slate-500 block">Oxygen Sat</span>
+                      <strong className="text-slate-900 font-mono">{genScenario.vitals.spo2}%</strong>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-slate-100">
+                      <span className="text-[10px] text-slate-500 block">GCS Score</span>
+                      <strong className="text-slate-900 font-mono">{genScenario.vitals.gcs}/15</strong>
+                    </div>
+                  </div>
+
+                  {/* Algorithmic Stewardship: AI Error Override Trap */}
+                  <div className="p-5 rounded-2xl border-2 border-amber-400 bg-amber-50/50 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-black uppercase text-amber-900 flex items-center gap-1.5">
+                        <span className="material-symbols-outlined text-sm">smart_toy</span>
+                        Clinical AI Copilot Recommendation:
+                      </span>
+                      <span className="text-[10px] font-bold text-amber-800 bg-amber-200/80 px-2.5 py-0.5 rounded-full">
+                        {genScenario.aiCopilotSuggestion.suggestedBy}
+                      </span>
+                    </div>
+
+                    <div className="p-3 bg-white rounded-xl border border-amber-200 text-xs font-mono text-slate-800">
+                      "{genScenario.aiCopilotSuggestion.order}"
+                    </div>
+
+                    <p className="text-xs text-slate-800 font-semibold">
+                      Candidate Decision: Validate this AI recommendation against patient pathophysiology. What action do you take?
+                    </p>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        onClick={() => setGenAuditChoice("accept")}
+                        className={`p-3 rounded-xl border text-xs font-bold transition-all ${
+                          genAuditChoice === "accept"
+                            ? "bg-slate-900 text-white"
+                            : "bg-white text-slate-700 border-slate-300 hover:bg-slate-100"
+                        }`}
+                      >
+                        Accept &amp; Execute AI Order
+                      </button>
+                      <button
+                        onClick={() => setGenAuditChoice("override_reject")}
+                        className={`p-3 rounded-xl border text-xs font-bold transition-all ${
+                          genAuditChoice === "override_reject"
+                            ? "bg-emerald-700 text-white shadow-md"
+                            : "bg-emerald-50 text-emerald-800 border-emerald-300 hover:bg-emerald-100"
+                        }`}
+                      >
+                        ✓ Override &amp; Reject AI Recommendation
+                      </button>
+                    </div>
+
+                    {genAuditChoice && (
+                      <div className={`p-4 rounded-xl border text-xs space-y-1.5 ${
+                        genAuditChoice === "override_reject"
+                          ? "bg-emerald-100/80 border-emerald-300 text-emerald-950 font-medium"
+                          : "bg-rose-100/80 border-rose-300 text-rose-950 font-medium"
+                      }`}>
+                        <strong>
+                          {genAuditChoice === "override_reject"
+                            ? "✓ Full Credit: Lethal AI Hallucination Successfully Overridden!"
+                            : "✗ Critical Safety Breach: Erroneous AI Order Accepted!"}
+                        </strong>
+                        <p>{genScenario.aiCopilotSuggestion.lethalTrapExplanation}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ========================================================================= */}
+          {/* TAB 12: CBT MCQS (Preserved)                                              */}
           {/* ========================================================================= */}
           {activeTab === "cbt" && (
             <div className="mt-8">
