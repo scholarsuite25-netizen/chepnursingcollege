@@ -9,7 +9,7 @@ export default function ContactPage() {
     fullName: "",
     email: "",
     phone: "",
-    prospectiveProgram: "Basic Nursing (3 Years)",
+    prospectiveProgram: "Basic Nursing (4-Year ND/HND)",
     visitDate: "",
     attendeesCount: "1",
     specialInterest: "Clinical Simulation Ward",
@@ -299,7 +299,7 @@ export default function ContactPage() {
                         onChange={(e) => setTourForm({ ...tourForm, prospectiveProgram: e.target.value })}
                         className="w-full h-11 px-3 rounded-xl border border-gray-200 text-xs focus:outline-hidden focus:border-forest-base"
                       >
-                        <option>Basic Nursing (3 Years)</option>
+                        <option>Basic Nursing (4-Year ND/HND)</option>
                         <option>Post-Basic Midwifery (18 Months)</option>
                         <option>Public Health &amp; Geriatric Nursing</option>
                         <option>General Institutional Stakeholder</option>

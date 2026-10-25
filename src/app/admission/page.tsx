@@ -12,7 +12,7 @@ export default function AdmissionPage() {
     fullName: "",
     email: "",
     phone: "",
-    program: "Basic Nursing (3 Years)",
+    program: "Basic Nursing (4-Year ND/HND)",
     jambScore: "",
     olevelExam: "WAEC",
     examYear: "2024",
@@ -29,12 +29,15 @@ export default function AdmissionPage() {
   const programs = [
     {
       name: "Basic Nursing (General)",
-      duration: "3 Years Full-Time",
+      duration: "4 Years (ND/HND Programme)",
       intake: "October 2026",
-      qualification: "Registered Nurse (RN)",
-      accreditation: "NMCN Fully Accredited",
-      requirements: "Five (5) credits in WAEC/NECO/NABTEB at not more than two sittings: English Language, Mathematics, Biology, Chemistry, and Physics.",
-      badge: "Flagship Programme",
+      qualification: "National Diploma (ND) & Higher National Diploma (HND) in Nursing / Registered Nurse (RN)",
+      accreditation: "Accredited by NMCN & NBTE",
+      description:
+        "CHEP College of Nursing Sciences Ota Ogun is a 4years ND/HND programme, accredited by Nursing and Midwifery council (NMCN) and National Board of Technical Education ( NBTE)",
+      requirements:
+        "Five (5) credits in WAEC/NECO/NABTEB at not more than two sittings: English Language, Mathematics, Biology, Chemistry, and Physics.",
+      badge: "Flagship ND/HND Programme",
     },
     {
       name: "Post-Basic Midwifery",
@@ -123,6 +126,11 @@ export default function AdmissionPage() {
                       {prog.badge}
                     </span>
                     <h3 className="text-lg font-bold text-forest-dark">{prog.name}</h3>
+                    {"description" in prog && prog.description && (
+                      <p className="text-xs text-slate-700 bg-emerald-50/90 p-3 rounded-xl border border-emerald-200/80 font-medium leading-relaxed">
+                        {prog.description}
+                      </p>
+                    )}
                     <div className="space-y-1.5 text-xs text-text-muted">
                       <div className="flex items-center gap-2">
                         <span className="material-symbols-outlined text-[16px] text-forest-base">schedule</span>
@@ -391,7 +399,7 @@ export default function AdmissionPage() {
                         onChange={(e) => setFormData({ ...formData, program: e.target.value })}
                         className="w-full h-11 px-3.5 rounded-xl border border-gray-200 text-xs focus:outline-hidden focus:border-forest-base"
                       >
-                        <option>Basic Nursing (3 Years)</option>
+                        <option>Basic Nursing (4-Year ND/HND)</option>
                         <option>Post-Basic Midwifery (18 Months)</option>
                         <option>Public Health &amp; Geriatric Nursing</option>
                       </select>

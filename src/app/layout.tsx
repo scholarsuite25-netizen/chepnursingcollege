@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     template: "%s | CHEP College of Nursing Sciences",
   },
   description:
-    "Official portal of CHEP College of Nursing Sciences, Ota, Ogun State. Fully accredited by the Nursing & Midwifery Council of Nigeria (NMCN). Offering Basic Nursing, Midwifery, CBT examination suites, and 480+ digital medical library resources.",
+    "Official portal of CHEP College of Nursing Sciences, Ota, Ogun State. A 4-year ND/HND programme accredited by the Nursing & Midwifery Council of Nigeria (NMCN) and National Board for Technical Education (NBTE). Offering Basic Nursing, Midwifery, CBT examination suites, and 480+ digital medical library resources.",
   keywords: [
     "CHEP College of Nursing Sciences",
     "Nursing School in Ogun State",

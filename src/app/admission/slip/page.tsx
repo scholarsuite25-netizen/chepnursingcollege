@@ -9,7 +9,7 @@ function AdmissionSlipContent() {
   const name = searchParams.get("name") || "Adebayo Oluwaseun";
   const ref = searchParams.get("ref") || "CHEP/ADM/2026/089";
   const rrr = searchParams.get("rrr") || "RRR-2901-4412-8819";
-  const program = searchParams.get("program") || "Basic Nursing (3 Years ND/HND)";
+  const program = searchParams.get("program") || "Basic Nursing (4 Years ND/HND)";
   const batch = searchParams.get("batch") || "Batch A-04 (08:30 AM)";
 
   return (

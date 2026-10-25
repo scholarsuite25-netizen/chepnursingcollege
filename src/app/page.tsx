@@ -621,12 +621,12 @@ export default function Home() {
                     Download the Official CHEP Institutional Prospectus &amp; Charter
                   </h2>
                   <p className="text-sm sm:text-base text-text-muted leading-relaxed">
-                    Get comprehensive details regarding the 3-Year Basic Nursing curriculum, NMCN entrance screening syllabus, clinical rotation schedules, fee schedules, geriatric certification options, and hostel lodging guidelines.
+                    Get comprehensive details regarding the 4-year ND/HND Basic Nursing curriculum accredited by Nursing and Midwifery Council (NMCN) and National Board for Technical Education (NBTE), entrance screening syllabus, clinical rotation schedules, fee schedules, geriatric certification options, and hostel lodging guidelines.
                   </p>
                   <div className="flex flex-wrap items-center gap-4 pt-2 text-xs font-semibold text-gray-700">
                     <span className="flex items-center gap-1 text-forest-base">
                       <span className="material-symbols-outlined text-[16px]">verified</span>
-                      NMCN Curricular Structure
+                      NMCN &amp; NBTE Curricular Structure
                     </span>
                     <span>•</span>
                     <span className="flex items-center gap-1 text-forest-base">
