@@ -447,7 +447,7 @@ export default function AdminPage() {
       category: "Public Health",
       type: "journal",
       isbnOrDoi: "10.1016/S2214-109X(23)00411-9",
-      level: "Clinical Postgraduate",
+      level: "Advanced Practice",
     },
     {
       id: "lib-5",
