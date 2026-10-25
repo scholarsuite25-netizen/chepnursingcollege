@@ -18,9 +18,9 @@ test("Integration Test: Verify /verify route is completely neutralized from site
   assert.strictEqual(content.includes('"/verify"'), false, "Sitemap must not list deprecated /verify route");
 });
 
-test("Integration Test: Verify About Us is registered in top navigation", () => {
+test("Integration Test: Verify About is registered in top navigation", () => {
   const navbarPath = path.join(process.cwd(), "src", "components", "Navbar.tsx");
   const content = fs.readFileSync(navbarPath, "utf-8");
-  assert.ok(content.includes('label: "About Us"'), "Navbar must have top-level About Us menu item");
-  assert.ok(content.includes('href: "/about"'), "Navbar About Us must link to /about");
+  assert.ok(content.includes('label: "About"'), "Navbar must have top-level About menu item");
+  assert.ok(content.includes('href: "/about"'), "Navbar About must link to /about");
 });

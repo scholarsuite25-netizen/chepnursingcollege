@@ -27,7 +27,7 @@ export default function Navbar() {
   const navCategories: NavCategory[] = [
     { label: "Home", href: "/" },
     {
-      label: "About Us",
+      label: "About",
       href: "/about",
       dropdown: [
         {
@@ -87,7 +87,7 @@ export default function Navbar() {
       ],
     },
     {
-      label: "Clinical & OSCE",
+      label: "Clinical",
       href: "/exams",
       dropdown: [
         {
@@ -115,7 +115,7 @@ export default function Navbar() {
       ],
     },
     {
-      label: "Virtual Library",
+      label: "Library",
       href: "/library",
       dropdown: [
         {
@@ -154,7 +154,7 @@ export default function Navbar() {
       ],
     },
     {
-      label: "Campus Life",
+      label: "Campus",
       href: "/gallery",
       dropdown: [
         {
@@ -247,7 +247,7 @@ export default function Navbar() {
               href="/portal"
             >
               <span className="material-symbols-outlined text-[15px]">lock</span>
-              Portal Login
+              Portal
             </Link>
           </div>
         </div>
@@ -362,7 +362,7 @@ export default function Navbar() {
             href="/admission"
             className="hidden lg:flex bg-orange-action hover:bg-orange-700 text-white font-bold text-xs sm:text-sm px-4 sm:px-5 py-2.5 rounded-xl shadow-sm transition-all hover:shadow-md items-center gap-1.5 shrink-0"
           >
-            <span>Enrol Now</span>
+            <span>Enrol</span>
             <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
           </Link>
 
