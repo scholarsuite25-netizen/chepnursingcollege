@@ -22,10 +22,13 @@ import { OSPE_STATIONS, OSPEStation } from "@/data/ospeExams";
 import { DOSAGE_MATH_QUESTIONS, DosageQuestion } from "@/data/dosageMathExams";
 import { WHO_PARTOGRAPH_SCENARIO, PartographScenario } from "@/data/partographExams";
 import { DISASTER_TRIAGE_CASUALTIES, TriageCasualty } from "@/data/triageExams";
+import { NGN_HEART_FAILURE_CASE, NGNCaseStudy } from "@/data/ngnExams";
+import { NCP_SEPSIS_SCENARIO, NCPCaseStudy } from "@/data/ncpExams";
+import { AI_PRECEPTOR_STEMI_SCENARIO, AIPreceptorScenario } from "@/data/aiPreceptorExams";
 
 export default function ExamsPage() {
   const [activeTab, setActiveTab] = useState<
-    "caosce" | "partograph" | "ospe" | "dosage" | "triage" | "cbt" | "essays"
+    "caosce" | "partograph" | "ospe" | "dosage" | "triage" | "ngn" | "ncp" | "ai-preceptor" | "cbt" | "essays"
   >("caosce");
 
   // =========================================================================
@@ -325,7 +328,44 @@ export default function ExamsPage() {
   const activeTriageCasualty: TriageCasualty = DISASTER_TRIAGE_CASUALTIES[currentTriageIndex] || DISASTER_TRIAGE_CASUALTIES[0];
 
   // =========================================================================
-  // 6. CBT MCQ & ESSAY BANK STATE (Preserved)
+  // 6. UNFOLDING NEXT-GEN NCLEX (NGN) EHR CASE STUDY STATE
+  // =========================================================================
+  const ngnCase: NGNCaseStudy = NGN_HEART_FAILURE_CASE;
+  const [ngnEHRTab, setNgnEHRTab] = useState<"notes" | "vitals" | "labs" | "orders">("notes");
+  const [ngnSelectedCues, setNgnSelectedCues] = useState<Record<string, boolean>>({});
+  const [ngnMatrixAnswers, setNgnMatrixAnswers] = useState<Record<string, "indicated" | "contraindicated" | "non-essential">>({});
+  const [ngnBowTieCondition, setNgnBowTieCondition] = useState<string>("");
+  const [ngnBowTieActions, setNgnBowTieActions] = useState<string[]>([]);
+  const [ngnBowTieParameters, setNgnBowTieParameters] = useState<string[]>([]);
+  const [ngnSubmitted, setNgnSubmitted] = useState<boolean>(false);
+
+  // =========================================================================
+  // 7. NURSING CARE PLAN (NCP) 5-STEP CLINICAL REASONING STATE
+  // =========================================================================
+  const ncpCase: NCPCaseStudy = NCP_SEPSIS_SCENARIO;
+  const [ncpAssessmentTypes, setNcpAssessmentTypes] = useState<Record<string, "subjective" | "objective">>({});
+  const [ncpSelectedDiagnosis, setNcpSelectedDiagnosis] = useState<string>("");
+  const [ncpSelectedOutcome, setNcpSelectedOutcome] = useState<string>("");
+  const [ncpSelectedInterventions, setNcpSelectedInterventions] = useState<string[]>([]);
+  const [ncpEvaluationVerdict, setNcpEvaluationVerdict] = useState<"met" | "partially_met" | "unmet" | "">("");
+  const [ncpSubmitted, setNcpSubmitted] = useState<boolean>(false);
+
+  // =========================================================================
+  // 8. CONVERSATIONAL AI PRECEPTOR & SBAR ENCOUNTER STATE
+  // =========================================================================
+  const aiSimScenario: AIPreceptorScenario = AI_PRECEPTOR_STEMI_SCENARIO;
+  const [aiActiveDialogueTurnIds, setAiActiveDialogueTurnIds] = useState<string[]>([]);
+  const [aiSBARAnswers, setAiSBARAnswers] = useState<Record<string, string>>({
+    situation: "",
+    background: "",
+    assessment: "",
+    recommendation: "",
+  });
+  const [aiStewardshipChoice, setAiStewardshipChoice] = useState<"accept" | "override_reject" | null>(null);
+  const [aiSimSubmitted, setAiSimSubmitted] = useState<boolean>(false);
+
+  // =========================================================================
+  // 9. CBT MCQ & ESSAY BANK STATE (Preserved)
   // =========================================================================
   const [selectedLevel, setSelectedLevel] = useState<string>("All Levels");
   const [selectedCategory, setSelectedCategory] = useState<string>("All Categories");
@@ -430,16 +470,16 @@ export default function ExamsPage() {
                 <div className="text-[11px] text-emerald-300">ECG, ABG &amp; Urinalysis</div>
               </div>
               <div className="bg-emerald-950/60 p-3 rounded-2xl border border-emerald-700/40">
-                <div className="text-xl font-black text-rose-300">Dosage Math</div>
-                <div className="text-[11px] text-emerald-300">Zero-Tolerance Calcs</div>
-              </div>
-              <div className="bg-emerald-950/60 p-3 rounded-2xl border border-emerald-700/40">
                 <div className="text-xl font-black text-emerald-300">START Triage</div>
                 <div className="text-[11px] text-emerald-300">Disaster Casualty Queue</div>
               </div>
               <div className="bg-emerald-950/60 p-3 rounded-2xl border border-emerald-700/40">
-                <div className="text-xl font-black text-white">160+ CBT Qs</div>
-                <div className="text-[11px] text-emerald-300">Scrambled Board MCQs</div>
+                <div className="text-xl font-black text-indigo-300">NGN &amp; NCP</div>
+                <div className="text-[11px] text-emerald-300">EHR &amp; Care Plan Matrices</div>
+              </div>
+              <div className="bg-emerald-950/60 p-3 rounded-2xl border border-emerald-700/40">
+                <div className="text-xl font-black text-purple-300">AI Preceptor</div>
+                <div className="text-[11px] text-emerald-300">Voice &amp; SBAR Encounters</div>
               </div>
             </div>
           </div>
@@ -493,6 +533,33 @@ export default function ExamsPage() {
               >
                 <span>🚨</span>
                 <span>Disaster Triage</span>
+              </button>
+              <button
+                onClick={() => setActiveTab("ngn")}
+                className={`px-3.5 sm:px-4 py-2 rounded-xl font-bold text-xs transition-all whitespace-nowrap flex items-center gap-1.5 ${
+                  activeTab === "ngn" ? "bg-emerald-700 text-white shadow-md" : "text-slate-700 hover:text-slate-900"
+                }`}
+              >
+                <span>📋</span>
+                <span>NGN EHR Study</span>
+              </button>
+              <button
+                onClick={() => setActiveTab("ncp")}
+                className={`px-3.5 sm:px-4 py-2 rounded-xl font-bold text-xs transition-all whitespace-nowrap flex items-center gap-1.5 ${
+                  activeTab === "ncp" ? "bg-emerald-700 text-white shadow-md" : "text-slate-700 hover:text-slate-900"
+                }`}
+              >
+                <span>📝</span>
+                <span>Nursing Care Plan</span>
+              </button>
+              <button
+                onClick={() => setActiveTab("ai-preceptor")}
+                className={`px-3.5 sm:px-4 py-2 rounded-xl font-bold text-xs transition-all whitespace-nowrap flex items-center gap-1.5 ${
+                  activeTab === "ai-preceptor" ? "bg-emerald-700 text-white shadow-md" : "text-slate-700 hover:text-slate-900"
+                }`}
+              >
+                <span>🤖</span>
+                <span>AI Preceptor &amp; SBAR</span>
               </button>
               <button
                 onClick={() => setActiveTab("cbt")}
@@ -1580,7 +1647,808 @@ export default function ExamsPage() {
           )}
 
           {/* ========================================================================= */}
-          {/* TAB 6: CBT MCQS (Preserved)                                               */}
+          {/* TAB 6: UNFOLDING NEXT-GEN NCLEX (NGN) EHR CASE STUDY                      */}
+          {/* ========================================================================= */}
+          {activeTab === "ngn" && (
+            <div className="mt-8 space-y-6">
+              {/* Patient Banner */}
+              <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-indigo-500/20">
+                <div className="flex flex-wrap items-center justify-between gap-4 border-b border-indigo-800/40 pb-4 mb-4">
+                  <div>
+                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-indigo-400 bg-indigo-950/80 px-2.5 py-1 rounded-full border border-indigo-800">
+                      NCSBN Next-Generation Clinical Judgment Model (CJMM)
+                    </span>
+                    <h2 className="text-xl sm:text-2xl font-black text-white mt-2">
+                      {ngnCase.title}
+                    </h2>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-xs font-bold text-slate-300">Client MRN:</span>{" "}
+                    <span className="font-mono text-sm text-indigo-300 font-bold">{ngnCase.clientProfile.mrn}</span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
+                  <div>
+                    <span className="text-slate-400 block">Client Demographics:</span>
+                    <strong className="text-white text-sm">{ngnCase.clientProfile.name}</strong>, {ngnCase.clientProfile.age}y ({ngnCase.clientProfile.gender})
+                  </div>
+                  <div>
+                    <span className="text-slate-400 block">Admitting Diagnosis:</span>
+                    <strong className="text-indigo-200">{ngnCase.clientProfile.admissionDiagnosis}</strong>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 block">Documented Allergies:</span>
+                    <strong className="text-rose-400">{ngnCase.clientProfile.allergies}</strong>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 block">Code Status:</span>
+                    <strong className="text-emerald-400">{ngnCase.clientProfile.codeStatus}</strong>
+                  </div>
+                </div>
+              </div>
+
+              {/* Two-Column EHR & Question Layout */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                {/* Left Column: Interactive Electronic Health Record (EHR) */}
+                <div className="lg:col-span-6 bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
+                  <div className="bg-slate-100 p-3 border-b border-slate-200 flex items-center justify-between">
+                    <span className="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-sm">clinical_notes</span>
+                      Interactive Electronic Health Record (EHR)
+                    </span>
+                    <div className="flex gap-1">
+                      <button
+                        onClick={() => setNgnEHRTab("notes")}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                          ngnEHRTab === "notes" ? "bg-white text-indigo-900 shadow-xs" : "text-slate-600 hover:text-slate-900"
+                        }`}
+                      >
+                        Nurses' Notes
+                      </button>
+                      <button
+                        onClick={() => setNgnEHRTab("vitals")}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                          ngnEHRTab === "vitals" ? "bg-white text-indigo-900 shadow-xs" : "text-slate-600 hover:text-slate-900"
+                        }`}
+                      >
+                        Vitals Flowsheet
+                      </button>
+                      <button
+                        onClick={() => setNgnEHRTab("labs")}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                          ngnEHRTab === "labs" ? "bg-white text-indigo-900 shadow-xs" : "text-slate-600 hover:text-slate-900"
+                        }`}
+                      >
+                        Lab Reports
+                      </button>
+                      <button
+                        onClick={() => setNgnEHRTab("orders")}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                          ngnEHRTab === "orders" ? "bg-white text-indigo-900 shadow-xs" : "text-slate-600 hover:text-slate-900"
+                        }`}
+                      >
+                        Provider Orders
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="p-6">
+                    {/* EHR Tab 1: Notes */}
+                    {ngnEHRTab === "notes" && (
+                      <div className="space-y-4">
+                        {ngnCase.ehr.nurseNotes.map((note, idx) => (
+                          <div key={idx} className="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-2">
+                            <div className="flex items-center justify-between font-bold text-slate-800 border-b border-slate-200 pb-1.5">
+                              <span>⏱ {note.timestamp}</span>
+                              <span className="text-indigo-700">✍️ {note.author}</span>
+                            </div>
+                            <p className="text-slate-700 leading-relaxed">{note.text}</p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* EHR Tab 2: Vitals */}
+                    {ngnEHRTab === "vitals" && (
+                      <div className="overflow-x-auto rounded-2xl border border-slate-200">
+                        <table className="w-full text-xs text-left">
+                          <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                            <tr>
+                              <th className="p-2.5">Time</th>
+                              <th className="p-2.5">BP</th>
+                              <th className="p-2.5">HR</th>
+                              <th className="p-2.5">RR</th>
+                              <th className="p-2.5">Temp</th>
+                              <th className="p-2.5">SpO2</th>
+                              <th className="p-2.5">O2 Device</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-100">
+                            {ngnCase.ehr.vitalsFlowsheet.map((v, idx) => (
+                              <tr key={idx} className={v.spo2 < 90 ? "bg-rose-50/70 font-semibold" : ""}>
+                                <td className="p-2.5 font-bold">{v.time}</td>
+                                <td className="p-2.5">{v.bp}</td>
+                                <td className="p-2.5">{v.hr} bpm</td>
+                                <td className="p-2.5">{v.rr} /min</td>
+                                <td className="p-2.5">{v.temp}</td>
+                                <td className={`p-2.5 ${v.spo2 < 90 ? "text-rose-600 font-black" : "text-emerald-700"}`}>{v.spo2}%</td>
+                                <td className="p-2.5">{v.o2device}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+
+                    {/* EHR Tab 3: Labs */}
+                    {ngnEHRTab === "labs" && (
+                      <div className="overflow-x-auto rounded-2xl border border-slate-200">
+                        <table className="w-full text-xs text-left">
+                          <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                            <tr>
+                              <th className="p-2.5">Diagnostic Panel</th>
+                              <th className="p-2.5">Result</th>
+                              <th className="p-2.5">Reference Range</th>
+                              <th className="p-2.5">Flag</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-100">
+                            {ngnCase.ehr.labs.map((lab, idx) => (
+                              <tr key={idx}>
+                                <td className="p-2.5 font-medium text-slate-800">{lab.test}</td>
+                                <td className="p-2.5 font-bold text-slate-900">{lab.result}</td>
+                                <td className="p-2.5 text-slate-500">{lab.reference}</td>
+                                <td className="p-2.5">
+                                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                                    lab.flag === "critical"
+                                      ? "bg-rose-100 text-rose-800"
+                                      : lab.flag === "abnormal"
+                                      ? "bg-amber-100 text-amber-800"
+                                      : "bg-emerald-100 text-emerald-800"
+                                  }`}>
+                                    {lab.flag.toUpperCase()}
+                                  </span>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+
+                    {/* EHR Tab 4: Orders */}
+                    {ngnEHRTab === "orders" && (
+                      <div className="space-y-3">
+                        {ngnCase.ehr.orders.map((ord, idx) => (
+                          <div key={idx} className="p-3 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between text-xs">
+                            <div>
+                              <span className="font-mono text-[10px] text-slate-500 block">⏱ {ord.time}</span>
+                              <strong className="text-slate-800">{ord.order}</strong>
+                            </div>
+                            <span className={`px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase ${
+                              ord.status === "stat"
+                                ? "bg-red-600 text-white"
+                                : ord.status === "completed"
+                                ? "bg-slate-200 text-slate-700"
+                                : "bg-emerald-100 text-emerald-800"
+                            }`}>
+                              {ord.status}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Right Column: Progressive NGN Questions */}
+                <div className="lg:col-span-6 space-y-6">
+                  {/* Step 1: Highlight Cues */}
+                  <div className="bg-white rounded-3xl border border-slate-200 shadow-xs p-6 space-y-4">
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                      <span className="text-xs font-black uppercase text-indigo-900 tracking-wider">
+                        Question 1 of 3: Highlight Cue Recognition
+                      </span>
+                      <span className="text-[11px] font-semibold text-slate-500">NCSBN CJMM Layer 3</span>
+                    </div>
+
+                    <p className="text-xs text-slate-700 font-medium leading-relaxed">
+                      {ngnCase.questions.step1Highlight.prompt}
+                    </p>
+
+                    <div className="flex flex-wrap gap-2 pt-2">
+                      {ngnCase.questions.step1Highlight.cues.map((cue) => {
+                        const isSelected = !!ngnSelectedCues[cue.id];
+                        return (
+                          <button
+                            key={cue.id}
+                            onClick={() => {
+                              if (ngnSubmitted) return;
+                              setNgnSelectedCues((prev) => ({ ...prev, [cue.id]: !prev[cue.id] }));
+                            }}
+                            className={`p-2.5 rounded-xl text-xs font-semibold text-left transition-all border ${
+                              isSelected
+                                ? "bg-amber-300 text-slate-900 border-amber-400 shadow-sm"
+                                : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
+                            }`}
+                          >
+                            <span>"{cue.phrase}"</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Step 2: Matrix Grid Multiple Response */}
+                  <div className="bg-white rounded-3xl border border-slate-200 shadow-xs p-6 space-y-4">
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                      <span className="text-xs font-black uppercase text-indigo-900 tracking-wider">
+                        Question 2 of 3: Matrix Clinical Judgment
+                      </span>
+                      <span className="text-[11px] font-semibold text-slate-500">Generate Solutions</span>
+                    </div>
+
+                    <p className="text-xs text-slate-700 font-medium leading-relaxed">
+                      {ngnCase.questions.step2Matrix.prompt}
+                    </p>
+
+                    <div className="overflow-x-auto rounded-2xl border border-slate-200">
+                      <table className="w-full text-xs text-left">
+                        <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                          <tr>
+                            <th className="p-3">Nursing Action</th>
+                            <th className="p-3 text-center">Indicated</th>
+                            <th className="p-3 text-center">Contraindicated</th>
+                            <th className="p-3 text-center">Non-Essential</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          {ngnCase.questions.step2Matrix.rows.map((r) => (
+                            <tr key={r.id}>
+                              <td className="p-3 font-medium text-slate-800">{r.action}</td>
+                              {(["indicated", "contraindicated", "non-essential"] as const).map((status) => (
+                                <td key={status} className="p-3 text-center">
+                                  <input
+                                    type="radio"
+                                    name={`ngn-matrix-${r.id}`}
+                                    disabled={ngnSubmitted}
+                                    checked={ngnMatrixAnswers[r.id] === status}
+                                    onChange={() => setNgnMatrixAnswers((prev) => ({ ...prev, [r.id]: status }))}
+                                    className="w-4 h-4 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                                  />
+                                </td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  {/* Step 3: Bow-Tie Clinical Reasoning */}
+                  <div className="bg-white rounded-3xl border border-slate-200 shadow-xs p-6 space-y-4">
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                      <span className="text-xs font-black uppercase text-indigo-900 tracking-wider">
+                        Question 3 of 3: NGN Bow-Tie Diagram
+                      </span>
+                      <span className="text-[11px] font-semibold text-slate-500">Take Action &amp; Evaluate</span>
+                    </div>
+
+                    <p className="text-xs text-slate-700 font-medium leading-relaxed">
+                      {ngnCase.questions.step3BowTie.prompt}
+                    </p>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
+                      {/* Left: 2 Actions */}
+                      <div className="bg-indigo-50/60 p-3.5 rounded-2xl border border-indigo-200 space-y-2">
+                        <span className="text-[10px] font-black uppercase tracking-wider text-indigo-900 block">
+                          Actions to Take (Select 2)
+                        </span>
+                        {ngnCase.questions.step3BowTie.actionOptions.map((act) => {
+                          const isChecked = ngnBowTieActions.includes(act.id);
+                          return (
+                            <label key={act.id} className="flex items-start gap-2 text-xs text-slate-800 cursor-pointer p-1.5 rounded-lg hover:bg-white/60">
+                              <input
+                                type="checkbox"
+                                disabled={ngnSubmitted}
+                                checked={isChecked}
+                                onChange={() => {
+                                  setNgnBowTieActions((prev) =>
+                                    isChecked ? prev.filter((id) => id !== act.id) : [...prev, act.id]
+                                  );
+                                }}
+                                className="mt-0.5 rounded text-indigo-600"
+                              />
+                              <span>{act.text}</span>
+                            </label>
+                          );
+                        })}
+                      </div>
+
+                      {/* Center: Primary Condition */}
+                      <div className="bg-amber-50/60 p-3.5 rounded-2xl border border-amber-200 space-y-2">
+                        <span className="text-[10px] font-black uppercase tracking-wider text-amber-900 block">
+                          Potential Condition (Select 1)
+                        </span>
+                        {ngnCase.questions.step3BowTie.conditionOptions.map((cond) => (
+                          <label key={cond.id} className="flex items-start gap-2 text-xs text-slate-800 cursor-pointer p-1.5 rounded-lg hover:bg-white/60">
+                            <input
+                              type="radio"
+                              name="bowtie-condition"
+                              disabled={ngnSubmitted}
+                              checked={ngnBowTieCondition === cond.id}
+                              onChange={() => setNgnBowTieCondition(cond.id)}
+                              className="mt-0.5 text-amber-600"
+                            />
+                            <span>{cond.text}</span>
+                          </label>
+                        ))}
+                      </div>
+
+                      {/* Right: 2 Parameters */}
+                      <div className="bg-emerald-50/60 p-3.5 rounded-2xl border border-emerald-200 space-y-2">
+                        <span className="text-[10px] font-black uppercase tracking-wider text-emerald-900 block">
+                          Parameters to Monitor (Select 2)
+                        </span>
+                        {ngnCase.questions.step3BowTie.parameterOptions.map((param) => {
+                          const isChecked = ngnBowTieParameters.includes(param.id);
+                          return (
+                            <label key={param.id} className="flex items-start gap-2 text-xs text-slate-800 cursor-pointer p-1.5 rounded-lg hover:bg-white/60">
+                              <input
+                                type="checkbox"
+                                disabled={ngnSubmitted}
+                                checked={isChecked}
+                                onChange={() => {
+                                  setNgnBowTieParameters((prev) =>
+                                    isChecked ? prev.filter((id) => id !== param.id) : [...prev, param.id]
+                                  );
+                                }}
+                                className="mt-0.5 rounded text-emerald-600"
+                              />
+                              <span>{param.text}</span>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {!ngnSubmitted ? (
+                      <button
+                        onClick={() => {
+                          playStationBell("double");
+                          setNgnSubmitted(true);
+                        }}
+                        className="w-full py-3.5 rounded-2xl bg-indigo-700 hover:bg-indigo-600 text-white font-extrabold text-xs uppercase tracking-wider shadow-lg transition-all cursor-pointer"
+                      >
+                        Submit &amp; Grade NGN Clinical Case Study
+                      </button>
+                    ) : (
+                      <div className="p-4 rounded-2xl bg-indigo-50 border border-indigo-200 text-xs space-y-2 text-indigo-950">
+                        <strong className="block text-sm font-black text-indigo-900">✓ NGN Case Study Evaluated:</strong>
+                        <p>{ngnCase.questions.step3BowTie.rationale}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ========================================================================= */}
+          {/* TAB 7: NURSING CARE PLAN (NCP) 5-STEP CLINICAL MATRIX                     */}
+          {/* ========================================================================= */}
+          {activeTab === "ncp" && (
+            <div className="mt-8 space-y-6">
+              {/* Surgical Sepsis Case Banner */}
+              <div className="bg-gradient-to-r from-emerald-950 via-teal-900 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-emerald-500/20">
+                <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-400 bg-emerald-950/80 px-2.5 py-1 rounded-full border border-emerald-800">
+                  NMCN Hospital Practical Ward Standard • NANDA-I / NOC / NIC
+                </span>
+                <h2 className="text-xl sm:text-2xl font-black text-white mt-2">
+                  {ncpCase.title}
+                </h2>
+                <div className="mt-4 p-4 rounded-2xl bg-white/10 border border-white/10 text-xs leading-relaxed space-y-2">
+                  <div><strong>Patient Demographics:</strong> {ncpCase.patientScenario.demographics}</div>
+                  <div><strong>Clinical Dossier:</strong> {ncpCase.patientScenario.clinicalContext}</div>
+                  <div className="text-emerald-300 font-mono font-bold"><strong>Vital Signs:</strong> {ncpCase.patientScenario.vitals}</div>
+                </div>
+              </div>
+
+              {/* 5-Step Clinical Reasoning Flow */}
+              <div className="bg-white rounded-3xl border border-slate-200 shadow-xs p-6 sm:p-8 space-y-8">
+                {/* Step 1: Assessment Data */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                    <h3 className="text-sm font-black text-slate-900 uppercase tracking-wider">
+                      Step 1: Clinical Assessment Data Sorting
+                    </h3>
+                    <span className="text-xs text-slate-500 font-semibold">Distinguish Subjective vs Objective findings</span>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {ncpCase.assessmentPool.map((f) => (
+                      <div key={f.id} className="p-3 rounded-2xl border border-slate-200 bg-slate-50 flex items-center justify-between gap-3 text-xs">
+                        <span className="text-slate-800 font-medium">{f.finding}</span>
+                        <div className="flex gap-1 shrink-0">
+                          <button
+                            onClick={() => setNcpAssessmentTypes((prev) => ({ ...prev, [f.id]: "subjective" }))}
+                            className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all ${
+                              ncpAssessmentTypes[f.id] === "subjective"
+                                ? "bg-amber-500 text-white"
+                                : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-100"
+                            }`}
+                          >
+                            Subjective
+                          </button>
+                          <button
+                            onClick={() => setNcpAssessmentTypes((prev) => ({ ...prev, [f.id]: "objective" }))}
+                            className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all ${
+                              ncpAssessmentTypes[f.id] === "objective"
+                                ? "bg-indigo-600 text-white"
+                                : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-100"
+                            }`}
+                          >
+                            Objective
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Step 2: NANDA-I Diagnosis Selection */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                    <h3 className="text-sm font-black text-slate-900 uppercase tracking-wider">
+                      Step 2: NANDA-I Prioritized Nursing Diagnosis
+                    </h3>
+                    <span className="text-xs text-slate-500 font-semibold">Select the #1 life-threatening diagnosis</span>
+                  </div>
+                  <div className="space-y-2">
+                    {ncpCase.diagnosisPool.map((diag) => (
+                      <label
+                        key={diag.id}
+                        className={`block p-4 rounded-2xl border cursor-pointer transition-all ${
+                          ncpSelectedDiagnosis === diag.id
+                            ? "border-emerald-600 bg-emerald-50/60 ring-2 ring-emerald-400"
+                            : "border-slate-200 hover:border-slate-300 bg-slate-50"
+                        }`}
+                      >
+                        <div className="flex items-start gap-3">
+                          <input
+                            type="radio"
+                            name="ncp-diagnosis"
+                            checked={ncpSelectedDiagnosis === diag.id}
+                            onChange={() => setNcpSelectedDiagnosis(diag.id)}
+                            className="mt-1 text-emerald-600"
+                          />
+                          <div>
+                            <span className="font-mono text-[10px] text-emerald-800 font-bold block">
+                              NANDA Code #{diag.nandaCode}
+                            </span>
+                            <span className="text-xs font-bold text-slate-900 leading-snug block">
+                              {diag.diagnosis}
+                            </span>
+                          </div>
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Step 3: NOC Expected Outcomes */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                    <h3 className="text-sm font-black text-slate-900 uppercase tracking-wider">
+                      Step 3: NOC Expected Patient Outcomes (SMART Goals)
+                    </h3>
+                    <span className="text-xs text-slate-500 font-semibold">Select measurable time-bound outcome</span>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {ncpCase.outcomePool.map((out) => (
+                      <label
+                        key={out.id}
+                        className={`p-3.5 rounded-2xl border cursor-pointer transition-all ${
+                          ncpSelectedOutcome === out.id
+                            ? "border-emerald-600 bg-emerald-50/60 ring-2 ring-emerald-400"
+                            : "border-slate-200 hover:border-slate-300 bg-slate-50"
+                        }`}
+                      >
+                        <div className="flex items-start gap-2.5">
+                          <input
+                            type="radio"
+                            name="ncp-outcome"
+                            checked={ncpSelectedOutcome === out.id}
+                            onChange={() => setNcpSelectedOutcome(out.id)}
+                            className="mt-0.5 text-emerald-600"
+                          />
+                          <span className="text-xs font-semibold text-slate-800">{out.goal}</span>
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Step 4: NIC Nursing Interventions */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                    <h3 className="text-sm font-black text-slate-900 uppercase tracking-wider">
+                      Step 4: NIC Nursing Interventions &amp; Rationales
+                    </h3>
+                    <span className="text-xs text-slate-500 font-semibold">Select all appropriate evidence-based interventions</span>
+                  </div>
+                  <div className="space-y-2">
+                    {ncpCase.interventionPool.map((intv) => {
+                      const isChecked = ncpSelectedInterventions.includes(intv.id);
+                      return (
+                        <label
+                          key={intv.id}
+                          className={`p-3 rounded-2xl border cursor-pointer block transition-all ${
+                            isChecked ? "bg-emerald-50/60 border-emerald-400" : "bg-slate-50 border-slate-200"
+                          }`}
+                        >
+                          <div className="flex items-start gap-3">
+                            <input
+                              type="checkbox"
+                              checked={isChecked}
+                              onChange={() => {
+                                setNcpSelectedInterventions((prev) =>
+                                  isChecked ? prev.filter((id) => id !== intv.id) : [...prev, intv.id]
+                                );
+                              }}
+                              className="mt-0.5 rounded text-emerald-600"
+                            />
+                            <div className="text-xs space-y-1">
+                              <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-200 text-slate-700 uppercase">
+                                {intv.category} Action
+                              </span>
+                              <strong className="block text-slate-900">{intv.intervention}</strong>
+                              <p className="text-slate-600 italic text-[11px]">Rationale: {intv.scientificRationale}</p>
+                            </div>
+                          </div>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Step 5: Evaluation */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                    <h3 className="text-sm font-black text-slate-900 uppercase tracking-wider">
+                      Step 5: Clinical Re-Assessment &amp; Evaluation
+                    </h3>
+                    <span className="text-xs text-slate-500 font-semibold">Determine goal attainment</span>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 text-xs text-slate-800 leading-relaxed">
+                    <strong>Re-Assessment Data at Hour 3:</strong> {ncpCase.evaluationScenario.reassessmentData}
+                  </div>
+                  <div className="flex gap-3">
+                    {(["met", "partially_met", "unmet"] as const).map((verdict) => (
+                      <button
+                        key={verdict}
+                        onClick={() => setNcpEvaluationVerdict(verdict)}
+                        className={`flex-1 py-3 rounded-xl text-xs font-bold uppercase transition-all ${
+                          ncpEvaluationVerdict === verdict
+                            ? verdict === "met"
+                              ? "bg-emerald-600 text-white shadow-md"
+                              : verdict === "partially_met"
+                              ? "bg-amber-500 text-white shadow-md"
+                              : "bg-red-600 text-white shadow-md"
+                            : "bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200"
+                        }`}
+                      >
+                        Goal {verdict.replace("_", " ")}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {!ncpSubmitted ? (
+                  <button
+                    onClick={() => {
+                      playStationBell("double");
+                      setNcpSubmitted(true);
+                    }}
+                    className="w-full py-4 rounded-2xl bg-emerald-800 hover:bg-emerald-700 text-white font-black text-xs uppercase tracking-wider shadow-lg transition-all cursor-pointer"
+                  >
+                    Grade Complete 5-Step Nursing Care Plan
+                  </button>
+                ) : (
+                  <div className="p-5 rounded-2xl bg-emerald-50 border border-emerald-300 text-xs space-y-2 text-emerald-950">
+                    <strong className="block text-sm font-black text-emerald-900">✓ Nursing Care Plan Successfully Audited:</strong>
+                    <p>{ncpCase.evaluationScenario.rationale}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* ========================================================================= */}
+          {/* TAB 8: CONVERSATIONAL AI PRECEPTOR & SBAR ENCOUNTER                       */}
+          {/* ========================================================================= */}
+          {activeTab === "ai-preceptor" && (
+            <div className="mt-8 space-y-6">
+              {/* Encounter Header */}
+              <div className="bg-gradient-to-r from-purple-950 via-slate-900 to-indigo-950 text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-purple-500/20">
+                <span className="text-[10px] font-extrabold uppercase tracking-widest text-purple-400 bg-purple-950/80 px-2.5 py-1 rounded-full border border-purple-800">
+                  Frontier AI Assessment Standard • Conversational Patient Encounter
+                </span>
+                <h2 className="text-xl sm:text-2xl font-black text-white mt-2">
+                  {aiSimScenario.title}
+                </h2>
+                <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+                  <div>
+                    <span className="text-purple-300 block">Simulated Patient:</span>
+                    <strong className="text-white text-sm">{aiSimScenario.simulatedPatient.name}</strong>, {aiSimScenario.simulatedPatient.age}y
+                  </div>
+                  <div>
+                    <span className="text-purple-300 block">Setting:</span>
+                    <strong className="text-white">{aiSimScenario.simulatedPatient.setting}</strong>
+                  </div>
+                  <div>
+                    <span className="text-purple-300 block">Chief Complaint:</span>
+                    <strong className="text-rose-300">{aiSimScenario.simulatedPatient.chiefComplaint}</strong>
+                  </div>
+                </div>
+                <div className="mt-3 p-3 rounded-xl bg-white/10 text-xs font-mono text-purple-200">
+                  Telemetry: {aiSimScenario.simulatedPatient.vitalSigns} | {aiSimScenario.simulatedPatient.ecgTelemetry}
+                </div>
+              </div>
+
+              {/* Dialogue & SBAR Grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                {/* Left Column: Interactive Dialogue Encounter */}
+                <div className="lg:col-span-6 bg-white rounded-3xl border border-slate-200 shadow-xs p-6 space-y-4">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <span className="text-xs font-black uppercase text-purple-900 tracking-wider">
+                      Clinical Dialogue &amp; History Taking
+                    </span>
+                    <span className="text-[11px] text-slate-500 font-semibold">Select questions to ask client</span>
+                  </div>
+
+                  <div className="space-y-2">
+                    {aiSimScenario.dialogueBank.map((turn) => {
+                      const isAsked = aiActiveDialogueTurnIds.includes(turn.id);
+                      return (
+                        <div key={turn.id} className="space-y-2">
+                          <button
+                            onClick={() => {
+                              if (!isAsked) {
+                                playStationBell("single");
+                                setAiActiveDialogueTurnIds((prev) => [...prev, turn.id]);
+                              }
+                            }}
+                            className={`w-full p-3 rounded-xl text-left text-xs font-bold transition-all border ${
+                              isAsked
+                                ? "bg-purple-100 border-purple-300 text-purple-950"
+                                : "bg-slate-50 hover:bg-purple-50 text-slate-800 border-slate-200"
+                            }`}
+                          >
+                            <span>💬 Nurse: "{turn.nurseQuestion}"</span>
+                          </button>
+
+                          {isAsked && (
+                            <div className="p-3.5 rounded-xl bg-purple-50/80 border-l-4 border-purple-600 text-xs text-purple-950 space-y-1 ml-4">
+                              <span className="font-extrabold block text-purple-900">🗣 {aiSimScenario.simulatedPatient.name}:</span>
+                              <p className="italic">"{turn.patientResponse}"</p>
+                              <span className="text-[10px] font-bold text-purple-700 block mt-1">
+                                Clinical Takeaway: {turn.clinicalRelevance}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Right Column: SBAR & Algorithmic Stewardship Challenge */}
+                <div className="lg:col-span-6 space-y-6">
+                  {/* SBAR Handover Form */}
+                  <div className="bg-white rounded-3xl border border-slate-200 shadow-xs p-6 space-y-4">
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                      <span className="text-xs font-black uppercase text-purple-900 tracking-wider">
+                        SBAR Structured Clinical Handover
+                      </span>
+                      <span className="text-[11px] text-slate-500 font-semibold">Physician Communication</span>
+                    </div>
+
+                    {(["situation", "background", "assessment", "recommendation"] as const).map((dim) => (
+                      <div key={dim} className="space-y-1">
+                        <label className="text-xs font-black uppercase tracking-wider text-slate-700 block">
+                          {dim.charAt(0).toUpperCase() + dim.slice(1)}:
+                        </label>
+                        <input
+                          type="text"
+                          disabled={aiSimSubmitted}
+                          placeholder={`Enter ${dim} handover statement...`}
+                          value={aiSBARAnswers[dim]}
+                          onChange={(e) => setAiSBARAnswers((prev) => ({ ...prev, [dim]: e.target.value }))}
+                          className="w-full p-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-purple-500 focus:outline-hidden"
+                        />
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Algorithmic Stewardship: AI Error Override Trap */}
+                  <div className="bg-white rounded-3xl border-2 border-amber-400 shadow-md p-6 space-y-4">
+                    <div className="flex items-center justify-between border-b border-amber-200 pb-3">
+                      <span className="text-xs font-black uppercase text-amber-900 tracking-wider flex items-center gap-1.5">
+                        <span className="material-symbols-outlined text-sm text-amber-600">smart_toy</span>
+                        Algorithmic Stewardship &amp; AI Safety Audit
+                      </span>
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">
+                        {aiSimScenario.aiStewardship.aiConfidenceScore}
+                      </span>
+                    </div>
+
+                    <div className="p-3.5 rounded-2xl bg-amber-50 text-xs space-y-1.5 text-amber-950 border border-amber-200">
+                      <strong>AI Copilot Automated Suggestion:</strong>
+                      <p className="font-mono text-[11px]">"{aiSimScenario.aiStewardship.aiSuggestedOrder}"</p>
+                    </div>
+
+                    <p className="text-xs text-slate-700 leading-relaxed font-semibold">
+                      As the bedside Registered Nurse, evaluate the AI suggestion against your patient's clinical state. What is your judgment?
+                    </p>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        disabled={aiSimSubmitted}
+                        onClick={() => setAiStewardshipChoice("accept")}
+                        className={`p-3 rounded-xl border text-xs font-bold transition-all ${
+                          aiStewardshipChoice === "accept"
+                            ? "bg-slate-800 text-white border-slate-900"
+                            : "bg-slate-50 text-slate-700 border-slate-300 hover:bg-slate-100"
+                        }`}
+                      >
+                        Accept AI Order
+                      </button>
+                      <button
+                        disabled={aiSimSubmitted}
+                        onClick={() => setAiStewardshipChoice("override_reject")}
+                        className={`p-3 rounded-xl border text-xs font-bold transition-all ${
+                          aiStewardshipChoice === "override_reject"
+                            ? "bg-emerald-700 text-white border-emerald-800 shadow-md"
+                            : "bg-emerald-50 text-emerald-800 border-emerald-300 hover:bg-emerald-100"
+                        }`}
+                      >
+                        ✓ Override &amp; Reject AI Order
+                      </button>
+                    </div>
+
+                    {!aiSimSubmitted ? (
+                      <button
+                        onClick={() => {
+                          playStationBell("double");
+                          setAiSimSubmitted(true);
+                        }}
+                        className="w-full py-3.5 rounded-2xl bg-purple-800 hover:bg-purple-700 text-white font-black text-xs uppercase tracking-wider shadow-lg transition-all cursor-pointer"
+                      >
+                        Submit AI Encounter &amp; Stewardship Score
+                      </button>
+                    ) : (
+                      <div className={`p-4 rounded-2xl border text-xs space-y-2 ${
+                        aiStewardshipChoice === "override_reject"
+                          ? "bg-emerald-50 border-emerald-300 text-emerald-950"
+                          : "bg-red-50 border-red-300 text-red-950"
+                      }`}>
+                        <div className="font-black text-sm">
+                          {aiStewardshipChoice === "override_reject"
+                            ? "✓ 100% Stewardship Score: AI Fatal Hallucination Overridden"
+                            : "✗ Safety Breach: AI Order Accepted"}
+                        </div>
+                        <p>{aiSimScenario.aiStewardship.clinicalRationale}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ========================================================================= */}
+          {/* TAB 9: CBT MCQS (Preserved)                                               */}
           {/* ========================================================================= */}
           {activeTab === "cbt" && (
             <div className="mt-8">

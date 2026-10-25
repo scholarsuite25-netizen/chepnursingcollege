@@ -9,7 +9,14 @@ describe('Unified Clinical Examination & Simulation Academy Test Suite', () => {
   const dosageDataPath = path.resolve(process.cwd(), 'src/data/dosageMathExams.ts');
   const partographDataPath = path.resolve(process.cwd(), 'src/data/partographExams.ts');
   const triageDataPath = path.resolve(process.cwd(), 'src/data/triageExams.ts');
+  const ngnDataPath = path.resolve(process.cwd(), 'src/data/ngnExams.ts');
+  const ncpDataPath = path.resolve(process.cwd(), 'src/data/ncpExams.ts');
+  const aiPreceptorDataPath = path.resolve(process.cwd(), 'src/data/aiPreceptorExams.ts');
   const examsPagePath = path.resolve(process.cwd(), 'src/app/exams/page.tsx');
+  const nextConfigPath = path.resolve(process.cwd(), 'next.config.ts');
+  const notFoundPath = path.resolve(process.cwd(), 'src/app/not-found.tsx');
+  const errorPath = path.resolve(process.cwd(), 'src/app/error.tsx');
+  const loadingPath = path.resolve(process.cwd(), 'src/app/loading.tsx');
 
   test('Module 1: CAOSCE 6-Station Autonomous Engine is verified', () => {
     assert.ok(fs.existsSync(caosceDataPath), 'caosceExams.ts must exist');
@@ -53,13 +60,59 @@ describe('Unified Clinical Examination & Simulation Academy Test Suite', () => {
     assert.ok(content.includes('BLACK'), 'Must include Black Tag');
   });
 
-  test('Exams Page unifies all modules with Cryptographic Verification', () => {
+  test('Module 6: Unfolding Next-Gen NCLEX (NGN) EHR Case Study is verified', () => {
+    assert.ok(fs.existsSync(ngnDataPath), 'ngnExams.ts must exist');
+    const content = fs.readFileSync(ngnDataPath, 'utf8');
+    assert.ok(content.includes('NGN_HEART_FAILURE_CASE'), 'Must export NGN_HEART_FAILURE_CASE');
+    assert.ok(content.includes('step1Highlight'), 'Must include highlight cue recognition');
+    assert.ok(content.includes('step2Matrix'), 'Must include matrix grid judgment');
+    assert.ok(content.includes('step3BowTie'), 'Must include bow-tie decision model');
+  });
+
+  test('Module 7: Nursing Care Plan (NCP) 5-Step Clinical Reasoning Matrix is verified', () => {
+    assert.ok(fs.existsSync(ncpDataPath), 'ncpExams.ts must exist');
+    const content = fs.readFileSync(ncpDataPath, 'utf8');
+    assert.ok(content.includes('NCP_SEPSIS_SCENARIO'), 'Must export NCP_SEPSIS_SCENARIO');
+    assert.ok(content.includes('Deficient Fluid Volume'), 'Must include NANDA diagnosis');
+    assert.ok(content.includes('SMART'), 'Must enforce SMART outcome goals');
+    assert.ok(content.includes('scientificRationale'), 'Must provide evidence-based rationales');
+  });
+
+  test('Module 8: Conversational AI Preceptor & Algorithmic Stewardship is verified', () => {
+    assert.ok(fs.existsSync(aiPreceptorDataPath), 'aiPreceptorExams.ts must exist');
+    const content = fs.readFileSync(aiPreceptorDataPath, 'utf8');
+    assert.ok(content.includes('AI_PRECEPTOR_STEMI_SCENARIO'), 'Must export AI_PRECEPTOR_STEMI_SCENARIO');
+    assert.ok(content.includes('sbarRubric'), 'Must include SBAR rubric');
+    assert.ok(content.includes('aiStewardship'), 'Must include AI error override challenge');
+    assert.ok(content.includes('override_reject'), 'Must test rejection of fatal AI hallucination');
+  });
+
+  test('Exams Page unifies all 10 modules with Cryptographic Verification', () => {
     const pageContent = fs.readFileSync(examsPagePath, 'utf8');
     assert.ok(pageContent.includes('activeTab === "caosce"'), 'Must have CAOSCE tab');
     assert.ok(pageContent.includes('activeTab === "partograph"'), 'Must have Partograph tab');
     assert.ok(pageContent.includes('activeTab === "ospe"'), 'Must have OSPE tab');
     assert.ok(pageContent.includes('activeTab === "dosage"'), 'Must have Dosage tab');
     assert.ok(pageContent.includes('activeTab === "triage"'), 'Must have Triage tab');
+    assert.ok(pageContent.includes('activeTab === "ngn"'), 'Must have NGN tab');
+    assert.ok(pageContent.includes('activeTab === "ncp"'), 'Must have NCP tab');
+    assert.ok(pageContent.includes('activeTab === "ai-preceptor"'), 'Must have AI Preceptor tab');
     assert.ok(pageContent.includes('cryptographicCertificateHash'), 'Must generate cryptographic token');
+  });
+
+  test('DevSecOps Security Headers are enforced in next.config.ts', () => {
+    assert.ok(fs.existsSync(nextConfigPath), 'next.config.ts must exist');
+    const content = fs.readFileSync(nextConfigPath, 'utf8');
+    assert.ok(content.includes('Strict-Transport-Security'), 'Must enforce HSTS');
+    assert.ok(content.includes('X-Content-Type-Options'), 'Must enforce nosniff');
+    assert.ok(content.includes('X-Frame-Options'), 'Must enforce clickjacking protection');
+    assert.ok(content.includes('Referrer-Policy'), 'Must enforce Referrer-Policy');
+    assert.ok(content.includes('Permissions-Policy'), 'Must enforce Permissions-Policy');
+  });
+
+  test('Institutional Resilience & Error Boundaries exist', () => {
+    assert.ok(fs.existsSync(notFoundPath), 'not-found.tsx must exist');
+    assert.ok(fs.existsSync(errorPath), 'error.tsx must exist');
+    assert.ok(fs.existsSync(loadingPath), 'loading.tsx must exist');
   });
 });

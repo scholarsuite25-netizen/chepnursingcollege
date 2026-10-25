@@ -23,8 +23,8 @@
             </div>
             <div class="flex items-center gap-4 text-[11px] text-gray-300">
                 <span class="hidden md:inline">Ota Campus: No. 18 Agbebi Estate Road, Honda B/Stop</span>
-                <a href="<?php echo esc_url(home_url('/verify')); ?>" class="text-primary-fixed hover:underline font-bold flex items-center gap-0.5">
-                    <span class="material-symbols-outlined text-[14px]">verified_user</span> Council Verification
+                <a href="<?php echo esc_url(home_url('/about')); ?>" class="text-primary-fixed hover:underline font-bold flex items-center gap-0.5">
+                    <span class="material-symbols-outlined text-[14px]">school</span> Official Collegiate Registry
                 </a>
             </div>
         </div>
