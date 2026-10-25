@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 
 export interface OfflineOutboxItem {
   id: string;
@@ -11,7 +11,7 @@ export interface OfflineOutboxItem {
 }
 
 export default function PwaNotificationManager() {
-  const [isSupported, setIsSupported] = useState(false);
+  const [, setIsSupported] = useState(false);
   const [permission, setPermission] = useState<NotificationPermission>("default");
   const [installPrompt, setInstallPrompt] = useState<any>(null);
   const [isInstalled, setIsInstalled] = useState(false);
@@ -34,6 +34,129 @@ export default function PwaNotificationManager() {
     },
   ]);
 
+  // Web Audio Hospital Chime Synthesizer
+  const playHospitalChime = useCallback((type: "bell" | "emergency" | "normal" = "normal") => {
+    try {
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+
+      if (type === "bell") {
+        const freqs = [880, 1174.66];
+        freqs.forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.15);
+          gain.gain.setValueAtTime(0.25, ctx.currentTime + idx * 0.15);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.15 + 1.2);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + idx * 0.15);
+          osc.stop(ctx.currentTime + idx * 0.15 + 1.2);
+        });
+      } else if (type === "emergency") {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sawtooth";
+        osc.frequency.setValueAtTime(750, ctx.currentTime);
+        osc.frequency.setValueAtTime(950, ctx.currentTime + 0.15);
+        osc.frequency.setValueAtTime(750, ctx.currentTime + 0.3);
+        osc.frequency.setValueAtTime(950, ctx.currentTime + 0.45);
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.8);
+      } else {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+        osc.frequency.setValueAtTime(880, ctx.currentTime + 0.2);
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.0);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 1.0);
+      }
+    } catch {
+      // Audio autoplay policy fallback
+    }
+  }, []);
+
+  const sendNotification = useCallback((
+    title: string,
+    body: string,
+    url: string = "/",
+    chimeType: "bell" | "emergency" | "normal" = "normal"
+  ) => {
+    playHospitalChime(chimeType);
+
+    setAlertHistory((prev) => [
+      {
+        id: "alert-" + Date.now(),
+        title,
+        time: "Just now",
+        type: chimeType,
+      },
+      ...prev.slice(0, 7),
+    ]);
+
+    if (!("Notification" in window) || Notification.permission !== "granted") {
+      return;
+    }
+
+    if ("serviceWorker" in navigator && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.ready.then((reg) => {
+        reg.showNotification(title, {
+          body,
+          icon: "/images/chep/chep_logo.png",
+          badge: "/images/chep/chep_logo.png",
+          data: { url },
+          tag: "chep-" + Date.now(),
+        } as any);
+      });
+    } else {
+      new Notification(title, {
+        body,
+        icon: "/images/chep/chep_logo.png",
+      });
+    }
+  }, [playHospitalChime]);
+
+  // Offline Auto-Sync Functionality
+  const triggerAutoSync = useCallback(async () => {
+    if (!navigator.onLine) {
+      alert("Cannot synchronize: You are currently offline. Connect to internet first.");
+      return;
+    }
+
+    const currentOutbox: OfflineOutboxItem[] = JSON.parse(
+      localStorage.getItem("chep_offline_outbox") || "[]"
+    );
+
+    if (currentOutbox.length === 0) {
+      return;
+    }
+
+    setIsSyncing(true);
+    await new Promise((r) => setTimeout(r, 1200));
+
+    localStorage.removeItem("chep_offline_outbox");
+    setOutbox([]);
+    setIsSyncing(false);
+
+    sendNotification(
+      "✓ Cloud Synchronization Successful",
+      `Synchronized ${currentOutbox.length} offline record(s) to central institutional cloud registry.`,
+      "/exams",
+      "normal"
+    );
+  }, [sendNotification]);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const supported = "serviceWorker" in navigator && "Notification" in window;
@@ -48,7 +171,7 @@ export default function PwaNotificationManager() {
       try {
         const stored = localStorage.getItem("chep_offline_outbox");
         if (stored) setOutbox(JSON.parse(stored));
-      } catch (e) {
+      } catch {
         // Fallback
       }
 
@@ -114,131 +237,7 @@ export default function PwaNotificationManager() {
         window.removeEventListener("offline", handleOffline);
       };
     }
-  }, []);
-
-  // Web Audio Hospital Chime Synthesizer
-  const playHospitalChime = (type: "bell" | "emergency" | "normal" = "normal") => {
-    try {
-      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-      if (!AudioCtx) return;
-      const ctx = new AudioCtx();
-
-      if (type === "bell") {
-        const freqs = [880, 1174.66]; // A5 and D6
-        freqs.forEach((freq, idx) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = "sine";
-          osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.15);
-          gain.gain.setValueAtTime(0.25, ctx.currentTime + idx * 0.15);
-          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.15 + 1.2);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(ctx.currentTime + idx * 0.15);
-          osc.stop(ctx.currentTime + idx * 0.15 + 1.2);
-        });
-      } else if (type === "emergency") {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = "sawtooth";
-        osc.frequency.setValueAtTime(750, ctx.currentTime);
-        osc.frequency.setValueAtTime(950, ctx.currentTime + 0.15);
-        osc.frequency.setValueAtTime(750, ctx.currentTime + 0.3);
-        osc.frequency.setValueAtTime(950, ctx.currentTime + 0.45);
-        gain.gain.setValueAtTime(0.2, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(ctx.currentTime);
-        osc.stop(ctx.currentTime + 0.8);
-      } else {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = "sine";
-        osc.frequency.setValueAtTime(587.33, ctx.currentTime);
-        osc.frequency.setValueAtTime(880, ctx.currentTime + 0.2);
-        gain.gain.setValueAtTime(0.2, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.0);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(ctx.currentTime);
-        osc.stop(ctx.currentTime + 1.0);
-      }
-    } catch (e) {
-      // Audio autoplay policy fallback
-    }
-  };
-
-  const sendNotification = (
-    title: string,
-    body: string,
-    url: string = "/",
-    chimeType: "bell" | "emergency" | "normal" = "normal"
-  ) => {
-    playHospitalChime(chimeType);
-
-    setAlertHistory((prev) => [
-      {
-        id: "alert-" + Date.now(),
-        title,
-        time: "Just now",
-        type: chimeType,
-      },
-      ...prev.slice(0, 7),
-    ]);
-
-    if (!("Notification" in window) || Notification.permission !== "granted") {
-      return;
-    }
-
-    if ("serviceWorker" in navigator && navigator.serviceWorker.controller) {
-      navigator.serviceWorker.ready.then((reg) => {
-        reg.showNotification(title, {
-          body,
-          icon: "/images/chep/chep_logo.png",
-          badge: "/images/chep/chep_logo.png",
-          data: { url },
-          tag: "chep-" + Date.now(),
-        } as any);
-      });
-    } else {
-      new Notification(title, {
-        body,
-        icon: "/images/chep/chep_logo.png",
-      });
-    }
-  };
-
-  // Offline Auto-Sync Functionality
-  const triggerAutoSync = async () => {
-    if (!navigator.onLine) {
-      alert("Cannot synchronize: You are currently offline. Connect to internet first.");
-      return;
-    }
-
-    const currentOutbox: OfflineOutboxItem[] = JSON.parse(
-      localStorage.getItem("chep_offline_outbox") || "[]"
-    );
-
-    if (currentOutbox.length === 0) {
-      return;
-    }
-
-    setIsSyncing(true);
-    // Simulate API batch sync with cloud registry
-    await new Promise((r) => setTimeout(r, 1200));
-
-    localStorage.removeItem("chep_offline_outbox");
-    setOutbox([]);
-    setIsSyncing(false);
-
-    sendNotification(
-      "✓ Cloud Synchronization Successful",
-      `Synchronized ${currentOutbox.length} offline record(s) to central institutional cloud registry.`,
-      "/exams",
-      "normal"
-    );
-  };
+  }, [sendNotification, triggerAutoSync]);
 
   // Add dummy item to outbox for testing
   const addTestOfflineItem = () => {
