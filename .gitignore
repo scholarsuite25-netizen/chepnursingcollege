@@ -38,6 +38,9 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# root download zip (served from public/downloads/)
+/GLOBAL_CAOSCE_EXAMINATION_SYSTEM_STANDARDS.zip
 next-env.d.ts
 
 .vercel
