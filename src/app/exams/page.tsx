@@ -699,25 +699,13 @@ export default function ExamsPage() {
               </button>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2 self-start lg:self-center">
-              <a
-                href="/api/download-package"
-                download="GLOBAL_CAOSCE_EXAMINATION_SYSTEM_STANDARDS.zip"
-                className="px-3.5 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm transition-all flex items-center gap-1.5"
-                title="Download full project package including all standards, prompts, and TypeScript modules"
-              >
-                <span>📦</span>
-                <span>Download Package (.ZIP)</span>
-              </a>
-
-              <button
-                onClick={() => setShowProctoringHUD(!showProctoringHUD)}
-                className="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 hover:bg-slate-800 text-indigo-300 border border-indigo-500/30 transition-all flex items-center gap-2"
-              >
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span>Proctoring HUD: {showProctoringHUD ? "Active" : "Hidden"}</span>
-              </button>
-            </div>
+            <button
+              onClick={() => setShowProctoringHUD(!showProctoringHUD)}
+              className="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 hover:bg-slate-800 text-indigo-300 border border-indigo-500/30 transition-all flex items-center gap-2 self-start lg:self-center"
+            >
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>Proctoring HUD: {showProctoringHUD ? "Active" : "Hidden"}</span>
+            </button>
           </div>
 
           {/* Biometric Anti-Tamper Edge HUD Overlay */}
