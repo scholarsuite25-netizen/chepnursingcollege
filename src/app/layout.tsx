@@ -86,6 +86,7 @@ export const metadata: Metadata = {
 };
 
 import AdmissionsConcierge from "@/components/AdmissionsConcierge";
+import PwaNotificationManager from "@/components/PwaNotificationManager";
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -120,6 +121,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${plusJakarta.variable} ${inter.variable}`}>
       <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#064e3b" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <link rel="apple-touch-icon" href="/images/chep/chep_logo.png" />
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
@@ -132,6 +138,7 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col antialiased">
         {children}
         <AdmissionsConcierge />
+        <PwaNotificationManager />
       </body>
     </html>
   );

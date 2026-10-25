@@ -54,9 +54,26 @@ function chep_create_portal_tables() {
         UNIQUE KEY nmcn_index (nmcn_index)
     ) $charset_collate;";
 
+    // 3. Clinical Logbook Table
+    $table_logs = $wpdb->prefix . 'chep_clinical_logs';
+    $sql_logs = "CREATE TABLE IF NOT EXISTS $table_logs (
+        id bigint(20) NOT NULL AUTO_INCREMENT,
+        created_at datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
+        student_name varchar(255) NOT NULL,
+        matric_number varchar(100) NOT NULL,
+        hospital_unit varchar(255) NOT NULL,
+        shift_date date NOT NULL,
+        hours int(11) DEFAULT 8,
+        procedure_notes text NOT NULL,
+        preceptor_signed tinyint(1) DEFAULT 0,
+        preceptor_name varchar(255) DEFAULT '',
+        PRIMARY KEY  (id)
+    ) $charset_collate;";
+
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     dbDelta($sql_applications);
     dbDelta($sql_students);
+    dbDelta($sql_logs);
 
     // Seed Sample Data
     chep_seed_sample_students();

@@ -81,6 +81,20 @@ function chep_enqueue_scripts() {
         'ajax_url' => admin_url('admin-ajax.php'),
         'nonce'    => wp_create_nonce('chep_nonce'),
     ));
+
+    // PWA & Push Notification Hub
+    wp_enqueue_script(
+        'chep-pwa-script',
+        get_template_directory_uri() . '/assets/js/pwa-notifications.js',
+        array('chep-main-script'),
+        '1.0.0',
+        true
+    );
+
+    wp_localize_script('chep-pwa-script', 'chep_pwa_object', array(
+        'sw_url'   => get_template_directory_uri() . '/sw.js',
+        'icon_url' => chep_asset('images/chep_logo.png'),
+    ));
 }
 add_action('wp_enqueue_scripts', 'chep_enqueue_scripts');
 

@@ -39,6 +39,24 @@ function chep_register_admin_menus() {
         'chep-students',
         'chep_render_students_page'
     );
+
+    add_submenu_page(
+        'chep-admissions',
+        'Clinical Logbook Preceptor Sign-offs',
+        'Clinical Logbook',
+        'manage_options',
+        'chep-clinical-logs',
+        'chep_render_clinical_logs_page'
+    );
+
+    add_submenu_page(
+        'chep-admissions',
+        'Executive Senate Suite (Iloro)',
+        'Senate Suite (Iloro)',
+        'manage_options',
+        'chep-senate-suite',
+        'chep_render_senate_suite_page'
+    );
 }
 
 // Render Admissions Queue
@@ -215,3 +233,72 @@ function chep_render_students_page() {
     </div>
     <?php
 }
+
+// Render Clinical Logbook Sign-offs
+function chep_render_clinical_logs_page() {
+    global $wpdb;
+    $table = $wpdb->prefix . 'chep_clinical_logs';
+
+    if (isset($_GET['sign_id']) && check_admin_referer('chep_sign_log')) {
+        $id = intval($_GET['sign_id']);
+        $wpdb->update($table, array('preceptor_signed' => 1, 'preceptor_name' => 'Matron Victoria Adediran (RN, RM)'), array('id' => $id));
+        echo '<div class="notice notice-success is-dismissible"><p>Clinical logbook shift officially signed and validated for NMCN portfolio.</p></div>';
+    }
+
+    $logs = $wpdb->get_results("SELECT * FROM $table ORDER BY shift_date DESC LIMIT 50");
+    ?>
+    <div class="wrap">
+        <h1>CHEP Clinical Preceptorship • Ward Shift Validation &amp; Logbook</h1>
+        <p>Review and sign bedside clinical procedure records submitted by student nurses during hospital ward rotations.</p>
+        <table class="wp-list-table widefat fixed striped" style="margin-top: 15px;">
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Matric Number</th>
+                    <th>Hospital Unit</th>
+                    <th>Shift Date</th>
+                    <th>Hours</th>
+                    <th>Procedure Details</th>
+                    <th>Preceptor Signature</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (!empty($logs)): foreach ($logs as $l): ?>
+                    <tr>
+                        <td><strong><?php echo esc_html($l->student_name); ?></strong></td>
+                        <td><code><?php echo esc_html($l->matric_number); ?></code></td>
+                        <td><?php echo esc_html($l->hospital_unit); ?></td>
+                        <td><?php echo esc_html($l->shift_date); ?></td>
+                        <td><?php echo esc_html($l->hours); ?> hrs</td>
+                        <td><small><?php echo esc_html($l->procedure_notes); ?></small></td>
+                        <td>
+                            <?php if ($l->preceptor_signed): ?>
+                                <span style="color: #15803d; font-weight: bold;">✓ Signed by <?php echo esc_html($l->preceptor_name); ?></span>
+                            <?php else: ?>
+                                <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=chep-clinical-logs&sign_id=' . $l->id), 'chep_sign_log'); ?>" class="button button-primary">Sign Shift</a>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endforeach; else: ?>
+                    <tr><td colspan="7" style="text-align: center; padding: 20px;">No student clinical logs pending validation.</td></tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+    <?php
+}
+
+// Render Executive Senate Suite (/iloro)
+function chep_render_senate_suite_page() {
+    ?>
+    <div class="wrap">
+        <h1>CHEP Institutional Senate Suite • Office of the Provost</h1>
+        <p>Unified executive oversight for admissions, curriculum governance, faculty preceptor assignments, and collegiate accreditations.</p>
+        <div style="background: #fff; padding: 24px; border-radius: 12px; margin-top: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+            <h2>Senate Executive Dashboard</h2>
+            <p>Direct portal link: <a href="<?php echo esc_url(home_url('/iloro')); ?>" target="_blank" class="button button-primary">Launch Full-Screen Senate Console (/iloro) &rarr;</a></p>
+        </div>
+    </div>
+    <?php
+}
+

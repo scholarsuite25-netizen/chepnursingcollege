@@ -1,0 +1,58 @@
+{
+  "name": "CHEP College of Nursing Sciences",
+  "short_name": "CHEP Nursing",
+  "description": "Accredited Nursing & Midwifery College, CBT Examinations & Clinical CAOSCE Simulation Academy",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#064e3b",
+  "theme_color": "#064e3b",
+  "lang": "en-NG",
+  "dir": "ltr",
+  "categories": ["education", "medical", "productivity"],
+  "icons": [
+    {
+      "src": "assets/images/chep_logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/images/chep_logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Clinical CAOSCE Exams",
+      "short_name": "Exams",
+      "description": "Launch 6-station CAOSCE and 3PL IRT CBT Examination Studio",
+      "url": "/exams",
+      "icons": [{ "src": "assets/images/chep_logo.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Admission Application",
+      "short_name": "Admissions",
+      "description": "Apply for 2026/2027 Basic Nursing and generate screening slip",
+      "url": "/admission",
+      "icons": [{ "src": "assets/images/chep_logo.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Clinical Reflections",
+      "short_name": "Reflections",
+      "description": "Submit Gibbs' (1988) reflective logbook dossier with PHI scrubber",
+      "url": "/clinical-reflections",
+      "icons": [{ "src": "assets/images/chep_logo.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Student & Faculty Portals",
+      "short_name": "Portals",
+      "description": "Access collegiate logbooks, results, and preceptor queues",
+      "url": "/portal",
+      "icons": [{ "src": "assets/images/chep_logo.png", "sizes": "192x192" }]
+    }
+  ]
+}

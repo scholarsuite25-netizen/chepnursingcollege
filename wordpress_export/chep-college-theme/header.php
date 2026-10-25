@@ -3,6 +3,11 @@
 <head>
     <meta charset="<?php bloginfo('charset'); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="<?php echo esc_url(get_template_directory_uri() . '/manifest.json'); ?>">
+    <meta name="theme-color" content="#064e3b">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="<?php echo esc_url(chep_asset('images/chep_logo.png')); ?>">
     <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
@@ -62,8 +67,16 @@
                 </div>
             </div>
 
+            <a href="<?php echo esc_url(home_url('/exams')); ?>" class="hover:text-forest-base transition-colors text-emerald-800 font-extrabold flex items-center gap-1">
+                <span>Clinical Exams</span>
+                <span class="px-1.5 py-0.5 rounded text-[10px] bg-emerald-100 text-emerald-800 font-black">CAOSCE</span>
+            </a>
+            <a href="<?php echo esc_url(home_url('/clinical-reflections')); ?>" class="hover:text-forest-base transition-colors">Reflections</a>
+            <a href="<?php echo esc_url(home_url('/library')); ?>" class="hover:text-forest-base transition-colors">e-Library</a>
             <a href="<?php echo esc_url(home_url('/gallery')); ?>" class="hover:text-forest-base transition-colors">Gallery</a>
-            <a href="<?php echo esc_url(home_url('/news')); ?>" class="hover:text-forest-base transition-colors">News &amp; Bulletins</a>
+            <a href="<?php echo esc_url(home_url('/news')); ?>" class="hover:text-forest-base transition-colors">News</a>
+            <a href="<?php echo esc_url(home_url('/contact')); ?>" class="hover:text-forest-base transition-colors">Contact</a>
+            <a href="<?php echo esc_url(home_url('/portal')); ?>" class="hover:text-forest-base transition-colors">Portals</a>
         </nav>
 
         <!-- Right Action Buttons -->
@@ -85,7 +98,12 @@
         <a href="<?php echo esc_url(home_url('/')); ?>" class="block font-semibold text-sm text-forest-dark py-2 border-b border-gray-100">Home</a>
         <a href="<?php echo esc_url(home_url('/about')); ?>" class="block font-semibold text-sm text-forest-dark py-2 border-b border-gray-100">About Us &amp; Governance</a>
         <a href="<?php echo esc_url(home_url('/admission')); ?>" class="block font-semibold text-sm text-forest-dark py-2 border-b border-gray-100">Admissions &amp; Application Form</a>
+        <a href="<?php echo esc_url(home_url('/exams')); ?>" class="block font-semibold text-sm text-emerald-800 py-2 border-b border-gray-100">Clinical Examination Academy (CAOSCE)</a>
+        <a href="<?php echo esc_url(home_url('/clinical-reflections')); ?>" class="block font-semibold text-sm text-forest-dark py-2 border-b border-gray-100">Clinical Reflections Forum</a>
+        <a href="<?php echo esc_url(home_url('/library')); ?>" class="block font-semibold text-sm text-forest-dark py-2 border-b border-gray-100">e-Library &amp; Repository</a>
         <a href="<?php echo esc_url(home_url('/gallery')); ?>" class="block font-semibold text-sm text-forest-dark py-2 border-b border-gray-100">Campus Media Gallery</a>
         <a href="<?php echo esc_url(home_url('/news')); ?>" class="block font-semibold text-sm text-forest-dark py-2 border-b border-gray-100">News &amp; Clinical Dispatches</a>
+        <a href="<?php echo esc_url(home_url('/contact')); ?>" class="block font-semibold text-sm text-forest-dark py-2 border-b border-gray-100">Contact &amp; Tours</a>
+        <a href="<?php echo esc_url(home_url('/portal')); ?>" class="block font-semibold text-sm text-forest-dark py-2 border-b border-gray-100">Student &amp; Faculty Portals</a>
     </div>
 </header>
